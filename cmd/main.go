@@ -8,7 +8,8 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/opsee/hugs/config"
+	"github.com/opsee/hailcannon/config"
+	"github.com/opsee/hailcannon/hacker"
 )
 
 const (
@@ -31,7 +32,7 @@ type ActiveHackers struct {
 func (ah *ActiveHackers) Get(key string) *hacker.Hacker {
 	ah.Lock()
 	defer ah.Unlock()
-	if h, ok := Hackers[key]; ok {
+	if h, ok := ah.Hackers[key]; ok {
 		return h
 	}
 	return nil
@@ -50,10 +51,6 @@ func getActiveBastions() []string {
 
 func main() {
 	cfg := config.GetConfig()
-	hacker, err := NewHacker(cfg)
-	if err != nil {
-		log.WithError(err).Fatal("Error starting hacker.")
-	}
 	ah := &ActiveHackers{}
 
 	// for each one create a new hacker.
@@ -62,15 +59,18 @@ func main() {
 		case s := <-signalsChannel:
 			switch s {
 			case syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT:
-				log.Info("Received signal ", s, ". Stopping.")
+				log.Infof("Received signal %s, Stopping.", s)
 				os.Exit(0)
 			}
-		case time.After(1 * time.Minute):
-			// TODO(dan) get all active bastions
+		case <-time.After(1 * time.Minute):
 			activeBastions := getActiveBastions()
 			for _, custyId := range activeBastions {
-				if ah.Get(bastion) == nil {
-					ah.Put(bastion, NewHacker(custyId, cfg))
+				if ah.Get(custyId) == nil {
+					nh, err := hacker.NewHacker(custyId, cfg)
+					if err != nil {
+						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", custyId)
+					}
+					ah.Put(custyId, nh)
 				}
 			}
 		}

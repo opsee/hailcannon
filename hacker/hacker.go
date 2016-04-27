@@ -1,4 +1,4 @@
-package main
+package hacker
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	cf "github.com/crewjam/go-cloudformation"
-	"github.com/opsee/hugs/config"
+	"github.com/opsee/hailcannon/config"
 )
 
 const (
@@ -52,15 +52,15 @@ func NewHacker(customerId string, cfg *config.Config) (*Hacker, error) {
 
 	sess, err := cfg.AWS.Session()
 	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": this.CustomerId}).WithError(err).Fatal("Couldn't get aws session from global config")
+		log.WithFields(log.Fields{"CustomerId": customerId}).WithError(err).Fatal("Couldn't get aws session from global config")
 	}
 
 	metaData, err := cfg.AWS.MetaData()
 	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": this.CustomerId}).WithError(err).Fatal("Couldn't get aws metadata from global config")
+		log.WithFields(log.Fields{"CustomerId": customerId}).WithError(err).Fatal("Couldn't get aws metadata from global config")
 	}
 	if metaData.VpcId == "" {
-		log.WithFields(log.Fields{"CustomerId": this.CustomerId}).Warn("No VpcId available in global config aws metadata")
+		log.WithFields(log.Fields{"CustomerId": customerId}).Warn("No VpcId available in global config aws metadata")
 	}
 	hacker.VpcId = metaData.VpcId
 
@@ -73,7 +73,7 @@ func NewHacker(customerId string, cfg *config.Config) (*Hacker, error) {
 	}
 	resp, err := hacker.cloudformationClient.DescribeStackResources(params)
 	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": this.CustomerId}).WithError(err).Fatal("Couldn't get stack resources.")
+		log.WithFields(log.Fields{"CustomerId": customerId}).WithError(err).Fatal("Couldn't get stack resources.")
 	}
 
 	for _, resource := range resp.StackResources {
@@ -275,11 +275,11 @@ func (this *Hacker) HackForever() {
 	for {
 		t := time.Now()
 		log.Info("Hacking")
-		_, err := hacker.Hack()
+		_, err := this.Hack()
 		if err != nil {
 			log.WithFields(log.Fields{"CustomerId": this.CustomerId}).WithError(err).Error("Couldn't update the stack.")
 		}
-		if wait := hacker.waitTime - time.Since(t); wait > time.Millisecond {
+		if wait := this.waitTime - time.Since(t); wait > time.Millisecond {
 			log.Info("Waiting ", wait)
 			time.Sleep(wait)
 		}

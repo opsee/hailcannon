@@ -4,7 +4,6 @@ package config
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
 
@@ -15,11 +14,6 @@ var (
 func init() {
 	viper.AutomaticEnv()
 	viper.SetDefault("log_level", "info")
-
-	viper.WatchConfig()
-	viper.OnConfigChange(func(e fsnotify.Event) {
-		config = NewConfig()
-	})
 }
 
 // Global config provides shared aws session, metadata, and environmental variables declared in etc/opsee/bastion-env.sh.
