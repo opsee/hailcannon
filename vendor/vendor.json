@@ -128,6 +128,11 @@
 			"revisionTime": "2016-04-14T16:41:04-07:00"
 		},
 		{
+			"path": "github.com/crewjam/go-cloudformation",
+			"revision": "8588dff84e44872c1f496ae607af335311b301ce",
+			"revisionTime": "2016-04-26T00:25:11-04:00"
+		},
+		{
 			"path": "github.com/fsnotify/fsnotify",
 			"revision": "3c39c22b2c7b0516d5f2553f1608e5d13cb19053",
 			"revisionTime": "2016-03-09T17:19:56-08:00"

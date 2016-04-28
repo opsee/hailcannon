@@ -1,0 +1,23 @@
+machine:
+  services:
+    - docker
+  environment:
+    ci: "true"
+dependencies:
+  cache_directories: []
+  override:
+    - docker info
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD quay.io
+    - docker pull quay.io/opsee/build-go:go16
+    - git submodule update --init
+test:
+  override:
+    - make build
+    - make docker-push
+deployment:
+  production:
+    branch: master
+    owner: opsee
+    commands:
+      - docker tag -f quay.io/opsee/hailcannon:$CIRCLE_SHA1 quay.io/opsee/hailcannon:latest
+      - docker push quay.io/opsee/hailcannon:latest
