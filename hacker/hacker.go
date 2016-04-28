@@ -12,10 +12,14 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
+	"github.com/aws/aws-sdk-go/aws/ec2metadata"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	cf "github.com/crewjam/go-cloudformation"
-	"github.com/opsee/hailcannon/config"
+	"github.com/opsee/basic/schema"
 )
 
 const (
@@ -30,6 +34,23 @@ func init() {
 	signal.Notify(signalsChannel, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 }
 
+func Session(region string) *session.Session {
+	creds := credentials.NewChainCredentials(
+		[]credentials.Provider{
+			&ec2rolecreds.EC2RoleProvider{
+				Client: ec2metadata.New(session.New()),
+			},
+			&credentials.EnvProvider{},
+		})
+
+	sess := session.New(&aws.Config{
+		Credentials: creds,
+		Region:      aws.String(region),
+	})
+
+	return sess
+}
+
 type Hacker struct {
 	CustomerId                  string
 	HostSecurityGroupPhysicalId string
@@ -42,28 +63,20 @@ type Hacker struct {
 	cloudformationClient        *cloudformation.CloudFormation
 }
 
-func NewHacker(customerId string, cfg *config.Config) (*Hacker, error) {
+func NewHacker(bastion *schema.BastionState) (*Hacker, error) {
+	if bastion == nil {
+		return nil, fmt.Errorf("Nil bastion argument")
+	}
+
 	hacker := &Hacker{
-		CustomerId:             customerId,
-		bastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", customerId),
+		CustomerId:             bastion.CustomerId,
+		bastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", bastion.CustomerId),
 		waitTime:               time.Duration(time.Minute * 2),
 		stackTimeoutMinutes:    int64(2),
 	}
 
-	sess, err := cfg.AWS.Session()
-	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": customerId}).WithError(err).Fatal("Couldn't get aws session from global config")
-	}
-
-	metaData, err := cfg.AWS.MetaData()
-	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": customerId}).WithError(err).Fatal("Couldn't get aws metadata from global config")
-	}
-	if metaData.VpcId == "" {
-		log.WithFields(log.Fields{"CustomerId": customerId}).Warn("No VpcId available in global config aws metadata")
-	}
-	hacker.VpcId = metaData.VpcId
-
+	sess := Session(bastion.Region)
+	hacker.VpcId = bastion.VpcId
 	hacker.ec2Client = ec2.New(sess)
 	hacker.cloudformationClient = cloudformation.New(sess)
 
@@ -73,7 +86,7 @@ func NewHacker(customerId string, cfg *config.Config) (*Hacker, error) {
 	}
 	resp, err := hacker.cloudformationClient.DescribeStackResources(params)
 	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": customerId}).WithError(err).Fatal("Couldn't get stack resources.")
+		log.WithFields(log.Fields{"CustomerId": bastion.CustomerId}).WithError(err).Fatal("Couldn't get stack resources.")
 	}
 
 	for _, resource := range resp.StackResources {
@@ -274,7 +287,7 @@ func (this *Hacker) HackForever() {
 	log.WithFields(log.Fields{"CustomerId": this.CustomerId}).Info("Started hacker.")
 	for {
 		t := time.Now()
-		log.Info("Hacking")
+		log.WithFields(log.Fields{"customer_id": this.CustomerId}).Info("Hacking")
 		_, err := this.Hack()
 		if err != nil {
 			log.WithFields(log.Fields{"CustomerId": this.CustomerId}).WithError(err).Error("Couldn't update the stack.")

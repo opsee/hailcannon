@@ -8,8 +8,9 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/opsee/hailcannon/config"
+	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
+	"github.com/opsee/hailcannon/svc"
 )
 
 const (
@@ -44,14 +45,9 @@ func (ah *ActiveHackers) Put(key string, h *hacker.Hacker) {
 	ah.Hackers[key] = h
 }
 
-// TODO(dan) this actually will return an array of UUID
-func getActiveBastions() []string {
-	return []string{}
-}
-
 func main() {
-	cfg := config.GetConfig()
 	ah := &ActiveHackers{}
+	services := svc.NewOpseeServices()
 
 	// for each one create a new hacker.
 	for {
@@ -63,14 +59,19 @@ func main() {
 				os.Exit(0)
 			}
 		case <-time.After(1 * time.Minute):
-			activeBastions := getActiveBastions()
-			for _, custyId := range activeBastions {
-				if ah.Get(custyId) == nil {
-					nh, err := hacker.NewHacker(custyId, cfg)
+			activeBastions, err := services.GetBastionStates([]string{}, &service.Filter{Key: "status", Value: "active"})
+			if err != nil {
+				log.WithError(err).Error("Couldn't get bastion states")
+			}
+			for _, bastion := range activeBastions {
+				if ah.Get(bastion.CustomerId) == nil {
+					nh, err := hacker.NewHacker(bastion)
 					if err != nil {
-						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", custyId)
+						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
 					}
-					ah.Put(custyId, nh)
+					log.Infof("Created hacker for customer %s", bastion.CustomerId)
+					ah.Put(bastion.CustomerId, nh)
+					// nh.HackForever()
 				}
 			}
 		}

@@ -239,6 +239,11 @@
 			"revisionTime": "2016-02-11T19:18:39-08:00"
 		},
 		{
+			"path": "github.com/opsee/basic/service",
+			"revision": "8311ef500c32d81808e98ef6d62b40018c5653d4",
+			"revisionTime": "2016-04-27T19:27:34-07:00"
+		},
+		{
 			"path": "github.com/opsee/hugs/config",
 			"revision": "86dc3a602e74db6ddad2e0d0fd02f6ebf2f5f0ed",
 			"revisionTime": "2016-04-18T18:07:32-04:00"
