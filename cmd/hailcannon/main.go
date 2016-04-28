@@ -8,13 +8,14 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
 	"github.com/opsee/hailcannon/svc"
 )
 
 const (
-	moduleName = "hacker"
+	moduleName = "hailcannon"
 )
 
 var (
@@ -65,9 +66,15 @@ func main() {
 			}
 			for _, bastion := range activeBastions {
 				if ah.Get(bastion.CustomerId) == nil {
-					nh, err := hacker.NewHacker(bastion)
+					creds, err := svc.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId})
+					if err != nil {
+						log.WithError(err).Errorf("Couldn't retrieve credentials for new hacker for customer %s", bastion.CustomerId)
+						continue
+					}
+					nh, err := hacker.NewHacker(bastion, creds)
 					if err != nil {
 						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
+						continue
 					}
 					log.Infof("Created hacker for customer %s", bastion.CustomerId)
 					ah.Put(bastion.CustomerId, nh)

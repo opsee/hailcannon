@@ -13,8 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -34,15 +32,7 @@ func init() {
 	signal.Notify(signalsChannel, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 }
 
-func Session(region string) *session.Session {
-	creds := credentials.NewChainCredentials(
-		[]credentials.Provider{
-			&ec2rolecreds.EC2RoleProvider{
-				Client: ec2metadata.New(session.New()),
-			},
-			&credentials.EnvProvider{},
-		})
-
+func Session(region string, creds *credentials.Credentials) *session.Session {
 	sess := session.New(&aws.Config{
 		Credentials: creds,
 		Region:      aws.String(region),
@@ -63,11 +53,10 @@ type Hacker struct {
 	cloudformationClient        *cloudformation.CloudFormation
 }
 
-func NewHacker(bastion *schema.BastionState) (*Hacker, error) {
+func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials) (*Hacker, error) {
 	if bastion == nil {
 		return nil, fmt.Errorf("Nil bastion argument")
 	}
-
 	hacker := &Hacker{
 		CustomerId:             bastion.CustomerId,
 		bastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", bastion.CustomerId),
@@ -75,7 +64,7 @@ func NewHacker(bastion *schema.BastionState) (*Hacker, error) {
 		stackTimeoutMinutes:    int64(2),
 	}
 
-	sess := Session(bastion.Region)
+	sess := Session(bastion.Region, creds)
 	hacker.VpcId = bastion.VpcId
 	hacker.ec2Client = ec2.New(sess)
 	hacker.cloudformationClient = cloudformation.New(sess)
