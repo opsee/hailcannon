@@ -3,10 +3,18 @@ machine:
     - docker
   environment:
     ci: "true"
+experimental:
+  notify:
+    branches:
+      only:
+        - master
+notify:
+  webhooks:
+    - url: https://hooks.slack.com/services/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
 dependencies:
-  cache_directories: []
   override:
     - docker info
+    - go version
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD quay.io
 test:
   override:
@@ -17,5 +25,5 @@ deployment:
     branch: master
     owner: opsee
     commands:
-      - docker tag -f quay.io/opsee/hailcannon:$CIRCLE_SHA1 quay.io/opsee/hailcannon:latest
+      - docker build -t quay.io/opsee/hailcannon:latest .
       - docker push quay.io/opsee/hailcannon:latest
