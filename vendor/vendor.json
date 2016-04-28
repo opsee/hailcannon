@@ -144,6 +144,76 @@
 			"revisionTime": "2016-04-14T16:41:04-07:00"
 		},
 		{
+			"path": "github.com/gogo/protobuf/gogoproto",
+			"revision": "4365f750fe246471f2a03ef5da5231c3565c5628",
+			"revisionTime": "2016-04-05T17:39:49+02:00"
+		},
+		{
+			"path": "github.com/gogo/protobuf/proto",
+			"revision": "4365f750fe246471f2a03ef5da5231c3565c5628",
+			"revisionTime": "2016-04-05T17:39:49+02:00"
+		},
+		{
+			"path": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+			"revision": "4365f750fe246471f2a03ef5da5231c3565c5628",
+			"revisionTime": "2016-04-05T17:39:49+02:00"
+		},
+		{
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "dda510ac0fd43b39770f22ac6260eb91d377bce3",
+			"revisionTime": "2016-03-30T11:19:00+11:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/gqlerrors",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/ast",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/kinds",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/lexer",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/location",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/parser",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/printer",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/source",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
+			"path": "github.com/graphql-go/graphql/language/visitor",
+			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
+			"revisionTime": "2016-03-18T15:58:50+08:00"
+		},
+		{
 			"path": "github.com/hashicorp/hcl",
 			"revision": "defa3a4c5ee508f4cd3023aa9916cb7148a3b460",
 			"revisionTime": "2016-03-18T11:40:51-04:00"
@@ -289,6 +359,21 @@
 			"revisionTime": "2016-04-18T18:07:32-04:00"
 		},
 		{
+			"path": "github.com/opsee/protobuf/opseeproto",
+			"revision": "fcd127be28d4536d18a88580598eb30664b5d68f",
+			"revisionTime": "2016-04-14T10:55:35-07:00"
+		},
+		{
+			"path": "github.com/opsee/protobuf/opseeproto/types",
+			"revision": "fcd127be28d4536d18a88580598eb30664b5d68f",
+			"revisionTime": "2016-04-14T10:55:35-07:00"
+		},
+		{
+			"path": "github.com/opsee/protobuf/plugin/graphql/scalars",
+			"revision": "fcd127be28d4536d18a88580598eb30664b5d68f",
+			"revisionTime": "2016-04-14T10:55:35-07:00"
+		},
+		{
 			"origin": "github.com/opsee/hugs/vendor/github.com/sirupsen/logrus",
 			"path": "github.com/sirupsen/logrus",
 			"revision": "86dc3a602e74db6ddad2e0d0fd02f6ebf2f5f0ed",
@@ -313,6 +398,76 @@
 			"path": "github.com/spf13/viper",
 			"revision": "c975dc1b4eacf4ec7fdbf0873638de5d090ba323",
 			"revisionTime": "2015-12-29T23:11:39-07:00"
+		},
+		{
+			"path": "golang.org/x/net/context",
+			"revision": "fb93926129b8ec0056f2f458b1f519654814edf0",
+			"revisionTime": "2016-04-13T08:48:50+10:00"
+		},
+		{
+			"path": "golang.org/x/net/http2",
+			"revision": "fb93926129b8ec0056f2f458b1f519654814edf0",
+			"revisionTime": "2016-04-13T08:48:50+10:00"
+		},
+		{
+			"path": "golang.org/x/net/http2/hpack",
+			"revision": "fb93926129b8ec0056f2f458b1f519654814edf0",
+			"revisionTime": "2016-04-13T08:48:50+10:00"
+		},
+		{
+			"path": "golang.org/x/net/internal/timeseries",
+			"revision": "fb93926129b8ec0056f2f458b1f519654814edf0",
+			"revisionTime": "2016-04-13T08:48:50+10:00"
+		},
+		{
+			"path": "golang.org/x/net/trace",
+			"revision": "fb93926129b8ec0056f2f458b1f519654814edf0",
+			"revisionTime": "2016-04-13T08:48:50+10:00"
+		},
+		{
+			"path": "google.golang.org/grpc",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/codes",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/credentials",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/grpclog",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/internal",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/metadata",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/naming",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/peer",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
+		},
+		{
+			"path": "google.golang.org/grpc/transport",
+			"revision": "e3d8dfd9076c03272c6e3c7a0ac8671a0e0b374e",
+			"revisionTime": "2016-04-04T18:43:02-07:00"
 		},
 		{
 			"path": "gopkg.in/fsnotify.v1",
