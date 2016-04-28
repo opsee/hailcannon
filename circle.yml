@@ -8,8 +8,6 @@ dependencies:
   override:
     - docker info
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD quay.io
-    - docker pull quay.io/opsee/build-go:go16
-    - git submodule update --init
 test:
   override:
     - make build
