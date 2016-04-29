@@ -12,12 +12,11 @@ import (
 	grpc_credentials "google.golang.org/grpc/credentials"
 )
 
-const tcpTimeout = time.Duration(3) * time.Second
+const tcpTimeout = time.Duration(15) * time.Second
 
 type OpseeServices struct {
 	spanx    service.SpanxClient
 	keelhaul service.KeelhaulClient
-	//	awsSession session.Session
 }
 
 func NewOpseeServices() *OpseeServices {

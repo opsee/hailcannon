@@ -30,7 +30,7 @@ run: $(APPENV)
 	-e AWS_ACCESS_KEY_ID \
 	-e AWS_SECRET_ACCESS_KEY \
 	-p 9109:9109 \
-	 --rm \ quay.io/opsee/hailcannon:${HAILCANNON_VERSION} .
+	quay.io/opsee/hailcannon:${HAILCANNON_VERSION}
 
 docker-push:
 	docker push quay.io/opsee/hailcannon:${HAILCANNON_VERSION} 
