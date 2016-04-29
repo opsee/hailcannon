@@ -75,7 +75,7 @@ func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials) (*H
 	}
 	resp, err := hacker.cloudformationClient.DescribeStackResources(params)
 	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": bastion.CustomerId}).WithError(err).Fatal("Couldn't get stack resources.")
+		return nil, err
 	}
 
 	for _, resource := range resp.StackResources {

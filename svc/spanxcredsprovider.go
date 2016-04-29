@@ -54,6 +54,7 @@ func (s *SpanxProvider) GetSpanxCreds() (*credentials.Value, error) {
 		log.WithError(err).Error("Couldn't connect to spanx.")
 		return nil, ErrSpanxCredentialsEmpty
 	}
+	defer conn.Close()
 
 	spanx := service.NewSpanxClient(conn)
 	spanxResp, err := spanx.GetCredentials(context.Background(), &service.GetCredentialsRequest{

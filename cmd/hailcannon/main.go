@@ -31,6 +31,12 @@ type ActiveHackers struct {
 	sync.Mutex
 }
 
+func NewActiveHackers() *ActiveHackers {
+	return &ActiveHackers{
+		Hackers: make(map[string]*hacker.Hacker),
+	}
+}
+
 func (ah *ActiveHackers) Get(key string) *hacker.Hacker {
 	ah.Lock()
 	defer ah.Unlock()
@@ -47,7 +53,7 @@ func (ah *ActiveHackers) Put(key string, h *hacker.Hacker) {
 }
 
 func main() {
-	ah := &ActiveHackers{}
+	ah := NewActiveHackers()
 	services := svc.NewOpseeServices()
 
 	// for each one create a new hacker.
