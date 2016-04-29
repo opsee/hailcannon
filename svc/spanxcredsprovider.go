@@ -2,6 +2,7 @@ package svc
 
 import (
 	"crypto/tls"
+	"os"
 	"time"
 
 	"golang.org/x/net/context"
@@ -47,7 +48,7 @@ func NewSpanxCredentials(user *schema.User) (*credentials.Credentials, error) {
 }
 
 func (s *SpanxProvider) GetSpanxCreds() (*credentials.Value, error) {
-	conn, err := grpc.Dial("spanx.in.opsee.com:8443",
+	conn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
 		grpc.WithTransportCredentials(grpc_credentials.NewTLS(&tls.Config{})),
 		grpc.WithTimeout(tcpTimeout))
 	if err != nil {

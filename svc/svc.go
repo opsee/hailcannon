@@ -2,6 +2,7 @@ package svc
 
 import (
 	"crypto/tls"
+	"os"
 	"time"
 
 	"github.com/opsee/basic/schema"
@@ -29,7 +30,7 @@ func (o *OpseeServices) initKeelhaul() {
 	if o.keelhaul != nil {
 		return
 	}
-	conn, err := grpc.Dial("keelhaul.in.opsee.com:443",
+	conn, err := grpc.Dial(os.Getenv("HAILCANNON_KEELHAUL_ADDRESS"),
 		grpc.WithTransportCredentials(grpc_credentials.NewTLS(&tls.Config{})),
 		grpc.WithTimeout(tcpTimeout))
 	if err != nil {

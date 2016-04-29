@@ -1,6 +1,6 @@
+APPENV ?= testenv
 PROJECT := github.com/opsee/hailcannon
 
-# docker tag is HAILCANNON_VERSION unless HAILCANNON_VERSION is set
 HAILCANNON_VERSION := $(shell git rev-parse --short HEAD)
 GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 GITUNTRACKEDCHANGES := $(shell git status --porcelain --untracked-files=no)
@@ -15,12 +15,22 @@ clean:
 
 build:
 	docker run \
-	-e AWS_DEFAULT_REGION \
+	--env-file=$(APPENV) \
 	-e "TARGETS=linux/amd64"  \
 	-e PROJECT=$(PROJECT) \
 	-v `pwd`:/gopath/src/$(PROJECT) \
 	quay.io/opsee/build-go:16
 	docker build -t quay.io/opsee/hailcannon:${HAILCANNON_VERSION} .
+
+run: $(APPENV)
+	docker run \
+	--env-file=$(APPENV) \
+	-e PROJECT=$(PROJECT) \
+	-e AWS_DEFAULT_REGION \
+	-e AWS_ACCESS_KEY_ID \
+	-e AWS_SECRET_ACCESS_KEY \
+	-p 9109:9109 \
+	 --rm \ quay.io/opsee/hailcannon:${HAILCANNON_VERSION} .
 
 docker-push:
 	docker push quay.io/opsee/hailcannon:${HAILCANNON_VERSION} 
@@ -28,6 +38,4 @@ docker-push:
 fmt:
 	@gofmt -w .
 
-.PHONY: clean all
-.PHONY: $(BINARIES)
-.PHONY: $(CMDS)
+.PHONY: all clean build run
