@@ -62,7 +62,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 func health() {
 	hailcannonAddress := os.Getenv("HAILCANNON_ADDRESS")
-	log.Println("Listening on %s", hailcannonAddress)
+	log.Infof("Listening on %s", hailcannonAddress)
 	http.HandleFunc("/health", hello)
 	panic(http.ListenAndServe(hailcannonAddress, nil))
 }

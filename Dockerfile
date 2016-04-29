@@ -12,9 +12,7 @@ ENV AWS_DEFAULT_REGION=""
 ENV HAILCANNON_ADDRESS=""
 ENV HAILCANNON_SPANX_ADDRESS=""
 ENV HAILCANNON_KEELHAUL_ADDRESS=""
-ENV APPENV ""
-
-RUN apk add --update bash ca-certificates
+ENV APPENV=""
 
 COPY run.sh /
 COPY target/linux/amd64/bin/* /
