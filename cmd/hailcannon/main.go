@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io"
+	"net/http"
 	"os"
 	"os/signal"
 	"sync"
@@ -52,9 +54,24 @@ func (ah *ActiveHackers) Put(key string, h *hacker.Hacker) {
 	ah.Hackers[key] = h
 }
 
+// TODO(dan) grpc endpoint when we need it
+// dummy endpoint to prevent ECS kills
+func hello(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "hello")
+}
+
+func health() {
+	hailcannonAddress := os.Getenv("HAILCANNON_ADDRESS")
+	log.Println("Listening on %s", hailcannonAddress)
+	http.HandleFunc("/health", hello)
+	panic(http.ListenAndServe(hailcannonAddress, nil))
+}
+
 func main() {
 	ah := NewActiveHackers()
 	services := svc.NewOpseeServices()
+
+	go health()
 
 	// for each one create a new hacker.
 	for {
