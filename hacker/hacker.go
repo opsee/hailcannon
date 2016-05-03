@@ -84,7 +84,7 @@ func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials) (*H
 			hacker.HostSecurityGroupPhysicalId = *resource.PhysicalResourceId
 		case "OpseeBastionIngressStack":
 			hacker.ingressStackPhysicalId = *resource.PhysicalResourceId
-			if aws.StringValue(resource.ResourceStatus) == "CREATE_COMPLETE" {
+			if aws.StringValue(resource.ResourceStatus) == "CREATE_COMPLETE" || aws.StringValue(resource.ResourceStatus) == "UPDATE_COMPLETE" {
 				if time.Now().UTC().Sub(aws.TimeValue(resource.Timestamp)) <= time.Duration(3*time.Minute) {
 					return nil, fmt.Errorf("Ingress stack less than 3 minutes old")
 				}
