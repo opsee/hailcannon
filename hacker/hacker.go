@@ -84,6 +84,13 @@ func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials) (*H
 			hacker.HostSecurityGroupPhysicalId = *resource.PhysicalResourceId
 		case "OpseeBastionIngressStack":
 			hacker.ingressStackPhysicalId = *resource.PhysicalResourceId
+			if aws.StringValue(resource.ResourceStatus) == "CREATE_COMPLETE" {
+				if time.Now().UTC().Sub(aws.TimeValue(resource.Timestamp)) <= time.Duration(3*time.Minute) {
+					return nil, fmt.Errorf("Ingress stack less than 3 minutes old")
+				}
+			} else {
+				return nil, fmt.Errorf("This stack has been updated by someone other than us.")
+			}
 		}
 	}
 
@@ -217,7 +224,6 @@ func noUpdatesAreToBePerformed(err error) bool {
 
 // Creates new cloudformation template and updates existing bastion stack with this template. if stack does not exist, creates a new one
 func (this *Hacker) Hack() (*string, error) {
-
 	securityGroups, err := this.GetSecurityGroups()
 	if err != nil {
 		log.WithFields(log.Fields{"CustomerId": this.CustomerId}).WithError(err).Error("Couldn't retrieve security groups")
