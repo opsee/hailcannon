@@ -101,7 +101,7 @@ func main() {
 					}
 					log.Infof("Created hacker for customer %s", bastion.CustomerId)
 					ah.Put(bastion.CustomerId, nh)
-					//nh.HackForever()
+					nh.HackForever()
 				}
 			}
 		}
