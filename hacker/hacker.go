@@ -192,15 +192,20 @@ func (h *Hacker) UpdateStack(stackName string, parameters []*cloudformation.Para
 // call stop if the stack is in state DELETE_COMPLETE or DELETE_IN_PROGRESS.  save an API call
 func (h *Hacker) handleStackUpdateError(err error) {
 	awsErr, ok := err.(awserr.RequestFailure)
-	h.stackUpdateErrCount += 1
-	if h.stackUpdateErrCount >= MaxStackUpdateErrorCount {
-		log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Warn("Max stack update error count reached")
-		go h.Stop()
-	} else if ok && awsErr.Code() == "ValidationError" {
+	if ok && awsErr.Code() == "ValidationError" {
+		if strings.Contains(awsErr.Message(), "No updates are to be performed.") {
+			return
+		}
 		// if the stack has been deleted, stop trying to
 		if strings.Contains(awsErr.Message(), "DELETE_COMPLETE") || strings.Contains(awsErr.Message(), "DELETE_IN_PROGESS") {
 			go h.Stop()
+			return
 		}
+		h.stackUpdateErrCount += 1
+	}
+	if h.stackUpdateErrCount >= MaxStackUpdateErrorCount {
+		log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Warn("Max stack update error count reached")
+		go h.Stop()
 	}
 }
 
