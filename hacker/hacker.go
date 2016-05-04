@@ -105,10 +105,10 @@ func (h *Hacker) FindIngressStack() error {
 			// try to avoid creating a hacker for customers who's stacks have been updated by the legacy hacker
 			if aws.StringValue(resource.ResourceStatus) == "CREATE_COMPLETE" || aws.StringValue(resource.ResourceStatus) == "UPDATE_COMPLETE" {
 				if time.Now().UTC().Sub(aws.TimeValue(resource.Timestamp)) <= time.Duration(2*time.Minute) {
-					return fmt.Errorf("Ingress stack less than 2 minutes old")
+					return fmt.Errorf("Stack was recently updated.  Last updated: %s", aws.TimeValue(resource.Timestamp).String())
 				}
 			} else {
-				return fmt.Errorf("h stack has been updated by someone other than us.")
+				return fmt.Errorf("Stack in incorrect state: %s.  Last updated: %s", aws.StringValue(resource.ResourceStatus), aws.TimeValue(resource.Timestamp).String())
 			}
 		}
 	}
