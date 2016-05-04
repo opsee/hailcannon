@@ -69,6 +69,7 @@ func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials, qui
 		stackTimeoutMinutes:    int64(2),
 		quit:                   quitChan,
 		kill:                   make(chan bool),
+		waitGroup:              &sync.WaitGroup{},
 	}
 
 	sess := Session(bastion.Region, creds)
