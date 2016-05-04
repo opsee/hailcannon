@@ -29,14 +29,18 @@ func init() {
 }
 
 type ActiveHackers struct {
-	Hackers map[string]*hacker.Hacker
+	Hackers   map[string]*hacker.Hacker
+	staleKeys chan string
 	sync.Mutex
 }
 
 func NewActiveHackers() *ActiveHackers {
-	return &ActiveHackers{
-		Hackers: make(map[string]*hacker.Hacker),
+	ah := &ActiveHackers{
+		Hackers:   make(map[string]*hacker.Hacker),
+		staleKeys: make(chan string),
 	}
+	go ah.removeStaleKeys()
+	return ah
 }
 
 func (ah *ActiveHackers) Get(key string) *hacker.Hacker {
@@ -48,10 +52,32 @@ func (ah *ActiveHackers) Get(key string) *hacker.Hacker {
 	return nil
 }
 
+func (ah *ActiveHackers) Delete(key string) {
+	ah.Lock()
+	defer ah.Unlock()
+	delete(ah.Hackers, key)
+}
+
 func (ah *ActiveHackers) Put(key string, h *hacker.Hacker) {
 	ah.Lock()
 	defer ah.Unlock()
 	ah.Hackers[key] = h
+}
+
+// channel to report stale keys to be removed from the map
+// hackers can exit asynchronously due to cloudformation update errors
+func (ah *ActiveHackers) StaleKeys() chan string {
+	return ah.staleKeys
+}
+
+func (ah *ActiveHackers) removeStaleKeys() {
+	for {
+		select {
+		case customerId := <-ah.staleKeys:
+			ah.Delete(customerId)
+			log.Debugf("Hacker for customer %s stopped.  Deleting from index.", customerId)
+		}
+	}
 }
 
 // TODO(dan) grpc endpoint when we need it
@@ -94,7 +120,7 @@ func main() {
 						log.WithError(err).Errorf("Couldn't retrieve credentials for new hacker for customer %s", bastion.CustomerId)
 						continue
 					}
-					nh, err := hacker.NewHacker(bastion, creds)
+					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys())
 					if err != nil {
 						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
 						continue
