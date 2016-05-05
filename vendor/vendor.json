@@ -310,43 +310,43 @@
 		},
 		{
 			"path": "github.com/opsee/basic/schema",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/autoscaling",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/cloudwatch",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/credentials",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/ec2",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/elb",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/rds",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/service",
-			"revision": "c4c06e7cbb7d63ad98bce7ae96fd91ccd7e83017",
-			"revisionTime": "2016-04-28T09:51:51-07:00"
+			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
+			"revisionTime": "2016-05-05T09:24:11-07:00"
 		},
 		{
 			"path": "github.com/opsee/hugs/config",
