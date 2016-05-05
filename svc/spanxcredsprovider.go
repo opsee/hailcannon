@@ -18,24 +18,22 @@ import (
 )
 
 const SpanxProviderName = "SpanxProvider"
-const ExpiryWindow = time.Duration(60 * time.Minute)
-const Retries = 3
 
 var (
 	ErrSpanxCredentialsEmpty = awserr.New("EmptySpanxCreds", "spanx credentials are empty", nil)
 )
 
 type SpanxProvider struct {
+	credentials.Expiry
 	credentials.Value
-	SpanxClient service.SpanxClient
-	expiry      *credentials.Expiry
-	User        *schema.User
+	SpanxClient  service.SpanxClient
+	User         *schema.User
+	ExpiryWindow time.Duration
 }
 
 func NewSpanxCredentials(user *schema.User) (*credentials.Credentials, error) {
 	spanxProvider := &SpanxProvider{
-		expiry: &credentials.Expiry{},
-		User:   user,
+		User: user,
 	}
 
 	val, err := spanxProvider.Retrieve()
@@ -47,13 +45,14 @@ func NewSpanxCredentials(user *schema.User) (*credentials.Credentials, error) {
 	return credentials.NewCredentials(spanxProvider), nil
 }
 
-func (s *SpanxProvider) GetSpanxCreds() (*credentials.Value, error) {
+func (s *SpanxProvider) Retrieve() (credentials.Value, error) {
+	awsCredsVal := credentials.Value{}
 	conn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
 		grpc.WithTransportCredentials(grpc_credentials.NewTLS(&tls.Config{})),
 		grpc.WithTimeout(tcpTimeout))
 	if err != nil {
 		log.WithError(err).Error("Couldn't connect to spanx.")
-		return nil, ErrSpanxCredentialsEmpty
+		return awsCredsVal, ErrSpanxCredentialsEmpty
 	}
 	defer conn.Close()
 
@@ -63,45 +62,26 @@ func (s *SpanxProvider) GetSpanxCreds() (*credentials.Value, error) {
 	})
 	if err != nil {
 		log.WithError(err).Error("Couldn't get spanx creds.")
-		return nil, ErrSpanxCredentialsEmpty
+		return awsCredsVal, ErrSpanxCredentialsEmpty
 	}
+
 	credsVal := spanxResp.GetCredentials()
-	awsCredsVal := &credentials.Value{
+	awsCredsVal = credentials.Value{
 		AccessKeyID:     aws.StringValue(credsVal.AccessKeyID),
 		SecretAccessKey: aws.StringValue(credsVal.SecretAccessKey),
 		SessionToken:    aws.StringValue(credsVal.SessionToken),
+	}
+	credsVal.ProviderName = aws.String(SpanxProviderName)
+	expiryTime, err := spanxResp.Expires.Value()
+	if err == nil {
+		s.SetExpiration(expiryTime.(time.Time), s.ExpiryWindow)
+	} else {
+		log.WithError(err).Warn("Retrieved credentials have no expiration time")
 	}
 
 	return awsCredsVal, nil
 }
 
-func (s *SpanxProvider) UpdateExpiry() {
-	s.expiry.SetExpiration(time.Now().UTC().Add(time.Duration(ExpiryWindow)), ExpiryWindow)
-}
-
-func (s *SpanxProvider) Retrieve() (credentials.Value, error) {
-	var credsVal *credentials.Value
-	for try := 0; try < Retries; try++ {
-		value, err := s.GetSpanxCreds()
-		if err != nil {
-			log.WithError(err).Error("Couldn't get spanx creds")
-			time.Sleep((1 << uint(try+1)) * time.Millisecond * 10)
-			continue
-		}
-		if value != nil {
-			credsVal = value
-		}
-		break
-	}
-	if credsVal == nil {
-		return credentials.Value{}, ErrSpanxCredentialsEmpty
-	}
-
-	credsVal.ProviderName = SpanxProviderName
-	s.UpdateExpiry()
-	return *credsVal, nil
-}
-
 func (s *SpanxProvider) IsExpired() bool {
-	return s.expiry.IsExpired()
+	return s.Expiry.IsExpired()
 }
