@@ -9,11 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
 	"github.com/opsee/hailcannon/svc"
+	"github.com/opsee/spanx/spanxcreds"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -115,11 +116,7 @@ func main() {
 			}
 			for _, bastion := range activeBastions {
 				if ah.Get(bastion.CustomerId) == nil {
-					creds, err := svc.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId})
-					if err != nil {
-						log.WithError(err).Errorf("Couldn't retrieve credentials for new hacker for customer %s", bastion.CustomerId)
-						continue
-					}
+					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId})
 					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys())
 					if err != nil {
 						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
