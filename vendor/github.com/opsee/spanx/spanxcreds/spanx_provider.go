@@ -1,11 +1,9 @@
 package spanxcreds
 
 import (
-	"crypto/tls"
 	"time"
 
 	"golang.org/x/net/context"
-	"google.golang.org/grpc"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -13,7 +11,6 @@ import (
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	log "github.com/sirupsen/logrus"
-	grpc_credentials "google.golang.org/grpc/credentials"
 )
 
 const SpanxProviderName = "SpanxProvider"
@@ -26,10 +23,9 @@ var (
 
 type SpanxProvider struct {
 	credentials.Expiry
-	credentials.Value
 	user *schema.User
 
-	// equired spanxclient for connecting to spanx service
+	// Spanxclient for connecting to spanx service
 	Client service.SpanxClient
 
 	// ExpiryWindow will allow the credentials to trigger refreshing prior to
@@ -42,29 +38,18 @@ type SpanxProvider struct {
 	//
 	// If ExpiryWindow is 0 or less it will be ignored.
 	ExpiryWindow time.Duration
-	retrieved    bool
 }
 
-func NewSpanxCredentials(spanxUser *schema.User) *credentials.Credentials {
+func NewSpanxCredentials(spanxUser *schema.User, client service.SpanxClient) *credentials.Credentials {
 	return credentials.NewCredentials(&SpanxProvider{
-		user: spanxUser,
+		user:   spanxUser,
+		Client: client,
 	})
 }
 
 // Retrieve credentials from spanx via GPRC
 func (s *SpanxProvider) Retrieve() (credentials.Value, error) {
-	s.retrieved = false
-	conn, err := grpc.Dial("spanx.in.opsee.com:8443",
-		grpc.WithTransportCredentials(grpc_credentials.NewTLS(&tls.Config{})),
-		grpc.WithTimeout(time.Second*15))
-	if err != nil {
-		log.WithError(err).Error("Couldn't connect to spanx.")
-		return credentials.Value{ProviderName: SpanxProviderName}, ErrSpanxConnectionFailed
-	}
-	spanx := service.NewSpanxClient(conn)
-	defer conn.Close()
-
-	spanxResp, err := spanx.GetCredentials(context.Background(), &service.GetCredentialsRequest{
+	spanxResp, err := s.Client.GetCredentials(context.Background(), &service.GetCredentialsRequest{
 		User: s.user,
 	})
 	if err != nil {
@@ -83,15 +68,7 @@ func (s *SpanxProvider) Retrieve() (credentials.Value, error) {
 	expiryTime, err := spanxResp.Expires.Value()
 	if err == nil {
 		s.SetExpiration(expiryTime.(time.Time), s.ExpiryWindow)
-		s.retrieved = true
 	}
 
 	return awsCredsVal, nil
-}
-
-func (s *SpanxProvider) IsExpired() bool {
-	if s.retrieved == false {
-		return false
-	}
-	return s.Expiry.IsExpired()
 }
