@@ -15,7 +15,6 @@ import (
 const tcpTimeout = time.Duration(15) * time.Second
 
 type OpseeServices struct {
-	spanx    service.SpanxClient
 	keelhaul service.KeelhaulClient
 }
 

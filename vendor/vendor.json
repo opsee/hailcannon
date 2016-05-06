@@ -374,6 +374,11 @@
 			"revisionTime": "2016-04-14T10:55:35-07:00"
 		},
 		{
+			"path": "github.com/opsee/spanx/spanxcreds",
+			"revision": "967813f36eff7d60ee53fc063f666a21eb7953a3",
+			"revisionTime": "2016-05-06T14:03:50-07:00"
+		},
+		{
 			"origin": "github.com/opsee/hugs/vendor/github.com/sirupsen/logrus",
 			"path": "github.com/sirupsen/logrus",
 			"revision": "86dc3a602e74db6ddad2e0d0fd02f6ebf2f5f0ed",

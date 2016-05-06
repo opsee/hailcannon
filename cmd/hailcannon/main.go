@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"io"
 	"net/http"
 	"os"
@@ -9,15 +10,19 @@ import (
 	"syscall"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	"google.golang.org/grpc"
+
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
 	"github.com/opsee/hailcannon/svc"
+	"github.com/opsee/spanx/spanxcreds"
+	log "github.com/sirupsen/logrus"
+	grpc_credentials "google.golang.org/grpc/credentials"
 )
 
 const (
-	moduleName = "hailcannon"
+	SpanxGrpcTimeout = 15 * time.Second
 )
 
 var (
@@ -99,6 +104,16 @@ func main() {
 
 	go health()
 
+	conn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
+		grpc.WithTransportCredentials(grpc_credentials.NewTLS(&tls.Config{})),
+		grpc.WithTimeout(SpanxGrpcTimeout))
+	if err != nil {
+		log.WithError(err).Fatal("Couldn't create grpc connection to spanx.")
+	}
+	spanxClient := service.NewSpanxClient(conn)
+
+	defer conn.Close()
+
 	// for each one create a new hacker.
 	for {
 		select {
@@ -115,11 +130,7 @@ func main() {
 			}
 			for _, bastion := range activeBastions {
 				if ah.Get(bastion.CustomerId) == nil {
-					creds, err := svc.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId})
-					if err != nil {
-						log.WithError(err).Errorf("Couldn't retrieve credentials for new hacker for customer %s", bastion.CustomerId)
-						continue
-					}
+					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId}, spanxClient)
 					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys())
 					if err != nil {
 						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
