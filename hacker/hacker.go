@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"golang.org/x/net/context"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -18,11 +20,16 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 	cf "github.com/crewjam/go-cloudformation"
 	"github.com/opsee/basic/schema"
+	opsee_aws_ec2 "github.com/opsee/basic/schema/aws/ec2"
+	"github.com/opsee/basic/service"
+	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	log "github.com/sirupsen/logrus"
 )
 
 const (
 	MaxStackUpdateErrorCount = 3
+	DefaultResponseCacheTTL  = 2 * time.Minute
+	BezosRequestTimeout      = 30 * time.Second
 )
 
 var (
@@ -44,38 +51,44 @@ func Session(region string, creds *credentials.Credentials) *session.Session {
 
 type Hacker struct {
 	CustomerId                  string
-	HostSecurityGroupPhysicalId string
+	Region                      string
 	VpcId                       string
+	HostSecurityGroupPhysicalId string
 	ingressStackPhysicalId      string
 	bastionStackPhysicalId      string
 	waitTime                    time.Duration
 	stackTimeoutMinutes         int64
 	ec2Client                   *ec2.EC2
+	bezosClient                 service.BezosClient
 	cloudformationClient        *cloudformation.CloudFormation
 	quit                        chan string
 	kill                        chan bool
+	bastionState                *schema.BastionState
 	waitGroup                   *sync.WaitGroup
 	stackUpdateErrCount         int
 }
 
-func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials, quitChan chan string) (*Hacker, error) {
+func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials, quitChan chan string, bc service.BezosClient) (*Hacker, error) {
 	if bastion == nil {
 		return nil, fmt.Errorf("Nil bastion argument")
 	}
 	hacker := &Hacker{
 		CustomerId:             bastion.CustomerId,
+		Region:                 bastion.Region,
 		bastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", bastion.CustomerId),
 		waitTime:               time.Duration(time.Minute * 2),
 		stackTimeoutMinutes:    int64(2),
 		quit:                   quitChan,
 		kill:                   make(chan bool),
 		waitGroup:              &sync.WaitGroup{},
+		bezosClient:            bc,
 	}
 
 	sess := Session(bastion.Region, creds)
 	hacker.VpcId = bastion.VpcId
 	hacker.ec2Client = ec2.New(sess)
 	hacker.cloudformationClient = cloudformation.New(sess)
+
 	err := hacker.FindIngressStack()
 	if err != nil {
 		return nil, err
@@ -140,18 +153,44 @@ func (h *Hacker) Validate() error {
 }
 
 // Returns a list of security groups for the hacker's instances vpc
-func (h *Hacker) GetSecurityGroups() ([]*ec2.SecurityGroup, error) {
-	output, err := h.ec2Client.DescribeSecurityGroups(&ec2.DescribeSecurityGroupsInput{
-		Filters: []*ec2.Filter{
-			{
+func (h *Hacker) GetSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error) {
+	input := &opsee_aws_ec2.DescribeSecurityGroupsInput{
+		Filters: []*opsee_aws_ec2.Filter{
+			&opsee_aws_ec2.Filter{
 				Name:   aws.String("vpc-id"),
-				Values: []*string{aws.String(h.VpcId)},
+				Values: []string{h.VpcId},
 			},
 		},
-	})
+	}
+
+	timestamp := &opsee_types.Timestamp{}
+	timestamp.Scan(time.Now().UTC().Add(DefaultResponseCacheTTL * -1))
+	ctx, _ := context.WithTimeout(context.Background(), BezosRequestTimeout)
+	resp, err := h.bezosClient.Get(
+		ctx,
+		&service.BezosRequest{
+			User: &schema.User{
+				Id:         1,
+				CustomerId: h.CustomerId,
+				Email:      "thisisnotarealemailaddress",
+				Verified:   true,
+				Active:     true,
+				Admin:      false,
+			},
+			Region: h.Region,
+			VpcId:  h.VpcId,
+			MaxAge: timestamp,
+			Input:  &service.BezosRequest_Ec2_DescribeSecurityGroupsInput{input},
+		})
 	if err != nil {
 		return nil, err
 	}
+
+	output := resp.GetEc2_DescribeSecurityGroupsOutput()
+	if output == nil {
+		return nil, fmt.Errorf("error decoding aws response")
+	}
+
 	return output.SecurityGroups, err
 }
 
@@ -164,6 +203,7 @@ func (h *Hacker) GetStackTemplateBody(stackName string) (*string, error) {
 	return output.TemplateBody, err
 }
 
+// Used to update users ingress stack
 func (h *Hacker) UpdateStack(stackName string, parameters []*cloudformation.Parameter, templateBody string) error {
 	log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Infof("Attempting to update stack  %s", stackName)
 	updateStackInput := &cloudformation.UpdateStackInput{
