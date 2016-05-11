@@ -18,11 +18,11 @@ import (
 	"github.com/opsee/hailcannon/svc"
 	"github.com/opsee/spanx/spanxcreds"
 	log "github.com/sirupsen/logrus"
-	grpc_credentials "google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials"
 )
 
 const (
-	SpanxGrpcTimeout = 15 * time.Second
+	GrpcTimeout = 15 * time.Second
 )
 
 var (
@@ -104,17 +104,29 @@ func main() {
 
 	go health()
 
-	conn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
-		grpc.WithTransportCredentials(grpc_credentials.NewTLS(&tls.Config{})),
-		grpc.WithTimeout(SpanxGrpcTimeout))
+	spanxConn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
+		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
+		grpc.WithTimeout(GrpcTimeout))
 	if err != nil {
 		log.WithError(err).Fatal("Couldn't create grpc connection to spanx.")
 	}
-	spanxClient := service.NewSpanxClient(conn)
+	spanxClient := service.NewSpanxClient(spanxConn)
+	defer spanxConn.Close()
 
-	defer conn.Close()
+	bezosConn, err := grpc.Dial(os.Getenv("HAILCANNON_BEZOSPHERE_ADDRESS"),
+		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
+		grpc.WithTimeout(GrpcTimeout))
+	if err != nil {
+		log.WithError(err).Fatal("Couldn't create grpc connection to bezosphere.")
+	}
 
-	// for each one create a new hacker.
+	if err != nil {
+		log.Fatalf("Couldn't initialize connection to bezosphere")
+	}
+
+	bezosClient := service.NewBezosClient(bezosConn)
+	defer bezosConn.Close()
+
 	for {
 		select {
 		case s := <-signalsChannel:
@@ -123,7 +135,7 @@ func main() {
 				log.Infof("Received signal %s, Stopping.", s)
 				os.Exit(0)
 			}
-		case <-time.After(1 * time.Minute):
+		case <-time.After(30 * time.Second):
 			activeBastions, err := services.GetBastionStates([]string{}, &service.Filter{Key: "status", Value: "active"})
 			if err != nil {
 				log.WithError(err).Error("Couldn't get bastion states")
@@ -131,7 +143,7 @@ func main() {
 			for _, bastion := range activeBastions {
 				if ah.Get(bastion.CustomerId) == nil {
 					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId}, spanxClient)
-					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys())
+					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys(), bezosClient)
 					if err != nil {
 						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
 						continue
