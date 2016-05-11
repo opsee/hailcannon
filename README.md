@@ -5,5 +5,5 @@
 3. Hacker then periodically calls to bezosphere for a list of security groups, and updates the bastion ingress stack.
 4. The ingress rules in the bastion ingress stack allow the bastion to talk to things in its VPC.
 
-![a hailcannon](https://raw.githubusercontent.com/opsee/hailcannon/master/hc.jpg)
+![a hailcannon](/hc.jpg?raw=true)
 
