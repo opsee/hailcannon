@@ -191,7 +191,7 @@ func (h *Hacker) GetSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error) {
 		return nil, fmt.Errorf("error decoding aws response")
 	}
 
-	return output.SecurityGroups, err
+	return output.SecurityGroups, nil
 }
 
 // Returns a stack template body
@@ -252,7 +252,7 @@ func (h *Hacker) handleStackUpdateError(err error) {
 func (h *Hacker) Hack() error {
 	securityGroups, err := h.GetSecurityGroups()
 	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": h.CustomerId}).WithError(err).Error("Couldn't retrieve security groups")
+		log.WithFields(log.Fields{"CustomerId": h.CustomerId, "err": err}).Error("Couldn't retrieve security groups")
 		return err
 	}
 

@@ -31,8 +31,12 @@
 		Subnet
 		BastionState
 		Stack
+		RoleStack
 		User
 		Customer
+		Team
+		Invoice
+		CreditCardInfo
 */
 package schema
 
@@ -1455,17 +1459,17 @@ type CheckResultGetter interface {
 
 var GraphQLCheckResultType *github_com_graphql_go_graphql.Object
 
-func (g *Check_HttpCheck) GetHttpCheck() *HttpCheck {
-	return g.HttpCheck
-}
-func (g *Check_CloudwatchCheck) GetCloudWatchCheck() *CloudWatchCheck {
-	return g.CloudwatchCheck
-}
 func (g *CheckResponse_HttpResponse) GetHttpResponse() *HttpResponse {
 	return g.HttpResponse
 }
 func (g *CheckResponse_CloudwatchResponse) GetCloudWatchResponse() *CloudWatchResponse {
 	return g.CloudwatchResponse
+}
+func (g *Check_HttpCheck) GetHttpCheck() *HttpCheck {
+	return g.HttpCheck
+}
+func (g *Check_CloudwatchCheck) GetCloudWatchCheck() *CloudWatchCheck {
+	return g.CloudwatchCheck
 }
 
 func init() {
@@ -2772,23 +2776,6 @@ func init() {
 			}
 		}),
 	})
-	GraphQLCheckResponseReplyUnion = github_com_graphql_go_graphql.NewUnion(github_com_graphql_go_graphql.UnionConfig{
-		Name:        "CheckResponseReply",
-		Description: "",
-		Types: []*github_com_graphql_go_graphql.Object{
-			GraphQLHttpResponseType,
-			GraphQLCloudWatchResponseType,
-		},
-		ResolveType: func(value interface{}, info github_com_graphql_go_graphql.ResolveInfo) *github_com_graphql_go_graphql.Object {
-			switch value.(type) {
-			case *CheckResponse_HttpResponse:
-				return GraphQLHttpResponseType
-			case *CheckResponse_CloudwatchResponse:
-				return GraphQLCloudWatchResponseType
-			}
-			return nil
-		},
-	})
 	GraphQLCheckSpecUnion = github_com_graphql_go_graphql.NewUnion(github_com_graphql_go_graphql.UnionConfig{
 		Name:        "CheckSpec",
 		Description: "",
@@ -2802,6 +2789,23 @@ func init() {
 				return GraphQLHttpCheckType
 			case *Check_CloudwatchCheck:
 				return GraphQLCloudWatchCheckType
+			}
+			return nil
+		},
+	})
+	GraphQLCheckResponseReplyUnion = github_com_graphql_go_graphql.NewUnion(github_com_graphql_go_graphql.UnionConfig{
+		Name:        "CheckResponseReply",
+		Description: "",
+		Types: []*github_com_graphql_go_graphql.Object{
+			GraphQLHttpResponseType,
+			GraphQLCloudWatchResponseType,
+		},
+		ResolveType: func(value interface{}, info github_com_graphql_go_graphql.ResolveInfo) *github_com_graphql_go_graphql.Object {
+			switch value.(type) {
+			case *CheckResponse_HttpResponse:
+				return GraphQLHttpResponseType
+			case *CheckResponse_CloudwatchResponse:
+				return GraphQLCloudWatchResponseType
 			}
 			return nil
 		},
