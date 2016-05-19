@@ -98,7 +98,17 @@ func health() {
 	panic(http.ListenAndServe(hailcannonAddress, nil))
 }
 
+func logLevel(defaultLevel log.Level) {
+	level, err := log.ParseLevel(os.Getenv("HAILCANNON_LOG_LEVEL"))
+	if err != nil {
+		log.WithError(err).Error("Couldn't set log level")
+		level = defaultLevel
+	}
+	log.SetLevel(level)
+}
+
 func main() {
+	log.SetLevel(log.DebugLevel)
 	ah := NewActiveHackers()
 	services := svc.NewOpseeServices()
 
