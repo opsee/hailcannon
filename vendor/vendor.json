@@ -128,9 +128,10 @@
 			"revisionTime": "2016-04-14T16:41:04-07:00"
 		},
 		{
+			"checksumSHA1": "DKhxFZaM3RJqG0AFYm3/eUCblq0=",
 			"path": "github.com/crewjam/go-cloudformation",
-			"revision": "8588dff84e44872c1f496ae607af335311b301ce",
-			"revisionTime": "2016-04-26T00:25:11-04:00"
+			"revision": "c5a96624efbc78202d174bf9b325c6b5493fce92",
+			"revisionTime": "2016-05-19T04:25:07Z"
 		},
 		{
 			"path": "github.com/fsnotify/fsnotify",
@@ -489,5 +490,6 @@
 			"revision": "a83829b6f1293c91addabc89d0571c246397bbf4",
 			"revisionTime": "2016-03-01T17:40:22-03:00"
 		}
-	]
+	],
+	"rootPath": "github.com/opsee/hailcannon"
 }
