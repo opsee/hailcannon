@@ -310,43 +310,48 @@
 		},
 		{
 			"path": "github.com/opsee/basic/schema",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/autoscaling",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/cloudwatch",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/credentials",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/ec2",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
+		},
+		{
+			"path": "github.com/opsee/basic/schema/aws/ecs",
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/elb",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/schema/aws/rds",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/basic/service",
-			"revision": "91488f3f8949d7618563d44b11b7ac31c3d1e73e",
-			"revisionTime": "2016-05-05T09:24:11-07:00"
+			"revision": "09f16a1c5cfc7ea4cb6e1bebf2d9d2df871403d1",
+			"revisionTime": "2016-05-18T11:52:08-07:00"
 		},
 		{
 			"path": "github.com/opsee/hugs/config",
@@ -360,23 +365,23 @@
 		},
 		{
 			"path": "github.com/opsee/protobuf/opseeproto",
-			"revision": "fcd127be28d4536d18a88580598eb30664b5d68f",
-			"revisionTime": "2016-04-14T10:55:35-07:00"
+			"revision": "824e83d4202d49ae98d974ae0f16c19e63aa1d98",
+			"revisionTime": "2016-05-17T16:30:34-07:00"
 		},
 		{
 			"path": "github.com/opsee/protobuf/opseeproto/types",
-			"revision": "fcd127be28d4536d18a88580598eb30664b5d68f",
-			"revisionTime": "2016-04-14T10:55:35-07:00"
+			"revision": "824e83d4202d49ae98d974ae0f16c19e63aa1d98",
+			"revisionTime": "2016-05-17T16:30:34-07:00"
 		},
 		{
 			"path": "github.com/opsee/protobuf/plugin/graphql/scalars",
-			"revision": "fcd127be28d4536d18a88580598eb30664b5d68f",
-			"revisionTime": "2016-04-14T10:55:35-07:00"
+			"revision": "824e83d4202d49ae98d974ae0f16c19e63aa1d98",
+			"revisionTime": "2016-05-17T16:30:34-07:00"
 		},
 		{
 			"path": "github.com/opsee/spanx/spanxcreds",
-			"revision": "967813f36eff7d60ee53fc063f666a21eb7953a3",
-			"revisionTime": "2016-05-06T14:03:50-07:00"
+			"revision": "7bdf57795002b61d15abde53704b43151dd7f149",
+			"revisionTime": "2016-05-17T12:52:57-07:00"
 		},
 		{
 			"origin": "github.com/opsee/hugs/vendor/github.com/sirupsen/logrus",
