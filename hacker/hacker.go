@@ -22,8 +22,8 @@ import (
 	"github.com/opsee/basic/schema"
 	opsee_aws_ec2 "github.com/opsee/basic/schema/aws/ec2"
 	"github.com/opsee/basic/service"
+	log "github.com/opsee/logrus"
 	opsee_types "github.com/opsee/protobuf/opseeproto/types"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
