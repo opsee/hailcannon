@@ -16,8 +16,8 @@ import (
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
 	"github.com/opsee/hailcannon/svc"
+	log "github.com/opsee/logrus"
 	"github.com/opsee/spanx/spanxcreds"
-	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/credentials"
 )
 
