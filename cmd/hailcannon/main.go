@@ -108,7 +108,6 @@ func logLevel(defaultLevel log.Level) {
 }
 
 func main() {
-	log.SetLevel(log.DebugLevel)
 	ah := NewActiveHackers()
 	services := svc.NewOpseeServices()
 
