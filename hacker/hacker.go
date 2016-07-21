@@ -228,7 +228,7 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 			},
 			Region: h.Region,
 			VpcId:  h.VpcId,
-			MaxAge: timestamp,
+			MaxAge: nil, // don't cache
 			Input:  &service.BezosRequest_Ec2_DescribeSecurityGroupsInput{input},
 		})
 	if err != nil {
@@ -248,12 +248,21 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 
 	// TODO(dan) Think about ChangeSets instead of this hack.
 	newGroups := make(map[string]int)
+	forceUpdate := false
 	for i, securityGroup := range securityGroups {
+		for _, tag := range securityGroup.Tags {
+			if aws.StringValue(tag.Key) == "opsee_disable_ingress" {
+				if aws.StringValue(tag.Value) == "true" {
+					forceUpdate = true
+					continue
+				}
+			}
+		}
 		newGroups[aws.StringValue(securityGroup.GroupId)] = i
 	}
 
 	for _, securityGroup := range h.securityGroups {
-		if _, ok := newGroups[aws.StringValue(securityGroup.GroupId)]; !ok {
+		if _, ok := newGroups[aws.StringValue(securityGroup.GroupId)]; !ok || forceUpdate {
 			log.WithFields(log.Fields{"CustomerId": h.CustomerId, "GroupId": securityGroup.GroupId}).Error("Found new security group. Updating stack.")
 			h.securityGroups = securityGroups
 			return true, nil

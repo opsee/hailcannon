@@ -145,6 +145,12 @@
 			"revisionTime": "2016-04-05T17:39:49+02:00"
 		},
 		{
+			"checksumSHA1": "DECEQVrAJXa2SxCNLTq40H/2VvI=",
+			"path": "github.com/gogo/protobuf/jsonpb",
+			"revision": "2752d97bbd91927dd1c43296dbf8700e50e2708c",
+			"revisionTime": "2016-06-17T09:13:52Z"
+		},
+		{
 			"path": "github.com/gogo/protobuf/proto",
 			"revision": "4365f750fe246471f2a03ef5da5231c3565c5628",
 			"revisionTime": "2016-04-05T17:39:49+02:00"
