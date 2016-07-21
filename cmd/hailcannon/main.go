@@ -169,16 +169,16 @@ func main() {
 					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId}, spanxClient)
 					sess := session.New(&aws.Config{
 						Credentials: creds,
-						Region:      aws.String(region),
+						Region:      aws.String(config.Region),
 					})
 
 					clients := &hacker.Clients{
 						Ec2:            ec2.New(sess),
 						Cloudformation: cloudformation.New(sess),
-						Bezos:          beosClient,
+						Bezos:          bezosClient,
 					}
 
-					nh, err := hacker.New(config, creds, clients, ah.StaleKeys())
+					nh, err := hacker.New(config, resources, clients, ah.StaleKeys())
 					if err != nil {
 						log.WithError(err).Errorf("couldn't create new hacker for customer %s", bastion.CustomerId)
 						continue

@@ -26,12 +26,12 @@ import (
 )
 
 const (
-	ErrorKillThreshold      = 3
+	ErrThreshold            = 3
 	DefaultResponseCacheTTL = 2 * time.Minute
 	BezosRequestTimeout     = 30 * time.Second
 	StackTimeout            = 2 * time.Minute
 	IgnoreIngressKey        = "opsee_disable_ingress"
-	IngnoreIngressValue     = "true"
+	IgnoreIngressValue      = "true"
 	HoldTime                = 2 * time.Minute
 )
 
@@ -71,7 +71,7 @@ func (c *Config) Validate() error {
 
 type Clients struct {
 	Ec2            *ec2.EC2
-	Bezos          *service.Bezos
+	Bezos          service.BezosClient
 	Cloudformation *cloudformation.CloudFormation
 }
 
@@ -133,19 +133,19 @@ type Hacker struct {
 
 // returns pertinent log fields
 func (h *Hacker) Fields() log.Fields {
-	return log.Fields{"customer_id": c.CustomerId, "errCount": h.errCount}
+	return log.Fields{"customer_id": h.config.CustomerId, "errCount": h.errCount}
 }
 
 // returns err if hacker is missing fields
 func (h *Hacker) Validate() error {
-	if h.conig == nil {
+	if h.config == nil {
 		return fmt.Errorf("missing config")
 	} else {
 		if err := h.config.Validate(); err != nil {
 			return err
 		}
 	}
-	if h.Resources != nil {
+	if h.resources != nil {
 		return fmt.Errorf("missing resources")
 	} else {
 		if err := h.resources.Validate(); err != nil {
@@ -171,23 +171,22 @@ func New(config *Config, resources *Resources, clients *Clients, quitChan chan s
 		quit:      quitChan,
 		kill:      make(chan bool),
 		waitGroup: &sync.WaitGroup{},
-		updated:   true,
 	}
 
 	params := &cloudformation.DescribeStackResourcesInput{
-		StackName: aws.String(h.Resources.BastionStackPhysicalId),
+		StackName: aws.String(hacker.resources.BastionStackPhysicalId),
 	}
-	resp, err := h.Clients.Cloudformation.DescribeStackResources(params)
+	resp, err := hacker.clients.Cloudformation.DescribeStackResources(params)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	for _, resource := range resp.StackResources {
 		switch *resource.LogicalResourceId {
 		case "OpseeSecurityGroup":
-			h.Resources.HostSecurityGroupPhysicalId = aws.StringValue(resource.PhysicalResourceId)
+			hacker.resources.HostSecurityGroupPhysicalId = aws.StringValue(resource.PhysicalResourceId)
 		case "OpseeBastionIngressStack":
-			h.Resources.IngressStackPhysicalId = aws.StringValue(resource.PhysicalResourceId)
+			hacker.resources.IngressStackPhysicalId = aws.StringValue(resource.PhysicalResourceId)
 		}
 	}
 
@@ -199,18 +198,18 @@ func (h *Hacker) UpdateIngressStack(templateBody string) error {
 	parameters := []*cloudformation.Parameter{
 		&cloudformation.Parameter{
 			ParameterKey:   aws.String("BastionSecurityGroupId"),
-			ParameterValue: aws.String(h.Resources.HostSecurityGroupPhysicalId),
+			ParameterValue: aws.String(h.resources.HostSecurityGroupPhysicalId),
 		},
 	}
 
 	updateStackInput := &cloudformation.UpdateStackInput{
 		Capabilities: []*string{aws.String("CAPABILITY_IAM")},
 		Parameters:   parameters,
-		StackName:    aws.String(h.Resources.IngressStackPhysicalId),
+		StackName:    aws.String(h.resources.IngressStackPhysicalId),
 		TemplateBody: aws.String(templateBody),
 	}
 
-	resp, err := h.Clients.Cloudformation.UpdateStack(updateStackInput)
+	_, err := h.clients.Cloudformation.UpdateStack(updateStackInput)
 	if err != nil {
 		awsErr, ok := err.(awserr.RequestFailure)
 		if ok && awsErr.Code() == "ValidationError" {
@@ -225,8 +224,8 @@ func (h *Hacker) UpdateIngressStack(templateBody string) error {
 		return err
 	}
 
-	err = h.Clients.Cloudformation.WaitUntilStackUpdateComplete(&cloudformation.DescribeStacksInput{
-		StackName: aws.String(stackName),
+	err = h.clients.Cloudformation.WaitUntilStackUpdateComplete(&cloudformation.DescribeStacksInput{
+		StackName: aws.String(h.resources.IngressStackPhysicalId),
 	})
 
 	return err
@@ -262,7 +261,7 @@ func (h *Hacker) DescribeSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error
 		Filters: []*opsee_aws_ec2.Filter{
 			&opsee_aws_ec2.Filter{
 				Name:   aws.String("vpc-id"),
-				Values: []string{h.VpcId},
+				Values: []string{h.config.VpcId},
 			},
 		},
 	}
@@ -270,19 +269,19 @@ func (h *Hacker) DescribeSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error
 	timestamp := &opsee_types.Timestamp{}
 	timestamp.Scan(time.Now().UTC().Add(DefaultResponseCacheTTL * -1))
 	ctx, _ := context.WithTimeout(context.Background(), BezosRequestTimeout)
-	resp, err := h.Clients.Bezos.Get(
+	resp, err := h.clients.Bezos.Get(
 		ctx,
 		&service.BezosRequest{
 			User: &schema.User{
 				Id:         1,
-				CustomerId: h.CustomerId,
+				CustomerId: h.config.CustomerId,
 				Email:      "thisisnotarealemailaddress",
 				Verified:   true,
 				Active:     true,
 				Admin:      false,
 			},
-			Region: h.Region,
-			VpcId:  h.VpcId,
+			Region: h.config.Region,
+			VpcId:  h.config.VpcId,
 			MaxAge: timestamp,
 			Input:  &service.BezosRequest_Ec2_DescribeSecurityGroupsInput{input},
 		})
@@ -292,21 +291,21 @@ func (h *Hacker) DescribeSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error
 
 	output := resp.GetEc2_DescribeSecurityGroupsOutput()
 	if output == nil {
-		return false, fmt.Errorf("error decoding aws response")
+		return nil, fmt.Errorf("error decoding aws response")
 	}
 
-	return output.SecurityGroups
+	return output.SecurityGroups, nil
 }
 
 type SecurityGroups []*opsee_aws_ec2.SecurityGroup
 
-func (s SecurityGroups) Len() int      { return len(b) }
-func (s SecurityGroups) Swap(i, j int) { b[i], b[j] = b[j], b[i] }
+func (s SecurityGroups) Len() int      { return len(s) }
+func (s SecurityGroups) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 
 type ById struct{ SecurityGroups }
 
 func (b ById) Less(i, j int) bool {
-	return aws.StringValue(b[i].GroupID) < aws.StringValue(b[j].GroupID)
+	return aws.StringValue(b.SecurityGroups[i].GroupId) < aws.StringValue(b.SecurityGroups[j].GroupId)
 }
 
 // Compare the current group ids to the new security groups.  Update if we have new or different group ids
@@ -314,7 +313,7 @@ func (h *Hacker) GroupsToUpdate(ogs []*opsee_aws_ec2.SecurityGroup, ngs []*opsee
 	var fgs []*opsee_aws_ec2.SecurityGroup
 
 	// filter newGroups by key,value
-	for i, sg := range ngs {
+	for _, sg := range ngs {
 		skip := false
 		for _, tag := range sg.Tags {
 			k := aws.StringValue(tag.Key)
@@ -337,7 +336,7 @@ func (h *Hacker) GroupsToUpdate(ogs []*opsee_aws_ec2.SecurityGroup, ngs []*opsee
 	sort.Sort(ById{ogs}) // NOTE: these are just group ids! don't use them to update
 
 	for i, _ := range fgs {
-		if aws.StringValue(fgs[i].GroupId) != aws.StringValue(gs[i].GroupId) {
+		if aws.StringValue(fgs[i].GroupId) != aws.StringValue(ogs[i].GroupId) {
 			return fgs
 		}
 	}
@@ -347,20 +346,25 @@ func (h *Hacker) GroupsToUpdate(ogs []*opsee_aws_ec2.SecurityGroup, ngs []*opsee
 
 // Returns a semi-populated list of security groups retrieved from cloudformation resources
 // NOTE we only use these to ensure that we don't update if there are no new groups!
-func (h *Hacker) GetCurrentSecurityGroups() {
-	resp, err := h.Clients.Cloudformation.DescribeStackResources(params)
-	if err != nil {
-		return err
+func (h *Hacker) GetCurrentSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error) {
+	params := &cloudformation.DescribeStackResourcesInput{
+		StackName: aws.String(h.resources.BastionStackPhysicalId),
 	}
 
-	var cgs []opsee_aws_ec2.SecurityGroup
+	resp, err := h.clients.Cloudformation.DescribeStackResources(params)
+	if err != nil {
+		return nil, err
+	}
+
+	var cgs []*opsee_aws_ec2.SecurityGroup
 	for _, resource := range resp.StackResources {
 		lid := aws.StringValue(resource.LogicalResourceId)
-		sgid := strings.Replace(aws.StringValue(sg.GroupId), "sg", "sg-", 1)
+		sgid := strings.Replace(lid, "sg", "sg-", 1)
 		if strings.HasPrefix(sgid, "sg-") {
-			cgs := append(cgs, &opsee_aws_ec2.SecurityGroup{GroupId: sgid})
+			cgs = append(cgs, &opsee_aws_ec2.SecurityGroup{GroupId: aws.String(sgid)})
 		}
 	}
+	return cgs, nil
 }
 
 // Starts the hacker
@@ -407,14 +411,14 @@ func (h *Hacker) Start() {
 				}
 			}
 		}
-		if errCount > ErrThreshold {
-			return fmt.Errorf("reached error threshold... quitting")
+		if h.errCount > ErrThreshold {
+			h.Stop()
 		}
 		if wait := HoldTime - time.Since(t); wait > time.Millisecond {
-			log.Info("Waiting ", wait)
+			log.WithFields(h.Fields()).Info("waiting ", wait)
 			select {
 			case <-h.kill:
-				log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Info("Exiting.")
+				log.WithFields(log.Fields{"CustomerId": h.config.CustomerId}).Info("Exiting.")
 				return
 			case <-time.After(wait):
 				continue
@@ -425,7 +429,8 @@ func (h *Hacker) Start() {
 
 // Stop the hacker
 func (h *Hacker) Stop() {
+	log.WithFields(h.Fields()).Warn("stopping")
 	close(h.kill)
 	h.waitGroup.Wait()
-	h.quit <- h.CustomerId
+	h.quit <- h.config.CustomerId
 }
