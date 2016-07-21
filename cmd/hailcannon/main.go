@@ -150,6 +150,9 @@ func main() {
 				log.WithError(err).Error("Couldn't get bastion states")
 			}
 			for _, bastion := range activeBastions {
+				if bastion.CustomerId == "5963d7bc-6ba2-11e5-8603-6ba085b2f5b5" {
+					continue
+				}
 				if ah.Get(bastion.CustomerId) == nil {
 					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId}, spanxClient)
 					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys(), bezosClient)
