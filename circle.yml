@@ -19,7 +19,7 @@ dependencies:
 test:
   override:
     - make build
-    - make docker-push
+    - make push
 deployment:
   production:
     branch: master

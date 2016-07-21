@@ -11,6 +11,7 @@
 	It has these top-level messages:
 		Attribute
 		Container
+		ContainerDefinition
 		ContainerInstance
 		ContainerOverride
 		Deployment
@@ -19,24 +20,37 @@
 		DescribeContainerInstancesOutput
 		DescribeServicesInput
 		DescribeServicesOutput
+		DescribeTaskDefinitionInput
+		DescribeTaskDefinitionOutput
 		DescribeTasksInput
 		DescribeTasksOutput
 		Failure
+		HostEntry
+		HostVolumeProperties
 		KeyValuePair
 		ListClustersInput
 		ListClustersOutput
+		ListContainerInstancesInput
+		ListContainerInstancesOutput
 		ListServicesInput
 		ListServicesOutput
 		ListTasksInput
 		ListTasksOutput
 		LoadBalancer
+		LogConfiguration
+		MountPoint
 		NetworkBinding
+		PortMapping
 		Resource
 		Service
 		ServiceEvent
 		Task
+		TaskDefinition
 		TaskOverride
+		Ulimit
 		VersionInfo
+		Volume
+		VolumeFrom
 */
 package ecs
 
@@ -153,6 +167,215 @@ func (m *Container) GetTaskArn() string {
 	return ""
 }
 
+type ContainerDefinition struct {
+	Command                []string          `protobuf:"bytes,2,rep,name=Command,json=command" json:"Command,omitempty"`
+	Cpu                    *int64            `protobuf:"zigzag64,3,opt,name=Cpu,json=cpu" json:"Cpu,omitempty"`
+	DisableNetworking      *bool             `protobuf:"varint,4,opt,name=DisableNetworking,json=disableNetworking" json:"DisableNetworking,omitempty"`
+	DnsSearchDomains       []string          `protobuf:"bytes,5,rep,name=DnsSearchDomains,json=dnsSearchDomains" json:"DnsSearchDomains,omitempty"`
+	DnsServers             []string          `protobuf:"bytes,6,rep,name=DnsServers,json=dnsServers" json:"DnsServers,omitempty"`
+	DockerLabels           map[string]string `protobuf:"bytes,7,rep,name=DockerLabels,json=dockerLabels" json:"DockerLabels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	DockerSecurityOptions  []string          `protobuf:"bytes,8,rep,name=DockerSecurityOptions,json=dockerSecurityOptions" json:"DockerSecurityOptions,omitempty"`
+	EntryPoint             []string          `protobuf:"bytes,9,rep,name=EntryPoint,json=entryPoint" json:"EntryPoint,omitempty"`
+	Environment            []*KeyValuePair   `protobuf:"bytes,10,rep,name=Environment,json=environment" json:"Environment,omitempty"`
+	Essential              *bool             `protobuf:"varint,11,opt,name=Essential,json=essential" json:"Essential,omitempty"`
+	ExtraHosts             []*HostEntry      `protobuf:"bytes,12,rep,name=ExtraHosts,json=extraHosts" json:"ExtraHosts,omitempty"`
+	Hostname               *string           `protobuf:"bytes,13,opt,name=Hostname,json=hostname" json:"Hostname,omitempty"`
+	Image                  *string           `protobuf:"bytes,14,opt,name=Image,json=image" json:"Image,omitempty"`
+	Links                  []string          `protobuf:"bytes,15,rep,name=Links,json=links" json:"Links,omitempty"`
+	LogConfiguration       *LogConfiguration `protobuf:"bytes,16,opt,name=LogConfiguration,json=logConfiguration" json:"LogConfiguration,omitempty"`
+	Memory                 *int64            `protobuf:"zigzag64,17,opt,name=Memory,json=memory" json:"Memory,omitempty"`
+	MountPoints            []*MountPoint     `protobuf:"bytes,18,rep,name=MountPoints,json=mountPoints" json:"MountPoints,omitempty"`
+	Name                   *string           `protobuf:"bytes,19,opt,name=Name,json=name" json:"Name,omitempty"`
+	PortMappings           []*PortMapping    `protobuf:"bytes,20,rep,name=PortMappings,json=portMappings" json:"PortMappings,omitempty"`
+	Privileged             *bool             `protobuf:"varint,21,opt,name=Privileged,json=privileged" json:"Privileged,omitempty"`
+	ReadonlyRootFilesystem *bool             `protobuf:"varint,22,opt,name=ReadonlyRootFilesystem,json=readonlyRootFilesystem" json:"ReadonlyRootFilesystem,omitempty"`
+	Ulimits                []*Ulimit         `protobuf:"bytes,23,rep,name=Ulimits,json=ulimits" json:"Ulimits,omitempty"`
+	User                   *string           `protobuf:"bytes,24,opt,name=User,json=user" json:"User,omitempty"`
+	VolumesFrom            []*VolumeFrom     `protobuf:"bytes,25,rep,name=VolumesFrom,json=volumesFrom" json:"VolumesFrom,omitempty"`
+	WorkingDirectory       *string           `protobuf:"bytes,26,opt,name=WorkingDirectory,json=workingDirectory" json:"WorkingDirectory,omitempty"`
+	XXX_unrecognized       []byte            `json:"-"`
+}
+
+func (m *ContainerDefinition) Reset()                    { *m = ContainerDefinition{} }
+func (m *ContainerDefinition) String() string            { return proto.CompactTextString(m) }
+func (*ContainerDefinition) ProtoMessage()               {}
+func (*ContainerDefinition) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{2} }
+
+func (m *ContainerDefinition) GetCommand() []string {
+	if m != nil {
+		return m.Command
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetCpu() int64 {
+	if m != nil && m.Cpu != nil {
+		return *m.Cpu
+	}
+	return 0
+}
+
+func (m *ContainerDefinition) GetDisableNetworking() bool {
+	if m != nil && m.DisableNetworking != nil {
+		return *m.DisableNetworking
+	}
+	return false
+}
+
+func (m *ContainerDefinition) GetDnsSearchDomains() []string {
+	if m != nil {
+		return m.DnsSearchDomains
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetDnsServers() []string {
+	if m != nil {
+		return m.DnsServers
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetDockerLabels() map[string]string {
+	if m != nil {
+		return m.DockerLabels
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetDockerSecurityOptions() []string {
+	if m != nil {
+		return m.DockerSecurityOptions
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetEntryPoint() []string {
+	if m != nil {
+		return m.EntryPoint
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetEnvironment() []*KeyValuePair {
+	if m != nil {
+		return m.Environment
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetEssential() bool {
+	if m != nil && m.Essential != nil {
+		return *m.Essential
+	}
+	return false
+}
+
+func (m *ContainerDefinition) GetExtraHosts() []*HostEntry {
+	if m != nil {
+		return m.ExtraHosts
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetHostname() string {
+	if m != nil && m.Hostname != nil {
+		return *m.Hostname
+	}
+	return ""
+}
+
+func (m *ContainerDefinition) GetImage() string {
+	if m != nil && m.Image != nil {
+		return *m.Image
+	}
+	return ""
+}
+
+func (m *ContainerDefinition) GetLinks() []string {
+	if m != nil {
+		return m.Links
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetLogConfiguration() *LogConfiguration {
+	if m != nil {
+		return m.LogConfiguration
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetMemory() int64 {
+	if m != nil && m.Memory != nil {
+		return *m.Memory
+	}
+	return 0
+}
+
+func (m *ContainerDefinition) GetMountPoints() []*MountPoint {
+	if m != nil {
+		return m.MountPoints
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+func (m *ContainerDefinition) GetPortMappings() []*PortMapping {
+	if m != nil {
+		return m.PortMappings
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetPrivileged() bool {
+	if m != nil && m.Privileged != nil {
+		return *m.Privileged
+	}
+	return false
+}
+
+func (m *ContainerDefinition) GetReadonlyRootFilesystem() bool {
+	if m != nil && m.ReadonlyRootFilesystem != nil {
+		return *m.ReadonlyRootFilesystem
+	}
+	return false
+}
+
+func (m *ContainerDefinition) GetUlimits() []*Ulimit {
+	if m != nil {
+		return m.Ulimits
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetUser() string {
+	if m != nil && m.User != nil {
+		return *m.User
+	}
+	return ""
+}
+
+func (m *ContainerDefinition) GetVolumesFrom() []*VolumeFrom {
+	if m != nil {
+		return m.VolumesFrom
+	}
+	return nil
+}
+
+func (m *ContainerDefinition) GetWorkingDirectory() string {
+	if m != nil && m.WorkingDirectory != nil {
+		return *m.WorkingDirectory
+	}
+	return ""
+}
+
 type ContainerInstance struct {
 	AgentConnected       *bool        `protobuf:"varint,2,opt,name=AgentConnected,json=agentConnected" json:"AgentConnected,omitempty"`
 	AgentUpdateStatus    *string      `protobuf:"bytes,3,opt,name=AgentUpdateStatus,json=agentUpdateStatus" json:"AgentUpdateStatus,omitempty"`
@@ -171,7 +394,7 @@ type ContainerInstance struct {
 func (m *ContainerInstance) Reset()                    { *m = ContainerInstance{} }
 func (m *ContainerInstance) String() string            { return proto.CompactTextString(m) }
 func (*ContainerInstance) ProtoMessage()               {}
-func (*ContainerInstance) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{2} }
+func (*ContainerInstance) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{3} }
 
 func (m *ContainerInstance) GetAgentConnected() bool {
 	if m != nil && m.AgentConnected != nil {
@@ -260,7 +483,7 @@ type ContainerOverride struct {
 func (m *ContainerOverride) Reset()                    { *m = ContainerOverride{} }
 func (m *ContainerOverride) String() string            { return proto.CompactTextString(m) }
 func (*ContainerOverride) ProtoMessage()               {}
-func (*ContainerOverride) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{3} }
+func (*ContainerOverride) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{4} }
 
 func (m *ContainerOverride) GetCommand() []string {
 	if m != nil {
@@ -298,7 +521,7 @@ type Deployment struct {
 func (m *Deployment) Reset()                    { *m = Deployment{} }
 func (m *Deployment) String() string            { return proto.CompactTextString(m) }
 func (*Deployment) ProtoMessage()               {}
-func (*Deployment) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{4} }
+func (*Deployment) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{5} }
 
 func (m *Deployment) GetCreatedAt() *opsee_types.Timestamp {
 	if m != nil {
@@ -365,7 +588,7 @@ type DeploymentConfiguration struct {
 func (m *DeploymentConfiguration) Reset()                    { *m = DeploymentConfiguration{} }
 func (m *DeploymentConfiguration) String() string            { return proto.CompactTextString(m) }
 func (*DeploymentConfiguration) ProtoMessage()               {}
-func (*DeploymentConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{5} }
+func (*DeploymentConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{6} }
 
 func (m *DeploymentConfiguration) GetMaximumPercent() int64 {
 	if m != nil && m.MaximumPercent != nil {
@@ -391,7 +614,7 @@ func (m *DescribeContainerInstancesInput) Reset()         { *m = DescribeContain
 func (m *DescribeContainerInstancesInput) String() string { return proto.CompactTextString(m) }
 func (*DescribeContainerInstancesInput) ProtoMessage()    {}
 func (*DescribeContainerInstancesInput) Descriptor() ([]byte, []int) {
-	return fileDescriptorTypes, []int{6}
+	return fileDescriptorTypes, []int{7}
 }
 
 func (m *DescribeContainerInstancesInput) GetCluster() string {
@@ -418,7 +641,7 @@ func (m *DescribeContainerInstancesOutput) Reset()         { *m = DescribeContai
 func (m *DescribeContainerInstancesOutput) String() string { return proto.CompactTextString(m) }
 func (*DescribeContainerInstancesOutput) ProtoMessage()    {}
 func (*DescribeContainerInstancesOutput) Descriptor() ([]byte, []int) {
-	return fileDescriptorTypes, []int{7}
+	return fileDescriptorTypes, []int{8}
 }
 
 func (m *DescribeContainerInstancesOutput) GetContainerInstances() []*ContainerInstance {
@@ -444,7 +667,7 @@ type DescribeServicesInput struct {
 func (m *DescribeServicesInput) Reset()                    { *m = DescribeServicesInput{} }
 func (m *DescribeServicesInput) String() string            { return proto.CompactTextString(m) }
 func (*DescribeServicesInput) ProtoMessage()               {}
-func (*DescribeServicesInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{8} }
+func (*DescribeServicesInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{9} }
 
 func (m *DescribeServicesInput) GetCluster() string {
 	if m != nil && m.Cluster != nil {
@@ -469,7 +692,7 @@ type DescribeServicesOutput struct {
 func (m *DescribeServicesOutput) Reset()                    { *m = DescribeServicesOutput{} }
 func (m *DescribeServicesOutput) String() string            { return proto.CompactTextString(m) }
 func (*DescribeServicesOutput) ProtoMessage()               {}
-func (*DescribeServicesOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{9} }
+func (*DescribeServicesOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{10} }
 
 func (m *DescribeServicesOutput) GetFailures() []*Failure {
 	if m != nil {
@@ -485,6 +708,44 @@ func (m *DescribeServicesOutput) GetServices() []*Service {
 	return nil
 }
 
+type DescribeTaskDefinitionInput struct {
+	TaskDefinition   *string `protobuf:"bytes,2,opt,name=TaskDefinition,json=taskDefinition" json:"TaskDefinition,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *DescribeTaskDefinitionInput) Reset()         { *m = DescribeTaskDefinitionInput{} }
+func (m *DescribeTaskDefinitionInput) String() string { return proto.CompactTextString(m) }
+func (*DescribeTaskDefinitionInput) ProtoMessage()    {}
+func (*DescribeTaskDefinitionInput) Descriptor() ([]byte, []int) {
+	return fileDescriptorTypes, []int{11}
+}
+
+func (m *DescribeTaskDefinitionInput) GetTaskDefinition() string {
+	if m != nil && m.TaskDefinition != nil {
+		return *m.TaskDefinition
+	}
+	return ""
+}
+
+type DescribeTaskDefinitionOutput struct {
+	TaskDefinition   *TaskDefinition `protobuf:"bytes,2,opt,name=TaskDefinition,json=taskDefinition" json:"TaskDefinition,omitempty"`
+	XXX_unrecognized []byte          `json:"-"`
+}
+
+func (m *DescribeTaskDefinitionOutput) Reset()         { *m = DescribeTaskDefinitionOutput{} }
+func (m *DescribeTaskDefinitionOutput) String() string { return proto.CompactTextString(m) }
+func (*DescribeTaskDefinitionOutput) ProtoMessage()    {}
+func (*DescribeTaskDefinitionOutput) Descriptor() ([]byte, []int) {
+	return fileDescriptorTypes, []int{12}
+}
+
+func (m *DescribeTaskDefinitionOutput) GetTaskDefinition() *TaskDefinition {
+	if m != nil {
+		return m.TaskDefinition
+	}
+	return nil
+}
+
 type DescribeTasksInput struct {
 	Cluster          *string  `protobuf:"bytes,2,opt,name=Cluster,json=cluster" json:"Cluster,omitempty"`
 	Tasks            []string `protobuf:"bytes,3,rep,name=Tasks,json=tasks" json:"Tasks,omitempty"`
@@ -494,7 +755,7 @@ type DescribeTasksInput struct {
 func (m *DescribeTasksInput) Reset()                    { *m = DescribeTasksInput{} }
 func (m *DescribeTasksInput) String() string            { return proto.CompactTextString(m) }
 func (*DescribeTasksInput) ProtoMessage()               {}
-func (*DescribeTasksInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{10} }
+func (*DescribeTasksInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{13} }
 
 func (m *DescribeTasksInput) GetCluster() string {
 	if m != nil && m.Cluster != nil {
@@ -519,7 +780,7 @@ type DescribeTasksOutput struct {
 func (m *DescribeTasksOutput) Reset()                    { *m = DescribeTasksOutput{} }
 func (m *DescribeTasksOutput) String() string            { return proto.CompactTextString(m) }
 func (*DescribeTasksOutput) ProtoMessage()               {}
-func (*DescribeTasksOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{11} }
+func (*DescribeTasksOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{14} }
 
 func (m *DescribeTasksOutput) GetFailures() []*Failure {
 	if m != nil {
@@ -544,7 +805,7 @@ type Failure struct {
 func (m *Failure) Reset()                    { *m = Failure{} }
 func (m *Failure) String() string            { return proto.CompactTextString(m) }
 func (*Failure) ProtoMessage()               {}
-func (*Failure) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{12} }
+func (*Failure) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{15} }
 
 func (m *Failure) GetArn() string {
 	if m != nil && m.Arn != nil {
@@ -560,6 +821,48 @@ func (m *Failure) GetReason() string {
 	return ""
 }
 
+type HostEntry struct {
+	Hostname         *string `protobuf:"bytes,2,opt,name=Hostname,json=hostname" json:"Hostname,omitempty"`
+	IpAddress        *string `protobuf:"bytes,3,opt,name=IpAddress,json=ipAddress" json:"IpAddress,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *HostEntry) Reset()                    { *m = HostEntry{} }
+func (m *HostEntry) String() string            { return proto.CompactTextString(m) }
+func (*HostEntry) ProtoMessage()               {}
+func (*HostEntry) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{16} }
+
+func (m *HostEntry) GetHostname() string {
+	if m != nil && m.Hostname != nil {
+		return *m.Hostname
+	}
+	return ""
+}
+
+func (m *HostEntry) GetIpAddress() string {
+	if m != nil && m.IpAddress != nil {
+		return *m.IpAddress
+	}
+	return ""
+}
+
+type HostVolumeProperties struct {
+	SourcePath       *string `protobuf:"bytes,2,opt,name=SourcePath,json=sourcePath" json:"SourcePath,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *HostVolumeProperties) Reset()                    { *m = HostVolumeProperties{} }
+func (m *HostVolumeProperties) String() string            { return proto.CompactTextString(m) }
+func (*HostVolumeProperties) ProtoMessage()               {}
+func (*HostVolumeProperties) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{17} }
+
+func (m *HostVolumeProperties) GetSourcePath() string {
+	if m != nil && m.SourcePath != nil {
+		return *m.SourcePath
+	}
+	return ""
+}
+
 type KeyValuePair struct {
 	Name             *string `protobuf:"bytes,2,opt,name=Name,json=name" json:"Name,omitempty"`
 	Value            *string `protobuf:"bytes,3,opt,name=Value,json=value" json:"Value,omitempty"`
@@ -569,7 +872,7 @@ type KeyValuePair struct {
 func (m *KeyValuePair) Reset()                    { *m = KeyValuePair{} }
 func (m *KeyValuePair) String() string            { return proto.CompactTextString(m) }
 func (*KeyValuePair) ProtoMessage()               {}
-func (*KeyValuePair) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{13} }
+func (*KeyValuePair) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{18} }
 
 func (m *KeyValuePair) GetName() string {
 	if m != nil && m.Name != nil {
@@ -594,7 +897,7 @@ type ListClustersInput struct {
 func (m *ListClustersInput) Reset()                    { *m = ListClustersInput{} }
 func (m *ListClustersInput) String() string            { return proto.CompactTextString(m) }
 func (*ListClustersInput) ProtoMessage()               {}
-func (*ListClustersInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{14} }
+func (*ListClustersInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{19} }
 
 func (m *ListClustersInput) GetMaxResults() int64 {
 	if m != nil && m.MaxResults != nil {
@@ -619,7 +922,7 @@ type ListClustersOutput struct {
 func (m *ListClustersOutput) Reset()                    { *m = ListClustersOutput{} }
 func (m *ListClustersOutput) String() string            { return proto.CompactTextString(m) }
 func (*ListClustersOutput) ProtoMessage()               {}
-func (*ListClustersOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{15} }
+func (*ListClustersOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{20} }
 
 func (m *ListClustersOutput) GetClusterArns() []string {
 	if m != nil {
@@ -629,6 +932,68 @@ func (m *ListClustersOutput) GetClusterArns() []string {
 }
 
 func (m *ListClustersOutput) GetNextToken() string {
+	if m != nil && m.NextToken != nil {
+		return *m.NextToken
+	}
+	return ""
+}
+
+type ListContainerInstancesInput struct {
+	Cluster          *string `protobuf:"bytes,2,opt,name=Cluster,json=cluster" json:"Cluster,omitempty"`
+	MaxResults       *int64  `protobuf:"zigzag64,3,opt,name=MaxResults,json=maxResults" json:"MaxResults,omitempty"`
+	NextToken        *string `protobuf:"bytes,4,opt,name=NextToken,json=nextToken" json:"NextToken,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *ListContainerInstancesInput) Reset()         { *m = ListContainerInstancesInput{} }
+func (m *ListContainerInstancesInput) String() string { return proto.CompactTextString(m) }
+func (*ListContainerInstancesInput) ProtoMessage()    {}
+func (*ListContainerInstancesInput) Descriptor() ([]byte, []int) {
+	return fileDescriptorTypes, []int{21}
+}
+
+func (m *ListContainerInstancesInput) GetCluster() string {
+	if m != nil && m.Cluster != nil {
+		return *m.Cluster
+	}
+	return ""
+}
+
+func (m *ListContainerInstancesInput) GetMaxResults() int64 {
+	if m != nil && m.MaxResults != nil {
+		return *m.MaxResults
+	}
+	return 0
+}
+
+func (m *ListContainerInstancesInput) GetNextToken() string {
+	if m != nil && m.NextToken != nil {
+		return *m.NextToken
+	}
+	return ""
+}
+
+type ListContainerInstancesOutput struct {
+	ContainerInstanceArns []string `protobuf:"bytes,2,rep,name=ContainerInstanceArns,json=containerInstanceArns" json:"ContainerInstanceArns,omitempty"`
+	NextToken             *string  `protobuf:"bytes,3,opt,name=NextToken,json=nextToken" json:"NextToken,omitempty"`
+	XXX_unrecognized      []byte   `json:"-"`
+}
+
+func (m *ListContainerInstancesOutput) Reset()         { *m = ListContainerInstancesOutput{} }
+func (m *ListContainerInstancesOutput) String() string { return proto.CompactTextString(m) }
+func (*ListContainerInstancesOutput) ProtoMessage()    {}
+func (*ListContainerInstancesOutput) Descriptor() ([]byte, []int) {
+	return fileDescriptorTypes, []int{22}
+}
+
+func (m *ListContainerInstancesOutput) GetContainerInstanceArns() []string {
+	if m != nil {
+		return m.ContainerInstanceArns
+	}
+	return nil
+}
+
+func (m *ListContainerInstancesOutput) GetNextToken() string {
 	if m != nil && m.NextToken != nil {
 		return *m.NextToken
 	}
@@ -645,7 +1010,7 @@ type ListServicesInput struct {
 func (m *ListServicesInput) Reset()                    { *m = ListServicesInput{} }
 func (m *ListServicesInput) String() string            { return proto.CompactTextString(m) }
 func (*ListServicesInput) ProtoMessage()               {}
-func (*ListServicesInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{16} }
+func (*ListServicesInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{23} }
 
 func (m *ListServicesInput) GetCluster() string {
 	if m != nil && m.Cluster != nil {
@@ -677,7 +1042,7 @@ type ListServicesOutput struct {
 func (m *ListServicesOutput) Reset()                    { *m = ListServicesOutput{} }
 func (m *ListServicesOutput) String() string            { return proto.CompactTextString(m) }
 func (*ListServicesOutput) ProtoMessage()               {}
-func (*ListServicesOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{17} }
+func (*ListServicesOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{24} }
 
 func (m *ListServicesOutput) GetNextToken() string {
 	if m != nil && m.NextToken != nil {
@@ -708,7 +1073,7 @@ type ListTasksInput struct {
 func (m *ListTasksInput) Reset()                    { *m = ListTasksInput{} }
 func (m *ListTasksInput) String() string            { return proto.CompactTextString(m) }
 func (*ListTasksInput) ProtoMessage()               {}
-func (*ListTasksInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{18} }
+func (*ListTasksInput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{25} }
 
 func (m *ListTasksInput) GetCluster() string {
 	if m != nil && m.Cluster != nil {
@@ -775,7 +1140,7 @@ type ListTasksOutput struct {
 func (m *ListTasksOutput) Reset()                    { *m = ListTasksOutput{} }
 func (m *ListTasksOutput) String() string            { return proto.CompactTextString(m) }
 func (*ListTasksOutput) ProtoMessage()               {}
-func (*ListTasksOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{19} }
+func (*ListTasksOutput) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{26} }
 
 func (m *ListTasksOutput) GetNextToken() string {
 	if m != nil && m.NextToken != nil {
@@ -801,7 +1166,7 @@ type LoadBalancer struct {
 func (m *LoadBalancer) Reset()                    { *m = LoadBalancer{} }
 func (m *LoadBalancer) String() string            { return proto.CompactTextString(m) }
 func (*LoadBalancer) ProtoMessage()               {}
-func (*LoadBalancer) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{20} }
+func (*LoadBalancer) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{27} }
 
 func (m *LoadBalancer) GetContainerName() string {
 	if m != nil && m.ContainerName != nil {
@@ -824,6 +1189,64 @@ func (m *LoadBalancer) GetLoadBalancerName() string {
 	return ""
 }
 
+type LogConfiguration struct {
+	LogDriver        *string           `protobuf:"bytes,2,opt,name=LogDriver,json=logDriver" json:"LogDriver,omitempty"`
+	Options          map[string]string `protobuf:"bytes,3,rep,name=Options,json=options" json:"Options,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	XXX_unrecognized []byte            `json:"-"`
+}
+
+func (m *LogConfiguration) Reset()                    { *m = LogConfiguration{} }
+func (m *LogConfiguration) String() string            { return proto.CompactTextString(m) }
+func (*LogConfiguration) ProtoMessage()               {}
+func (*LogConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{28} }
+
+func (m *LogConfiguration) GetLogDriver() string {
+	if m != nil && m.LogDriver != nil {
+		return *m.LogDriver
+	}
+	return ""
+}
+
+func (m *LogConfiguration) GetOptions() map[string]string {
+	if m != nil {
+		return m.Options
+	}
+	return nil
+}
+
+type MountPoint struct {
+	ContainerPath    *string `protobuf:"bytes,2,opt,name=ContainerPath,json=containerPath" json:"ContainerPath,omitempty"`
+	ReadOnly         *bool   `protobuf:"varint,3,opt,name=ReadOnly,json=readOnly" json:"ReadOnly,omitempty"`
+	SourceVolume     *string `protobuf:"bytes,4,opt,name=SourceVolume,json=sourceVolume" json:"SourceVolume,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *MountPoint) Reset()                    { *m = MountPoint{} }
+func (m *MountPoint) String() string            { return proto.CompactTextString(m) }
+func (*MountPoint) ProtoMessage()               {}
+func (*MountPoint) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{29} }
+
+func (m *MountPoint) GetContainerPath() string {
+	if m != nil && m.ContainerPath != nil {
+		return *m.ContainerPath
+	}
+	return ""
+}
+
+func (m *MountPoint) GetReadOnly() bool {
+	if m != nil && m.ReadOnly != nil {
+		return *m.ReadOnly
+	}
+	return false
+}
+
+func (m *MountPoint) GetSourceVolume() string {
+	if m != nil && m.SourceVolume != nil {
+		return *m.SourceVolume
+	}
+	return ""
+}
+
 type NetworkBinding struct {
 	BindIP           *string `protobuf:"bytes,2,opt,name=BindIP,json=bindIP" json:"BindIP,omitempty"`
 	ContainerPort    *int64  `protobuf:"zigzag64,3,opt,name=ContainerPort,json=containerPort" json:"ContainerPort,omitempty"`
@@ -835,7 +1258,7 @@ type NetworkBinding struct {
 func (m *NetworkBinding) Reset()                    { *m = NetworkBinding{} }
 func (m *NetworkBinding) String() string            { return proto.CompactTextString(m) }
 func (*NetworkBinding) ProtoMessage()               {}
-func (*NetworkBinding) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{21} }
+func (*NetworkBinding) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{30} }
 
 func (m *NetworkBinding) GetBindIP() string {
 	if m != nil && m.BindIP != nil {
@@ -865,6 +1288,39 @@ func (m *NetworkBinding) GetProtocol() string {
 	return ""
 }
 
+type PortMapping struct {
+	ContainerPort    *int64  `protobuf:"zigzag64,2,opt,name=ContainerPort,json=containerPort" json:"ContainerPort,omitempty"`
+	HostPort         *int64  `protobuf:"zigzag64,3,opt,name=HostPort,json=hostPort" json:"HostPort,omitempty"`
+	Protocol         *string `protobuf:"bytes,4,opt,name=Protocol,json=protocol" json:"Protocol,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *PortMapping) Reset()                    { *m = PortMapping{} }
+func (m *PortMapping) String() string            { return proto.CompactTextString(m) }
+func (*PortMapping) ProtoMessage()               {}
+func (*PortMapping) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{31} }
+
+func (m *PortMapping) GetContainerPort() int64 {
+	if m != nil && m.ContainerPort != nil {
+		return *m.ContainerPort
+	}
+	return 0
+}
+
+func (m *PortMapping) GetHostPort() int64 {
+	if m != nil && m.HostPort != nil {
+		return *m.HostPort
+	}
+	return 0
+}
+
+func (m *PortMapping) GetProtocol() string {
+	if m != nil && m.Protocol != nil {
+		return *m.Protocol
+	}
+	return ""
+}
+
 type Resource struct {
 	DoubleValue      *float64 `protobuf:"fixed64,2,opt,name=DoubleValue,json=doubleValue" json:"DoubleValue,omitempty"`
 	IntegerValue     *int64   `protobuf:"zigzag64,3,opt,name=IntegerValue,json=integerValue" json:"IntegerValue,omitempty"`
@@ -878,7 +1334,7 @@ type Resource struct {
 func (m *Resource) Reset()                    { *m = Resource{} }
 func (m *Resource) String() string            { return proto.CompactTextString(m) }
 func (*Resource) ProtoMessage()               {}
-func (*Resource) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{22} }
+func (*Resource) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{32} }
 
 func (m *Resource) GetDoubleValue() float64 {
 	if m != nil && m.DoubleValue != nil {
@@ -943,7 +1399,7 @@ type Service struct {
 func (m *Service) Reset()                    { *m = Service{} }
 func (m *Service) String() string            { return proto.CompactTextString(m) }
 func (*Service) ProtoMessage()               {}
-func (*Service) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{23} }
+func (*Service) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{33} }
 
 func (m *Service) GetClusterArn() string {
 	if m != nil && m.ClusterArn != nil {
@@ -1053,7 +1509,7 @@ type ServiceEvent struct {
 func (m *ServiceEvent) Reset()                    { *m = ServiceEvent{} }
 func (m *ServiceEvent) String() string            { return proto.CompactTextString(m) }
 func (*ServiceEvent) ProtoMessage()               {}
-func (*ServiceEvent) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{24} }
+func (*ServiceEvent) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{34} }
 
 func (m *ServiceEvent) GetCreatedAt() *opsee_types.Timestamp {
 	if m != nil {
@@ -1096,7 +1552,7 @@ type Task struct {
 func (m *Task) Reset()                    { *m = Task{} }
 func (m *Task) String() string            { return proto.CompactTextString(m) }
 func (*Task) ProtoMessage()               {}
-func (*Task) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{25} }
+func (*Task) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{35} }
 
 func (m *Task) GetClusterArn() string {
 	if m != nil && m.ClusterArn != nil {
@@ -1189,6 +1645,71 @@ func (m *Task) GetTaskDefinitionArn() string {
 	return ""
 }
 
+type TaskDefinition struct {
+	ContainerDefinitions []*ContainerDefinition `protobuf:"bytes,2,rep,name=ContainerDefinitions,json=containerDefinitions" json:"ContainerDefinitions,omitempty"`
+	Family               *string                `protobuf:"bytes,3,opt,name=Family,json=family" json:"Family,omitempty"`
+	RequiresAttributes   []*Attribute           `protobuf:"bytes,4,rep,name=RequiresAttributes,json=requiresAttributes" json:"RequiresAttributes,omitempty"`
+	Revision             *int64                 `protobuf:"zigzag64,5,opt,name=Revision,json=revision" json:"Revision,omitempty"`
+	Status               *string                `protobuf:"bytes,6,opt,name=Status,json=status" json:"Status,omitempty"`
+	TaskDefinitionArn    *string                `protobuf:"bytes,7,opt,name=TaskDefinitionArn,json=taskDefinitionArn" json:"TaskDefinitionArn,omitempty"`
+	Volumes              []*Volume              `protobuf:"bytes,8,rep,name=Volumes,json=volumes" json:"Volumes,omitempty"`
+	XXX_unrecognized     []byte                 `json:"-"`
+}
+
+func (m *TaskDefinition) Reset()                    { *m = TaskDefinition{} }
+func (m *TaskDefinition) String() string            { return proto.CompactTextString(m) }
+func (*TaskDefinition) ProtoMessage()               {}
+func (*TaskDefinition) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{36} }
+
+func (m *TaskDefinition) GetContainerDefinitions() []*ContainerDefinition {
+	if m != nil {
+		return m.ContainerDefinitions
+	}
+	return nil
+}
+
+func (m *TaskDefinition) GetFamily() string {
+	if m != nil && m.Family != nil {
+		return *m.Family
+	}
+	return ""
+}
+
+func (m *TaskDefinition) GetRequiresAttributes() []*Attribute {
+	if m != nil {
+		return m.RequiresAttributes
+	}
+	return nil
+}
+
+func (m *TaskDefinition) GetRevision() int64 {
+	if m != nil && m.Revision != nil {
+		return *m.Revision
+	}
+	return 0
+}
+
+func (m *TaskDefinition) GetStatus() string {
+	if m != nil && m.Status != nil {
+		return *m.Status
+	}
+	return ""
+}
+
+func (m *TaskDefinition) GetTaskDefinitionArn() string {
+	if m != nil && m.TaskDefinitionArn != nil {
+		return *m.TaskDefinitionArn
+	}
+	return ""
+}
+
+func (m *TaskDefinition) GetVolumes() []*Volume {
+	if m != nil {
+		return m.Volumes
+	}
+	return nil
+}
+
 type TaskOverride struct {
 	ContainerOverrides []*ContainerOverride `protobuf:"bytes,2,rep,name=ContainerOverrides,json=containerOverrides" json:"ContainerOverrides,omitempty"`
 	XXX_unrecognized   []byte               `json:"-"`
@@ -1197,13 +1718,46 @@ type TaskOverride struct {
 func (m *TaskOverride) Reset()                    { *m = TaskOverride{} }
 func (m *TaskOverride) String() string            { return proto.CompactTextString(m) }
 func (*TaskOverride) ProtoMessage()               {}
-func (*TaskOverride) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{26} }
+func (*TaskOverride) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{37} }
 
 func (m *TaskOverride) GetContainerOverrides() []*ContainerOverride {
 	if m != nil {
 		return m.ContainerOverrides
 	}
 	return nil
+}
+
+type Ulimit struct {
+	HardLimit        *int64  `protobuf:"zigzag64,2,opt,name=HardLimit,json=hardLimit" json:"HardLimit,omitempty"`
+	Name             *string `protobuf:"bytes,3,opt,name=Name,json=name" json:"Name,omitempty"`
+	SoftLimit        *int64  `protobuf:"zigzag64,4,opt,name=SoftLimit,json=softLimit" json:"SoftLimit,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *Ulimit) Reset()                    { *m = Ulimit{} }
+func (m *Ulimit) String() string            { return proto.CompactTextString(m) }
+func (*Ulimit) ProtoMessage()               {}
+func (*Ulimit) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{38} }
+
+func (m *Ulimit) GetHardLimit() int64 {
+	if m != nil && m.HardLimit != nil {
+		return *m.HardLimit
+	}
+	return 0
+}
+
+func (m *Ulimit) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+func (m *Ulimit) GetSoftLimit() int64 {
+	if m != nil && m.SoftLimit != nil {
+		return *m.SoftLimit
+	}
+	return 0
 }
 
 type VersionInfo struct {
@@ -1216,7 +1770,7 @@ type VersionInfo struct {
 func (m *VersionInfo) Reset()                    { *m = VersionInfo{} }
 func (m *VersionInfo) String() string            { return proto.CompactTextString(m) }
 func (*VersionInfo) ProtoMessage()               {}
-func (*VersionInfo) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{27} }
+func (*VersionInfo) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{39} }
 
 func (m *VersionInfo) GetAgentHash() string {
 	if m != nil && m.AgentHash != nil {
@@ -1239,9 +1793,60 @@ func (m *VersionInfo) GetDockerVersion() string {
 	return ""
 }
 
+type Volume struct {
+	Host             *HostVolumeProperties `protobuf:"bytes,2,opt,name=Host,json=host" json:"Host,omitempty"`
+	Name             *string               `protobuf:"bytes,3,opt,name=Name,json=name" json:"Name,omitempty"`
+	XXX_unrecognized []byte                `json:"-"`
+}
+
+func (m *Volume) Reset()                    { *m = Volume{} }
+func (m *Volume) String() string            { return proto.CompactTextString(m) }
+func (*Volume) ProtoMessage()               {}
+func (*Volume) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{40} }
+
+func (m *Volume) GetHost() *HostVolumeProperties {
+	if m != nil {
+		return m.Host
+	}
+	return nil
+}
+
+func (m *Volume) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+type VolumeFrom struct {
+	ReadOnly         *bool   `protobuf:"varint,2,opt,name=ReadOnly,json=readOnly" json:"ReadOnly,omitempty"`
+	SourceContainer  *string `protobuf:"bytes,3,opt,name=SourceContainer,json=sourceContainer" json:"SourceContainer,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *VolumeFrom) Reset()                    { *m = VolumeFrom{} }
+func (m *VolumeFrom) String() string            { return proto.CompactTextString(m) }
+func (*VolumeFrom) ProtoMessage()               {}
+func (*VolumeFrom) Descriptor() ([]byte, []int) { return fileDescriptorTypes, []int{41} }
+
+func (m *VolumeFrom) GetReadOnly() bool {
+	if m != nil && m.ReadOnly != nil {
+		return *m.ReadOnly
+	}
+	return false
+}
+
+func (m *VolumeFrom) GetSourceContainer() string {
+	if m != nil && m.SourceContainer != nil {
+		return *m.SourceContainer
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Attribute)(nil), "opsee.aws.ecs.Attribute")
 	proto.RegisterType((*Container)(nil), "opsee.aws.ecs.Container")
+	proto.RegisterType((*ContainerDefinition)(nil), "opsee.aws.ecs.ContainerDefinition")
 	proto.RegisterType((*ContainerInstance)(nil), "opsee.aws.ecs.ContainerInstance")
 	proto.RegisterType((*ContainerOverride)(nil), "opsee.aws.ecs.ContainerOverride")
 	proto.RegisterType((*Deployment)(nil), "opsee.aws.ecs.Deployment")
@@ -1250,24 +1855,37 @@ func init() {
 	proto.RegisterType((*DescribeContainerInstancesOutput)(nil), "opsee.aws.ecs.DescribeContainerInstancesOutput")
 	proto.RegisterType((*DescribeServicesInput)(nil), "opsee.aws.ecs.DescribeServicesInput")
 	proto.RegisterType((*DescribeServicesOutput)(nil), "opsee.aws.ecs.DescribeServicesOutput")
+	proto.RegisterType((*DescribeTaskDefinitionInput)(nil), "opsee.aws.ecs.DescribeTaskDefinitionInput")
+	proto.RegisterType((*DescribeTaskDefinitionOutput)(nil), "opsee.aws.ecs.DescribeTaskDefinitionOutput")
 	proto.RegisterType((*DescribeTasksInput)(nil), "opsee.aws.ecs.DescribeTasksInput")
 	proto.RegisterType((*DescribeTasksOutput)(nil), "opsee.aws.ecs.DescribeTasksOutput")
 	proto.RegisterType((*Failure)(nil), "opsee.aws.ecs.Failure")
+	proto.RegisterType((*HostEntry)(nil), "opsee.aws.ecs.HostEntry")
+	proto.RegisterType((*HostVolumeProperties)(nil), "opsee.aws.ecs.HostVolumeProperties")
 	proto.RegisterType((*KeyValuePair)(nil), "opsee.aws.ecs.KeyValuePair")
 	proto.RegisterType((*ListClustersInput)(nil), "opsee.aws.ecs.ListClustersInput")
 	proto.RegisterType((*ListClustersOutput)(nil), "opsee.aws.ecs.ListClustersOutput")
+	proto.RegisterType((*ListContainerInstancesInput)(nil), "opsee.aws.ecs.ListContainerInstancesInput")
+	proto.RegisterType((*ListContainerInstancesOutput)(nil), "opsee.aws.ecs.ListContainerInstancesOutput")
 	proto.RegisterType((*ListServicesInput)(nil), "opsee.aws.ecs.ListServicesInput")
 	proto.RegisterType((*ListServicesOutput)(nil), "opsee.aws.ecs.ListServicesOutput")
 	proto.RegisterType((*ListTasksInput)(nil), "opsee.aws.ecs.ListTasksInput")
 	proto.RegisterType((*ListTasksOutput)(nil), "opsee.aws.ecs.ListTasksOutput")
 	proto.RegisterType((*LoadBalancer)(nil), "opsee.aws.ecs.LoadBalancer")
+	proto.RegisterType((*LogConfiguration)(nil), "opsee.aws.ecs.LogConfiguration")
+	proto.RegisterType((*MountPoint)(nil), "opsee.aws.ecs.MountPoint")
 	proto.RegisterType((*NetworkBinding)(nil), "opsee.aws.ecs.NetworkBinding")
+	proto.RegisterType((*PortMapping)(nil), "opsee.aws.ecs.PortMapping")
 	proto.RegisterType((*Resource)(nil), "opsee.aws.ecs.Resource")
 	proto.RegisterType((*Service)(nil), "opsee.aws.ecs.Service")
 	proto.RegisterType((*ServiceEvent)(nil), "opsee.aws.ecs.ServiceEvent")
 	proto.RegisterType((*Task)(nil), "opsee.aws.ecs.Task")
+	proto.RegisterType((*TaskDefinition)(nil), "opsee.aws.ecs.TaskDefinition")
 	proto.RegisterType((*TaskOverride)(nil), "opsee.aws.ecs.TaskOverride")
+	proto.RegisterType((*Ulimit)(nil), "opsee.aws.ecs.Ulimit")
 	proto.RegisterType((*VersionInfo)(nil), "opsee.aws.ecs.VersionInfo")
+	proto.RegisterType((*Volume)(nil), "opsee.aws.ecs.Volume")
+	proto.RegisterType((*VolumeFrom)(nil), "opsee.aws.ecs.VolumeFrom")
 }
 func (this *Attribute) Equal(that interface{}) bool {
 	if that == nil {
@@ -1402,6 +2020,242 @@ func (this *Container) Equal(that interface{}) bool {
 	} else if this.TaskArn != nil {
 		return false
 	} else if that1.TaskArn != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ContainerDefinition) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*ContainerDefinition)
+	if !ok {
+		that2, ok := that.(ContainerDefinition)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if len(this.Command) != len(that1.Command) {
+		return false
+	}
+	for i := range this.Command {
+		if this.Command[i] != that1.Command[i] {
+			return false
+		}
+	}
+	if this.Cpu != nil && that1.Cpu != nil {
+		if *this.Cpu != *that1.Cpu {
+			return false
+		}
+	} else if this.Cpu != nil {
+		return false
+	} else if that1.Cpu != nil {
+		return false
+	}
+	if this.DisableNetworking != nil && that1.DisableNetworking != nil {
+		if *this.DisableNetworking != *that1.DisableNetworking {
+			return false
+		}
+	} else if this.DisableNetworking != nil {
+		return false
+	} else if that1.DisableNetworking != nil {
+		return false
+	}
+	if len(this.DnsSearchDomains) != len(that1.DnsSearchDomains) {
+		return false
+	}
+	for i := range this.DnsSearchDomains {
+		if this.DnsSearchDomains[i] != that1.DnsSearchDomains[i] {
+			return false
+		}
+	}
+	if len(this.DnsServers) != len(that1.DnsServers) {
+		return false
+	}
+	for i := range this.DnsServers {
+		if this.DnsServers[i] != that1.DnsServers[i] {
+			return false
+		}
+	}
+	if len(this.DockerLabels) != len(that1.DockerLabels) {
+		return false
+	}
+	for i := range this.DockerLabels {
+		if this.DockerLabels[i] != that1.DockerLabels[i] {
+			return false
+		}
+	}
+	if len(this.DockerSecurityOptions) != len(that1.DockerSecurityOptions) {
+		return false
+	}
+	for i := range this.DockerSecurityOptions {
+		if this.DockerSecurityOptions[i] != that1.DockerSecurityOptions[i] {
+			return false
+		}
+	}
+	if len(this.EntryPoint) != len(that1.EntryPoint) {
+		return false
+	}
+	for i := range this.EntryPoint {
+		if this.EntryPoint[i] != that1.EntryPoint[i] {
+			return false
+		}
+	}
+	if len(this.Environment) != len(that1.Environment) {
+		return false
+	}
+	for i := range this.Environment {
+		if !this.Environment[i].Equal(that1.Environment[i]) {
+			return false
+		}
+	}
+	if this.Essential != nil && that1.Essential != nil {
+		if *this.Essential != *that1.Essential {
+			return false
+		}
+	} else if this.Essential != nil {
+		return false
+	} else if that1.Essential != nil {
+		return false
+	}
+	if len(this.ExtraHosts) != len(that1.ExtraHosts) {
+		return false
+	}
+	for i := range this.ExtraHosts {
+		if !this.ExtraHosts[i].Equal(that1.ExtraHosts[i]) {
+			return false
+		}
+	}
+	if this.Hostname != nil && that1.Hostname != nil {
+		if *this.Hostname != *that1.Hostname {
+			return false
+		}
+	} else if this.Hostname != nil {
+		return false
+	} else if that1.Hostname != nil {
+		return false
+	}
+	if this.Image != nil && that1.Image != nil {
+		if *this.Image != *that1.Image {
+			return false
+		}
+	} else if this.Image != nil {
+		return false
+	} else if that1.Image != nil {
+		return false
+	}
+	if len(this.Links) != len(that1.Links) {
+		return false
+	}
+	for i := range this.Links {
+		if this.Links[i] != that1.Links[i] {
+			return false
+		}
+	}
+	if !this.LogConfiguration.Equal(that1.LogConfiguration) {
+		return false
+	}
+	if this.Memory != nil && that1.Memory != nil {
+		if *this.Memory != *that1.Memory {
+			return false
+		}
+	} else if this.Memory != nil {
+		return false
+	} else if that1.Memory != nil {
+		return false
+	}
+	if len(this.MountPoints) != len(that1.MountPoints) {
+		return false
+	}
+	for i := range this.MountPoints {
+		if !this.MountPoints[i].Equal(that1.MountPoints[i]) {
+			return false
+		}
+	}
+	if this.Name != nil && that1.Name != nil {
+		if *this.Name != *that1.Name {
+			return false
+		}
+	} else if this.Name != nil {
+		return false
+	} else if that1.Name != nil {
+		return false
+	}
+	if len(this.PortMappings) != len(that1.PortMappings) {
+		return false
+	}
+	for i := range this.PortMappings {
+		if !this.PortMappings[i].Equal(that1.PortMappings[i]) {
+			return false
+		}
+	}
+	if this.Privileged != nil && that1.Privileged != nil {
+		if *this.Privileged != *that1.Privileged {
+			return false
+		}
+	} else if this.Privileged != nil {
+		return false
+	} else if that1.Privileged != nil {
+		return false
+	}
+	if this.ReadonlyRootFilesystem != nil && that1.ReadonlyRootFilesystem != nil {
+		if *this.ReadonlyRootFilesystem != *that1.ReadonlyRootFilesystem {
+			return false
+		}
+	} else if this.ReadonlyRootFilesystem != nil {
+		return false
+	} else if that1.ReadonlyRootFilesystem != nil {
+		return false
+	}
+	if len(this.Ulimits) != len(that1.Ulimits) {
+		return false
+	}
+	for i := range this.Ulimits {
+		if !this.Ulimits[i].Equal(that1.Ulimits[i]) {
+			return false
+		}
+	}
+	if this.User != nil && that1.User != nil {
+		if *this.User != *that1.User {
+			return false
+		}
+	} else if this.User != nil {
+		return false
+	} else if that1.User != nil {
+		return false
+	}
+	if len(this.VolumesFrom) != len(that1.VolumesFrom) {
+		return false
+	}
+	for i := range this.VolumesFrom {
+		if !this.VolumesFrom[i].Equal(that1.VolumesFrom[i]) {
+			return false
+		}
+	}
+	if this.WorkingDirectory != nil && that1.WorkingDirectory != nil {
+		if *this.WorkingDirectory != *that1.WorkingDirectory {
+			return false
+		}
+	} else if this.WorkingDirectory != nil {
+		return false
+	} else if that1.WorkingDirectory != nil {
 		return false
 	}
 	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
@@ -1908,6 +2762,78 @@ func (this *DescribeServicesOutput) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *DescribeTaskDefinitionInput) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*DescribeTaskDefinitionInput)
+	if !ok {
+		that2, ok := that.(DescribeTaskDefinitionInput)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.TaskDefinition != nil && that1.TaskDefinition != nil {
+		if *this.TaskDefinition != *that1.TaskDefinition {
+			return false
+		}
+	} else if this.TaskDefinition != nil {
+		return false
+	} else if that1.TaskDefinition != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *DescribeTaskDefinitionOutput) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*DescribeTaskDefinitionOutput)
+	if !ok {
+		that2, ok := that.(DescribeTaskDefinitionOutput)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if !this.TaskDefinition.Equal(that1.TaskDefinition) {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 func (this *DescribeTasksInput) Equal(that interface{}) bool {
 	if that == nil {
 		if this == nil {
@@ -2049,6 +2975,93 @@ func (this *Failure) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *HostEntry) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*HostEntry)
+	if !ok {
+		that2, ok := that.(HostEntry)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.Hostname != nil && that1.Hostname != nil {
+		if *this.Hostname != *that1.Hostname {
+			return false
+		}
+	} else if this.Hostname != nil {
+		return false
+	} else if that1.Hostname != nil {
+		return false
+	}
+	if this.IpAddress != nil && that1.IpAddress != nil {
+		if *this.IpAddress != *that1.IpAddress {
+			return false
+		}
+	} else if this.IpAddress != nil {
+		return false
+	} else if that1.IpAddress != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *HostVolumeProperties) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*HostVolumeProperties)
+	if !ok {
+		that2, ok := that.(HostVolumeProperties)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.SourcePath != nil && that1.SourcePath != nil {
+		if *this.SourcePath != *that1.SourcePath {
+			return false
+		}
+	} else if this.SourcePath != nil {
+		return false
+	} else if that1.SourcePath != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 func (this *KeyValuePair) Equal(that interface{}) bool {
 	if that == nil {
 		if this == nil {
@@ -2175,6 +3188,110 @@ func (this *ListClustersOutput) Equal(that interface{}) bool {
 	}
 	for i := range this.ClusterArns {
 		if this.ClusterArns[i] != that1.ClusterArns[i] {
+			return false
+		}
+	}
+	if this.NextToken != nil && that1.NextToken != nil {
+		if *this.NextToken != *that1.NextToken {
+			return false
+		}
+	} else if this.NextToken != nil {
+		return false
+	} else if that1.NextToken != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListContainerInstancesInput) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*ListContainerInstancesInput)
+	if !ok {
+		that2, ok := that.(ListContainerInstancesInput)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.Cluster != nil && that1.Cluster != nil {
+		if *this.Cluster != *that1.Cluster {
+			return false
+		}
+	} else if this.Cluster != nil {
+		return false
+	} else if that1.Cluster != nil {
+		return false
+	}
+	if this.MaxResults != nil && that1.MaxResults != nil {
+		if *this.MaxResults != *that1.MaxResults {
+			return false
+		}
+	} else if this.MaxResults != nil {
+		return false
+	} else if that1.MaxResults != nil {
+		return false
+	}
+	if this.NextToken != nil && that1.NextToken != nil {
+		if *this.NextToken != *that1.NextToken {
+			return false
+		}
+	} else if this.NextToken != nil {
+		return false
+	} else if that1.NextToken != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListContainerInstancesOutput) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*ListContainerInstancesOutput)
+	if !ok {
+		that2, ok := that.(ListContainerInstancesOutput)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if len(this.ContainerInstanceArns) != len(that1.ContainerInstanceArns) {
+		return false
+	}
+	for i := range this.ContainerInstanceArns {
+		if this.ContainerInstanceArns[i] != that1.ContainerInstanceArns[i] {
 			return false
 		}
 	}
@@ -2502,6 +3619,110 @@ func (this *LoadBalancer) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *LogConfiguration) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*LogConfiguration)
+	if !ok {
+		that2, ok := that.(LogConfiguration)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.LogDriver != nil && that1.LogDriver != nil {
+		if *this.LogDriver != *that1.LogDriver {
+			return false
+		}
+	} else if this.LogDriver != nil {
+		return false
+	} else if that1.LogDriver != nil {
+		return false
+	}
+	if len(this.Options) != len(that1.Options) {
+		return false
+	}
+	for i := range this.Options {
+		if this.Options[i] != that1.Options[i] {
+			return false
+		}
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *MountPoint) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*MountPoint)
+	if !ok {
+		that2, ok := that.(MountPoint)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.ContainerPath != nil && that1.ContainerPath != nil {
+		if *this.ContainerPath != *that1.ContainerPath {
+			return false
+		}
+	} else if this.ContainerPath != nil {
+		return false
+	} else if that1.ContainerPath != nil {
+		return false
+	}
+	if this.ReadOnly != nil && that1.ReadOnly != nil {
+		if *this.ReadOnly != *that1.ReadOnly {
+			return false
+		}
+	} else if this.ReadOnly != nil {
+		return false
+	} else if that1.ReadOnly != nil {
+		return false
+	}
+	if this.SourceVolume != nil && that1.SourceVolume != nil {
+		if *this.SourceVolume != *that1.SourceVolume {
+			return false
+		}
+	} else if this.SourceVolume != nil {
+		return false
+	} else if that1.SourceVolume != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 func (this *NetworkBinding) Equal(that interface{}) bool {
 	if that == nil {
 		if this == nil {
@@ -2534,6 +3755,63 @@ func (this *NetworkBinding) Equal(that interface{}) bool {
 	} else if this.BindIP != nil {
 		return false
 	} else if that1.BindIP != nil {
+		return false
+	}
+	if this.ContainerPort != nil && that1.ContainerPort != nil {
+		if *this.ContainerPort != *that1.ContainerPort {
+			return false
+		}
+	} else if this.ContainerPort != nil {
+		return false
+	} else if that1.ContainerPort != nil {
+		return false
+	}
+	if this.HostPort != nil && that1.HostPort != nil {
+		if *this.HostPort != *that1.HostPort {
+			return false
+		}
+	} else if this.HostPort != nil {
+		return false
+	} else if that1.HostPort != nil {
+		return false
+	}
+	if this.Protocol != nil && that1.Protocol != nil {
+		if *this.Protocol != *that1.Protocol {
+			return false
+		}
+	} else if this.Protocol != nil {
+		return false
+	} else if that1.Protocol != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *PortMapping) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*PortMapping)
+	if !ok {
+		that2, ok := that.(PortMapping)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
 		return false
 	}
 	if this.ContainerPort != nil && that1.ContainerPort != nil {
@@ -2965,6 +4243,96 @@ func (this *Task) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *TaskDefinition) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*TaskDefinition)
+	if !ok {
+		that2, ok := that.(TaskDefinition)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if len(this.ContainerDefinitions) != len(that1.ContainerDefinitions) {
+		return false
+	}
+	for i := range this.ContainerDefinitions {
+		if !this.ContainerDefinitions[i].Equal(that1.ContainerDefinitions[i]) {
+			return false
+		}
+	}
+	if this.Family != nil && that1.Family != nil {
+		if *this.Family != *that1.Family {
+			return false
+		}
+	} else if this.Family != nil {
+		return false
+	} else if that1.Family != nil {
+		return false
+	}
+	if len(this.RequiresAttributes) != len(that1.RequiresAttributes) {
+		return false
+	}
+	for i := range this.RequiresAttributes {
+		if !this.RequiresAttributes[i].Equal(that1.RequiresAttributes[i]) {
+			return false
+		}
+	}
+	if this.Revision != nil && that1.Revision != nil {
+		if *this.Revision != *that1.Revision {
+			return false
+		}
+	} else if this.Revision != nil {
+		return false
+	} else if that1.Revision != nil {
+		return false
+	}
+	if this.Status != nil && that1.Status != nil {
+		if *this.Status != *that1.Status {
+			return false
+		}
+	} else if this.Status != nil {
+		return false
+	} else if that1.Status != nil {
+		return false
+	}
+	if this.TaskDefinitionArn != nil && that1.TaskDefinitionArn != nil {
+		if *this.TaskDefinitionArn != *that1.TaskDefinitionArn {
+			return false
+		}
+	} else if this.TaskDefinitionArn != nil {
+		return false
+	} else if that1.TaskDefinitionArn != nil {
+		return false
+	}
+	if len(this.Volumes) != len(that1.Volumes) {
+		return false
+	}
+	for i := range this.Volumes {
+		if !this.Volumes[i].Equal(that1.Volumes[i]) {
+			return false
+		}
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 func (this *TaskOverride) Equal(that interface{}) bool {
 	if that == nil {
 		if this == nil {
@@ -2997,6 +4365,63 @@ func (this *TaskOverride) Equal(that interface{}) bool {
 		if !this.ContainerOverrides[i].Equal(that1.ContainerOverrides[i]) {
 			return false
 		}
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *Ulimit) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*Ulimit)
+	if !ok {
+		that2, ok := that.(Ulimit)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.HardLimit != nil && that1.HardLimit != nil {
+		if *this.HardLimit != *that1.HardLimit {
+			return false
+		}
+	} else if this.HardLimit != nil {
+		return false
+	} else if that1.HardLimit != nil {
+		return false
+	}
+	if this.Name != nil && that1.Name != nil {
+		if *this.Name != *that1.Name {
+			return false
+		}
+	} else if this.Name != nil {
+		return false
+	} else if that1.Name != nil {
+		return false
+	}
+	if this.SoftLimit != nil && that1.SoftLimit != nil {
+		if *this.SoftLimit != *that1.SoftLimit {
+			return false
+		}
+	} else if this.SoftLimit != nil {
+		return false
+	} else if that1.SoftLimit != nil {
+		return false
 	}
 	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
 		return false
@@ -3060,6 +4485,96 @@ func (this *VersionInfo) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *Volume) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*Volume)
+	if !ok {
+		that2, ok := that.(Volume)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if !this.Host.Equal(that1.Host) {
+		return false
+	}
+	if this.Name != nil && that1.Name != nil {
+		if *this.Name != *that1.Name {
+			return false
+		}
+	} else if this.Name != nil {
+		return false
+	} else if that1.Name != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *VolumeFrom) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*VolumeFrom)
+	if !ok {
+		that2, ok := that.(VolumeFrom)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.ReadOnly != nil && that1.ReadOnly != nil {
+		if *this.ReadOnly != *that1.ReadOnly {
+			return false
+		}
+	} else if this.ReadOnly != nil {
+		return false
+	} else if that1.ReadOnly != nil {
+		return false
+	}
+	if this.SourceContainer != nil && that1.SourceContainer != nil {
+		if *this.SourceContainer != *that1.SourceContainer {
+			return false
+		}
+	} else if this.SourceContainer != nil {
+		return false
+	} else if that1.SourceContainer != nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 
 type AttributeGetter interface {
 	GetAttribute() *Attribute
@@ -3072,6 +4587,13 @@ type ContainerGetter interface {
 }
 
 var GraphQLContainerType *github_com_graphql_go_graphql.Object
+
+type ContainerDefinitionGetter interface {
+	GetContainerDefinition() *ContainerDefinition
+}
+
+var GraphQLContainerDefinitionType *github_com_graphql_go_graphql.Object
+var GraphQLContainerDefinition_DockerLabelsEntryType = github_com_opsee_protobuf_plugin_graphql_scalars.Map
 
 type ContainerInstanceGetter interface {
 	GetContainerInstance() *ContainerInstance
@@ -3121,6 +4643,18 @@ type DescribeServicesOutputGetter interface {
 
 var GraphQLDescribeServicesOutputType *github_com_graphql_go_graphql.Object
 
+type DescribeTaskDefinitionInputGetter interface {
+	GetDescribeTaskDefinitionInput() *DescribeTaskDefinitionInput
+}
+
+var GraphQLDescribeTaskDefinitionInputType *github_com_graphql_go_graphql.Object
+
+type DescribeTaskDefinitionOutputGetter interface {
+	GetDescribeTaskDefinitionOutput() *DescribeTaskDefinitionOutput
+}
+
+var GraphQLDescribeTaskDefinitionOutputType *github_com_graphql_go_graphql.Object
+
 type DescribeTasksInputGetter interface {
 	GetDescribeTasksInput() *DescribeTasksInput
 }
@@ -3139,6 +4673,18 @@ type FailureGetter interface {
 
 var GraphQLFailureType *github_com_graphql_go_graphql.Object
 
+type HostEntryGetter interface {
+	GetHostEntry() *HostEntry
+}
+
+var GraphQLHostEntryType *github_com_graphql_go_graphql.Object
+
+type HostVolumePropertiesGetter interface {
+	GetHostVolumeProperties() *HostVolumeProperties
+}
+
+var GraphQLHostVolumePropertiesType *github_com_graphql_go_graphql.Object
+
 type KeyValuePairGetter interface {
 	GetKeyValuePair() *KeyValuePair
 }
@@ -3156,6 +4702,18 @@ type ListClustersOutputGetter interface {
 }
 
 var GraphQLListClustersOutputType *github_com_graphql_go_graphql.Object
+
+type ListContainerInstancesInputGetter interface {
+	GetListContainerInstancesInput() *ListContainerInstancesInput
+}
+
+var GraphQLListContainerInstancesInputType *github_com_graphql_go_graphql.Object
+
+type ListContainerInstancesOutputGetter interface {
+	GetListContainerInstancesOutput() *ListContainerInstancesOutput
+}
+
+var GraphQLListContainerInstancesOutputType *github_com_graphql_go_graphql.Object
 
 type ListServicesInputGetter interface {
 	GetListServicesInput() *ListServicesInput
@@ -3187,11 +4745,30 @@ type LoadBalancerGetter interface {
 
 var GraphQLLoadBalancerType *github_com_graphql_go_graphql.Object
 
+type LogConfigurationGetter interface {
+	GetLogConfiguration() *LogConfiguration
+}
+
+var GraphQLLogConfigurationType *github_com_graphql_go_graphql.Object
+var GraphQLLogConfiguration_OptionsEntryType = github_com_opsee_protobuf_plugin_graphql_scalars.Map
+
+type MountPointGetter interface {
+	GetMountPoint() *MountPoint
+}
+
+var GraphQLMountPointType *github_com_graphql_go_graphql.Object
+
 type NetworkBindingGetter interface {
 	GetNetworkBinding() *NetworkBinding
 }
 
 var GraphQLNetworkBindingType *github_com_graphql_go_graphql.Object
+
+type PortMappingGetter interface {
+	GetPortMapping() *PortMapping
+}
+
+var GraphQLPortMappingType *github_com_graphql_go_graphql.Object
 
 type ResourceGetter interface {
 	GetResource() *Resource
@@ -3217,17 +4794,41 @@ type TaskGetter interface {
 
 var GraphQLTaskType *github_com_graphql_go_graphql.Object
 
+type TaskDefinitionGetter interface {
+	GetTaskDefinition() *TaskDefinition
+}
+
+var GraphQLTaskDefinitionType *github_com_graphql_go_graphql.Object
+
 type TaskOverrideGetter interface {
 	GetTaskOverride() *TaskOverride
 }
 
 var GraphQLTaskOverrideType *github_com_graphql_go_graphql.Object
 
+type UlimitGetter interface {
+	GetUlimit() *Ulimit
+}
+
+var GraphQLUlimitType *github_com_graphql_go_graphql.Object
+
 type VersionInfoGetter interface {
 	GetVersionInfo() *VersionInfo
 }
 
 var GraphQLVersionInfoType *github_com_graphql_go_graphql.Object
+
+type VolumeGetter interface {
+	GetVolume() *Volume
+}
+
+var GraphQLVolumeType *github_com_graphql_go_graphql.Object
+
+type VolumeFromGetter interface {
+	GetVolumeFrom() *VolumeFrom
+}
+
+var GraphQLVolumeFromType *github_com_graphql_go_graphql.Object
 
 func init() {
 	GraphQLAttributeType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
@@ -3460,6 +5061,561 @@ func init() {
 							return face.GetTaskArn(), nil
 						}
 						return nil, fmt.Errorf("field TaskArn not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLContainerDefinitionType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsContainerDefinition",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"Command": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.Command, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.Command, nil
+						}
+						return nil, fmt.Errorf("field Command not resolved")
+					},
+				},
+				"Cpu": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Cpu == nil {
+								return nil, nil
+							}
+							return obj.GetCpu(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Cpu == nil {
+								return nil, nil
+							}
+							return face.GetCpu(), nil
+						}
+						return nil, fmt.Errorf("field Cpu not resolved")
+					},
+				},
+				"DisableNetworking": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Boolean,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.DisableNetworking == nil {
+								return nil, nil
+							}
+							return obj.GetDisableNetworking(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.DisableNetworking == nil {
+								return nil, nil
+							}
+							return face.GetDisableNetworking(), nil
+						}
+						return nil, fmt.Errorf("field DisableNetworking not resolved")
+					},
+				},
+				"DnsSearchDomains": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.DnsSearchDomains, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.DnsSearchDomains, nil
+						}
+						return nil, fmt.Errorf("field DnsSearchDomains not resolved")
+					},
+				},
+				"DnsServers": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.DnsServers, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.DnsServers, nil
+						}
+						return nil, fmt.Errorf("field DnsServers not resolved")
+					},
+				},
+				"DockerLabels": &github_com_graphql_go_graphql.Field{
+					Type:        GraphQLContainerDefinition_DockerLabelsEntryType,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.DockerLabels, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.DockerLabels, nil
+						}
+						return nil, fmt.Errorf("field DockerLabels not resolved")
+					},
+				},
+				"DockerSecurityOptions": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.DockerSecurityOptions, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.DockerSecurityOptions, nil
+						}
+						return nil, fmt.Errorf("field DockerSecurityOptions not resolved")
+					},
+				},
+				"EntryPoint": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.EntryPoint, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.EntryPoint, nil
+						}
+						return nil, fmt.Errorf("field EntryPoint not resolved")
+					},
+				},
+				"Environment": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLKeyValuePairType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.Environment, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.Environment, nil
+						}
+						return nil, fmt.Errorf("field Environment not resolved")
+					},
+				},
+				"Essential": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Boolean,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Essential == nil {
+								return nil, nil
+							}
+							return obj.GetEssential(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Essential == nil {
+								return nil, nil
+							}
+							return face.GetEssential(), nil
+						}
+						return nil, fmt.Errorf("field Essential not resolved")
+					},
+				},
+				"ExtraHosts": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLHostEntryType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.ExtraHosts, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.ExtraHosts, nil
+						}
+						return nil, fmt.Errorf("field ExtraHosts not resolved")
+					},
+				},
+				"Hostname": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Hostname == nil {
+								return nil, nil
+							}
+							return obj.GetHostname(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Hostname == nil {
+								return nil, nil
+							}
+							return face.GetHostname(), nil
+						}
+						return nil, fmt.Errorf("field Hostname not resolved")
+					},
+				},
+				"Image": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Image == nil {
+								return nil, nil
+							}
+							return obj.GetImage(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Image == nil {
+								return nil, nil
+							}
+							return face.GetImage(), nil
+						}
+						return nil, fmt.Errorf("field Image not resolved")
+					},
+				},
+				"Links": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.Links, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.Links, nil
+						}
+						return nil, fmt.Errorf("field Links not resolved")
+					},
+				},
+				"LogConfiguration": &github_com_graphql_go_graphql.Field{
+					Type:        GraphQLLogConfigurationType,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.LogConfiguration == nil {
+								return nil, nil
+							}
+							return obj.GetLogConfiguration(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.LogConfiguration == nil {
+								return nil, nil
+							}
+							return face.GetLogConfiguration(), nil
+						}
+						return nil, fmt.Errorf("field LogConfiguration not resolved")
+					},
+				},
+				"Memory": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Memory == nil {
+								return nil, nil
+							}
+							return obj.GetMemory(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Memory == nil {
+								return nil, nil
+							}
+							return face.GetMemory(), nil
+						}
+						return nil, fmt.Errorf("field Memory not resolved")
+					},
+				},
+				"MountPoints": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLMountPointType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.MountPoints, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.MountPoints, nil
+						}
+						return nil, fmt.Errorf("field MountPoints not resolved")
+					},
+				},
+				"Name": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Name == nil {
+								return nil, nil
+							}
+							return obj.GetName(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Name == nil {
+								return nil, nil
+							}
+							return face.GetName(), nil
+						}
+						return nil, fmt.Errorf("field Name not resolved")
+					},
+				},
+				"PortMappings": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLPortMappingType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.PortMappings, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.PortMappings, nil
+						}
+						return nil, fmt.Errorf("field PortMappings not resolved")
+					},
+				},
+				"Privileged": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Boolean,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.Privileged == nil {
+								return nil, nil
+							}
+							return obj.GetPrivileged(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Privileged == nil {
+								return nil, nil
+							}
+							return face.GetPrivileged(), nil
+						}
+						return nil, fmt.Errorf("field Privileged not resolved")
+					},
+				},
+				"ReadonlyRootFilesystem": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Boolean,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.ReadonlyRootFilesystem == nil {
+								return nil, nil
+							}
+							return obj.GetReadonlyRootFilesystem(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.ReadonlyRootFilesystem == nil {
+								return nil, nil
+							}
+							return face.GetReadonlyRootFilesystem(), nil
+						}
+						return nil, fmt.Errorf("field ReadonlyRootFilesystem not resolved")
+					},
+				},
+				"Ulimits": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLUlimitType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.Ulimits, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.Ulimits, nil
+						}
+						return nil, fmt.Errorf("field Ulimits not resolved")
+					},
+				},
+				"User": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.User == nil {
+								return nil, nil
+							}
+							return obj.GetUser(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.User == nil {
+								return nil, nil
+							}
+							return face.GetUser(), nil
+						}
+						return nil, fmt.Errorf("field User not resolved")
+					},
+				},
+				"VolumesFrom": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLVolumeFromType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							return obj.VolumesFrom, nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.VolumesFrom, nil
+						}
+						return nil, fmt.Errorf("field VolumesFrom not resolved")
+					},
+				},
+				"WorkingDirectory": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ContainerDefinition)
+						if ok {
+							if obj.WorkingDirectory == nil {
+								return nil, nil
+							}
+							return obj.GetWorkingDirectory(), nil
+						}
+						inter, ok := p.Source.(ContainerDefinitionGetter)
+						if ok {
+							face := inter.GetContainerDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.WorkingDirectory == nil {
+								return nil, nil
+							}
+							return face.GetWorkingDirectory(), nil
+						}
+						return nil, fmt.Errorf("field WorkingDirectory not resolved")
 					},
 				},
 			}
@@ -4263,6 +6419,72 @@ func init() {
 			}
 		}),
 	})
+	GraphQLDescribeTaskDefinitionInputType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsDescribeTaskDefinitionInput",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"TaskDefinition": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*DescribeTaskDefinitionInput)
+						if ok {
+							if obj.TaskDefinition == nil {
+								return nil, nil
+							}
+							return obj.GetTaskDefinition(), nil
+						}
+						inter, ok := p.Source.(DescribeTaskDefinitionInputGetter)
+						if ok {
+							face := inter.GetDescribeTaskDefinitionInput()
+							if face == nil {
+								return nil, nil
+							}
+							if face.TaskDefinition == nil {
+								return nil, nil
+							}
+							return face.GetTaskDefinition(), nil
+						}
+						return nil, fmt.Errorf("field TaskDefinition not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLDescribeTaskDefinitionOutputType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsDescribeTaskDefinitionOutput",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"TaskDefinition": &github_com_graphql_go_graphql.Field{
+					Type:        GraphQLTaskDefinitionType,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*DescribeTaskDefinitionOutput)
+						if ok {
+							if obj.TaskDefinition == nil {
+								return nil, nil
+							}
+							return obj.GetTaskDefinition(), nil
+						}
+						inter, ok := p.Source.(DescribeTaskDefinitionOutputGetter)
+						if ok {
+							face := inter.GetDescribeTaskDefinitionOutput()
+							if face == nil {
+								return nil, nil
+							}
+							if face.TaskDefinition == nil {
+								return nil, nil
+							}
+							return face.GetTaskDefinition(), nil
+						}
+						return nil, fmt.Errorf("field TaskDefinition not resolved")
+					},
+				},
+			}
+		}),
+	})
 	GraphQLDescribeTasksInputType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
 		Name:        "ecsDescribeTasksInput",
 		Description: "",
@@ -4414,6 +6636,97 @@ func init() {
 							return face.GetReason(), nil
 						}
 						return nil, fmt.Errorf("field Reason not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLHostEntryType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsHostEntry",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"Hostname": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*HostEntry)
+						if ok {
+							if obj.Hostname == nil {
+								return nil, nil
+							}
+							return obj.GetHostname(), nil
+						}
+						inter, ok := p.Source.(HostEntryGetter)
+						if ok {
+							face := inter.GetHostEntry()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Hostname == nil {
+								return nil, nil
+							}
+							return face.GetHostname(), nil
+						}
+						return nil, fmt.Errorf("field Hostname not resolved")
+					},
+				},
+				"IpAddress": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*HostEntry)
+						if ok {
+							if obj.IpAddress == nil {
+								return nil, nil
+							}
+							return obj.GetIpAddress(), nil
+						}
+						inter, ok := p.Source.(HostEntryGetter)
+						if ok {
+							face := inter.GetHostEntry()
+							if face == nil {
+								return nil, nil
+							}
+							if face.IpAddress == nil {
+								return nil, nil
+							}
+							return face.GetIpAddress(), nil
+						}
+						return nil, fmt.Errorf("field IpAddress not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLHostVolumePropertiesType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsHostVolumeProperties",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"SourcePath": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*HostVolumeProperties)
+						if ok {
+							if obj.SourcePath == nil {
+								return nil, nil
+							}
+							return obj.GetSourcePath(), nil
+						}
+						inter, ok := p.Source.(HostVolumePropertiesGetter)
+						if ok {
+							face := inter.GetHostVolumeProperties()
+							if face == nil {
+								return nil, nil
+							}
+							if face.SourcePath == nil {
+								return nil, nil
+							}
+							return face.GetSourcePath(), nil
+						}
+						return nil, fmt.Errorf("field SourcePath not resolved")
 					},
 				},
 			}
@@ -4573,6 +6886,141 @@ func init() {
 						inter, ok := p.Source.(ListClustersOutputGetter)
 						if ok {
 							face := inter.GetListClustersOutput()
+							if face == nil {
+								return nil, nil
+							}
+							if face.NextToken == nil {
+								return nil, nil
+							}
+							return face.GetNextToken(), nil
+						}
+						return nil, fmt.Errorf("field NextToken not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLListContainerInstancesInputType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsListContainerInstancesInput",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"Cluster": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ListContainerInstancesInput)
+						if ok {
+							if obj.Cluster == nil {
+								return nil, nil
+							}
+							return obj.GetCluster(), nil
+						}
+						inter, ok := p.Source.(ListContainerInstancesInputGetter)
+						if ok {
+							face := inter.GetListContainerInstancesInput()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Cluster == nil {
+								return nil, nil
+							}
+							return face.GetCluster(), nil
+						}
+						return nil, fmt.Errorf("field Cluster not resolved")
+					},
+				},
+				"MaxResults": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ListContainerInstancesInput)
+						if ok {
+							if obj.MaxResults == nil {
+								return nil, nil
+							}
+							return obj.GetMaxResults(), nil
+						}
+						inter, ok := p.Source.(ListContainerInstancesInputGetter)
+						if ok {
+							face := inter.GetListContainerInstancesInput()
+							if face == nil {
+								return nil, nil
+							}
+							if face.MaxResults == nil {
+								return nil, nil
+							}
+							return face.GetMaxResults(), nil
+						}
+						return nil, fmt.Errorf("field MaxResults not resolved")
+					},
+				},
+				"NextToken": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ListContainerInstancesInput)
+						if ok {
+							if obj.NextToken == nil {
+								return nil, nil
+							}
+							return obj.GetNextToken(), nil
+						}
+						inter, ok := p.Source.(ListContainerInstancesInputGetter)
+						if ok {
+							face := inter.GetListContainerInstancesInput()
+							if face == nil {
+								return nil, nil
+							}
+							if face.NextToken == nil {
+								return nil, nil
+							}
+							return face.GetNextToken(), nil
+						}
+						return nil, fmt.Errorf("field NextToken not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLListContainerInstancesOutputType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsListContainerInstancesOutput",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"ContainerInstanceArns": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(github_com_graphql_go_graphql.String),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ListContainerInstancesOutput)
+						if ok {
+							return obj.ContainerInstanceArns, nil
+						}
+						inter, ok := p.Source.(ListContainerInstancesOutputGetter)
+						if ok {
+							face := inter.GetListContainerInstancesOutput()
+							if face == nil {
+								return nil, nil
+							}
+							return face.ContainerInstanceArns, nil
+						}
+						return nil, fmt.Errorf("field ContainerInstanceArns not resolved")
+					},
+				},
+				"NextToken": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*ListContainerInstancesOutput)
+						if ok {
+							if obj.NextToken == nil {
+								return nil, nil
+							}
+							return obj.GetNextToken(), nil
+						}
+						inter, ok := p.Source.(ListContainerInstancesOutputGetter)
+						if ok {
+							face := inter.GetListContainerInstancesOutput()
 							if face == nil {
 								return nil, nil
 							}
@@ -5065,6 +7513,141 @@ func init() {
 			}
 		}),
 	})
+	GraphQLLogConfigurationType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsLogConfiguration",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"LogDriver": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*LogConfiguration)
+						if ok {
+							if obj.LogDriver == nil {
+								return nil, nil
+							}
+							return obj.GetLogDriver(), nil
+						}
+						inter, ok := p.Source.(LogConfigurationGetter)
+						if ok {
+							face := inter.GetLogConfiguration()
+							if face == nil {
+								return nil, nil
+							}
+							if face.LogDriver == nil {
+								return nil, nil
+							}
+							return face.GetLogDriver(), nil
+						}
+						return nil, fmt.Errorf("field LogDriver not resolved")
+					},
+				},
+				"Options": &github_com_graphql_go_graphql.Field{
+					Type:        GraphQLLogConfiguration_OptionsEntryType,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*LogConfiguration)
+						if ok {
+							return obj.Options, nil
+						}
+						inter, ok := p.Source.(LogConfigurationGetter)
+						if ok {
+							face := inter.GetLogConfiguration()
+							if face == nil {
+								return nil, nil
+							}
+							return face.Options, nil
+						}
+						return nil, fmt.Errorf("field Options not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLMountPointType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsMountPoint",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"ContainerPath": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*MountPoint)
+						if ok {
+							if obj.ContainerPath == nil {
+								return nil, nil
+							}
+							return obj.GetContainerPath(), nil
+						}
+						inter, ok := p.Source.(MountPointGetter)
+						if ok {
+							face := inter.GetMountPoint()
+							if face == nil {
+								return nil, nil
+							}
+							if face.ContainerPath == nil {
+								return nil, nil
+							}
+							return face.GetContainerPath(), nil
+						}
+						return nil, fmt.Errorf("field ContainerPath not resolved")
+					},
+				},
+				"ReadOnly": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Boolean,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*MountPoint)
+						if ok {
+							if obj.ReadOnly == nil {
+								return nil, nil
+							}
+							return obj.GetReadOnly(), nil
+						}
+						inter, ok := p.Source.(MountPointGetter)
+						if ok {
+							face := inter.GetMountPoint()
+							if face == nil {
+								return nil, nil
+							}
+							if face.ReadOnly == nil {
+								return nil, nil
+							}
+							return face.GetReadOnly(), nil
+						}
+						return nil, fmt.Errorf("field ReadOnly not resolved")
+					},
+				},
+				"SourceVolume": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*MountPoint)
+						if ok {
+							if obj.SourceVolume == nil {
+								return nil, nil
+							}
+							return obj.GetSourceVolume(), nil
+						}
+						inter, ok := p.Source.(MountPointGetter)
+						if ok {
+							face := inter.GetMountPoint()
+							if face == nil {
+								return nil, nil
+							}
+							if face.SourceVolume == nil {
+								return nil, nil
+							}
+							return face.GetSourceVolume(), nil
+						}
+						return nil, fmt.Errorf("field SourceVolume not resolved")
+					},
+				},
+			}
+		}),
+	})
 	GraphQLNetworkBindingType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
 		Name:        "ecsNetworkBinding",
 		Description: "",
@@ -5159,6 +7742,89 @@ func init() {
 						inter, ok := p.Source.(NetworkBindingGetter)
 						if ok {
 							face := inter.GetNetworkBinding()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Protocol == nil {
+								return nil, nil
+							}
+							return face.GetProtocol(), nil
+						}
+						return nil, fmt.Errorf("field Protocol not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLPortMappingType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsPortMapping",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"ContainerPort": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*PortMapping)
+						if ok {
+							if obj.ContainerPort == nil {
+								return nil, nil
+							}
+							return obj.GetContainerPort(), nil
+						}
+						inter, ok := p.Source.(PortMappingGetter)
+						if ok {
+							face := inter.GetPortMapping()
+							if face == nil {
+								return nil, nil
+							}
+							if face.ContainerPort == nil {
+								return nil, nil
+							}
+							return face.GetContainerPort(), nil
+						}
+						return nil, fmt.Errorf("field ContainerPort not resolved")
+					},
+				},
+				"HostPort": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*PortMapping)
+						if ok {
+							if obj.HostPort == nil {
+								return nil, nil
+							}
+							return obj.GetHostPort(), nil
+						}
+						inter, ok := p.Source.(PortMappingGetter)
+						if ok {
+							face := inter.GetPortMapping()
+							if face == nil {
+								return nil, nil
+							}
+							if face.HostPort == nil {
+								return nil, nil
+							}
+							return face.GetHostPort(), nil
+						}
+						return nil, fmt.Errorf("field HostPort not resolved")
+					},
+				},
+				"Protocol": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*PortMapping)
+						if ok {
+							if obj.Protocol == nil {
+								return nil, nil
+							}
+							return obj.GetProtocol(), nil
+						}
+						inter, ok := p.Source.(PortMappingGetter)
+						if ok {
+							face := inter.GetPortMapping()
 							if face == nil {
 								return nil, nil
 							}
@@ -6075,6 +8741,171 @@ func init() {
 			}
 		}),
 	})
+	GraphQLTaskDefinitionType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsTaskDefinition",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"ContainerDefinitions": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLContainerDefinitionType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							return obj.ContainerDefinitions, nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.ContainerDefinitions, nil
+						}
+						return nil, fmt.Errorf("field ContainerDefinitions not resolved")
+					},
+				},
+				"Family": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							if obj.Family == nil {
+								return nil, nil
+							}
+							return obj.GetFamily(), nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Family == nil {
+								return nil, nil
+							}
+							return face.GetFamily(), nil
+						}
+						return nil, fmt.Errorf("field Family not resolved")
+					},
+				},
+				"RequiresAttributes": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLAttributeType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							return obj.RequiresAttributes, nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.RequiresAttributes, nil
+						}
+						return nil, fmt.Errorf("field RequiresAttributes not resolved")
+					},
+				},
+				"Revision": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							if obj.Revision == nil {
+								return nil, nil
+							}
+							return obj.GetRevision(), nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Revision == nil {
+								return nil, nil
+							}
+							return face.GetRevision(), nil
+						}
+						return nil, fmt.Errorf("field Revision not resolved")
+					},
+				},
+				"Status": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							if obj.Status == nil {
+								return nil, nil
+							}
+							return obj.GetStatus(), nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Status == nil {
+								return nil, nil
+							}
+							return face.GetStatus(), nil
+						}
+						return nil, fmt.Errorf("field Status not resolved")
+					},
+				},
+				"TaskDefinitionArn": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							if obj.TaskDefinitionArn == nil {
+								return nil, nil
+							}
+							return obj.GetTaskDefinitionArn(), nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							if face.TaskDefinitionArn == nil {
+								return nil, nil
+							}
+							return face.GetTaskDefinitionArn(), nil
+						}
+						return nil, fmt.Errorf("field TaskDefinitionArn not resolved")
+					},
+				},
+				"Volumes": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.NewList(GraphQLVolumeType),
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*TaskDefinition)
+						if ok {
+							return obj.Volumes, nil
+						}
+						inter, ok := p.Source.(TaskDefinitionGetter)
+						if ok {
+							face := inter.GetTaskDefinition()
+							if face == nil {
+								return nil, nil
+							}
+							return face.Volumes, nil
+						}
+						return nil, fmt.Errorf("field Volumes not resolved")
+					},
+				},
+			}
+		}),
+	})
 	GraphQLTaskOverrideType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
 		Name:        "ecsTaskOverride",
 		Description: "",
@@ -6097,6 +8928,89 @@ func init() {
 							return face.ContainerOverrides, nil
 						}
 						return nil, fmt.Errorf("field ContainerOverrides not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLUlimitType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsUlimit",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"HardLimit": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*Ulimit)
+						if ok {
+							if obj.HardLimit == nil {
+								return nil, nil
+							}
+							return obj.GetHardLimit(), nil
+						}
+						inter, ok := p.Source.(UlimitGetter)
+						if ok {
+							face := inter.GetUlimit()
+							if face == nil {
+								return nil, nil
+							}
+							if face.HardLimit == nil {
+								return nil, nil
+							}
+							return face.GetHardLimit(), nil
+						}
+						return nil, fmt.Errorf("field HardLimit not resolved")
+					},
+				},
+				"Name": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*Ulimit)
+						if ok {
+							if obj.Name == nil {
+								return nil, nil
+							}
+							return obj.GetName(), nil
+						}
+						inter, ok := p.Source.(UlimitGetter)
+						if ok {
+							face := inter.GetUlimit()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Name == nil {
+								return nil, nil
+							}
+							return face.GetName(), nil
+						}
+						return nil, fmt.Errorf("field Name not resolved")
+					},
+				},
+				"SoftLimit": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Int,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*Ulimit)
+						if ok {
+							if obj.SoftLimit == nil {
+								return nil, nil
+							}
+							return obj.GetSoftLimit(), nil
+						}
+						inter, ok := p.Source.(UlimitGetter)
+						if ok {
+							face := inter.GetUlimit()
+							if face == nil {
+								return nil, nil
+							}
+							if face.SoftLimit == nil {
+								return nil, nil
+							}
+							return face.GetSoftLimit(), nil
+						}
+						return nil, fmt.Errorf("field SoftLimit not resolved")
 					},
 				},
 			}
@@ -6180,6 +9094,122 @@ func init() {
 							return face.GetDockerVersion(), nil
 						}
 						return nil, fmt.Errorf("field DockerVersion not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLVolumeType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsVolume",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"Host": &github_com_graphql_go_graphql.Field{
+					Type:        GraphQLHostVolumePropertiesType,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*Volume)
+						if ok {
+							if obj.Host == nil {
+								return nil, nil
+							}
+							return obj.GetHost(), nil
+						}
+						inter, ok := p.Source.(VolumeGetter)
+						if ok {
+							face := inter.GetVolume()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Host == nil {
+								return nil, nil
+							}
+							return face.GetHost(), nil
+						}
+						return nil, fmt.Errorf("field Host not resolved")
+					},
+				},
+				"Name": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*Volume)
+						if ok {
+							if obj.Name == nil {
+								return nil, nil
+							}
+							return obj.GetName(), nil
+						}
+						inter, ok := p.Source.(VolumeGetter)
+						if ok {
+							face := inter.GetVolume()
+							if face == nil {
+								return nil, nil
+							}
+							if face.Name == nil {
+								return nil, nil
+							}
+							return face.GetName(), nil
+						}
+						return nil, fmt.Errorf("field Name not resolved")
+					},
+				},
+			}
+		}),
+	})
+	GraphQLVolumeFromType = github_com_graphql_go_graphql.NewObject(github_com_graphql_go_graphql.ObjectConfig{
+		Name:        "ecsVolumeFrom",
+		Description: "",
+		Fields: (github_com_graphql_go_graphql.FieldsThunk)(func() github_com_graphql_go_graphql.Fields {
+			return github_com_graphql_go_graphql.Fields{
+				"ReadOnly": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.Boolean,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*VolumeFrom)
+						if ok {
+							if obj.ReadOnly == nil {
+								return nil, nil
+							}
+							return obj.GetReadOnly(), nil
+						}
+						inter, ok := p.Source.(VolumeFromGetter)
+						if ok {
+							face := inter.GetVolumeFrom()
+							if face == nil {
+								return nil, nil
+							}
+							if face.ReadOnly == nil {
+								return nil, nil
+							}
+							return face.GetReadOnly(), nil
+						}
+						return nil, fmt.Errorf("field ReadOnly not resolved")
+					},
+				},
+				"SourceContainer": &github_com_graphql_go_graphql.Field{
+					Type:        github_com_graphql_go_graphql.String,
+					Description: "",
+					Resolve: func(p github_com_graphql_go_graphql.ResolveParams) (interface{}, error) {
+						obj, ok := p.Source.(*VolumeFrom)
+						if ok {
+							if obj.SourceContainer == nil {
+								return nil, nil
+							}
+							return obj.GetSourceContainer(), nil
+						}
+						inter, ok := p.Source.(VolumeFromGetter)
+						if ok {
+							face := inter.GetVolumeFrom()
+							if face == nil {
+								return nil, nil
+							}
+							if face.SourceContainer == nil {
+								return nil, nil
+							}
+							return face.GetSourceContainer(), nil
+						}
+						return nil, fmt.Errorf("field SourceContainer not resolved")
 					},
 				},
 			}
@@ -6287,6 +9317,318 @@ func (m *Container) MarshalTo(data []byte) (int, error) {
 	return i, nil
 }
 
+func (m *ContainerDefinition) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *ContainerDefinition) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Command) > 0 {
+		for _, s := range m.Command {
+			data[i] = 0x12
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if m.Cpu != nil {
+		data[i] = 0x18
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.Cpu)<<1)^uint64((*m.Cpu>>63))))
+	}
+	if m.DisableNetworking != nil {
+		data[i] = 0x20
+		i++
+		if *m.DisableNetworking {
+			data[i] = 1
+		} else {
+			data[i] = 0
+		}
+		i++
+	}
+	if len(m.DnsSearchDomains) > 0 {
+		for _, s := range m.DnsSearchDomains {
+			data[i] = 0x2a
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if len(m.DnsServers) > 0 {
+		for _, s := range m.DnsServers {
+			data[i] = 0x32
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if len(m.DockerLabels) > 0 {
+		for k, _ := range m.DockerLabels {
+			data[i] = 0x3a
+			i++
+			v := m.DockerLabels[k]
+			mapSize := 1 + len(k) + sovTypes(uint64(len(k))) + 1 + len(v) + sovTypes(uint64(len(v)))
+			i = encodeVarintTypes(data, i, uint64(mapSize))
+			data[i] = 0xa
+			i++
+			i = encodeVarintTypes(data, i, uint64(len(k)))
+			i += copy(data[i:], k)
+			data[i] = 0x12
+			i++
+			i = encodeVarintTypes(data, i, uint64(len(v)))
+			i += copy(data[i:], v)
+		}
+	}
+	if len(m.DockerSecurityOptions) > 0 {
+		for _, s := range m.DockerSecurityOptions {
+			data[i] = 0x42
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if len(m.EntryPoint) > 0 {
+		for _, s := range m.EntryPoint {
+			data[i] = 0x4a
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if len(m.Environment) > 0 {
+		for _, msg := range m.Environment {
+			data[i] = 0x52
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Essential != nil {
+		data[i] = 0x58
+		i++
+		if *m.Essential {
+			data[i] = 1
+		} else {
+			data[i] = 0
+		}
+		i++
+	}
+	if len(m.ExtraHosts) > 0 {
+		for _, msg := range m.ExtraHosts {
+			data[i] = 0x62
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Hostname != nil {
+		data[i] = 0x6a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Hostname)))
+		i += copy(data[i:], *m.Hostname)
+	}
+	if m.Image != nil {
+		data[i] = 0x72
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Image)))
+		i += copy(data[i:], *m.Image)
+	}
+	if len(m.Links) > 0 {
+		for _, s := range m.Links {
+			data[i] = 0x7a
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if m.LogConfiguration != nil {
+		data[i] = 0x82
+		i++
+		data[i] = 0x1
+		i++
+		i = encodeVarintTypes(data, i, uint64(m.LogConfiguration.Size()))
+		n1, err := m.LogConfiguration.MarshalTo(data[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n1
+	}
+	if m.Memory != nil {
+		data[i] = 0x88
+		i++
+		data[i] = 0x1
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.Memory)<<1)^uint64((*m.Memory>>63))))
+	}
+	if len(m.MountPoints) > 0 {
+		for _, msg := range m.MountPoints {
+			data[i] = 0x92
+			i++
+			data[i] = 0x1
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Name != nil {
+		data[i] = 0x9a
+		i++
+		data[i] = 0x1
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Name)))
+		i += copy(data[i:], *m.Name)
+	}
+	if len(m.PortMappings) > 0 {
+		for _, msg := range m.PortMappings {
+			data[i] = 0xa2
+			i++
+			data[i] = 0x1
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Privileged != nil {
+		data[i] = 0xa8
+		i++
+		data[i] = 0x1
+		i++
+		if *m.Privileged {
+			data[i] = 1
+		} else {
+			data[i] = 0
+		}
+		i++
+	}
+	if m.ReadonlyRootFilesystem != nil {
+		data[i] = 0xb0
+		i++
+		data[i] = 0x1
+		i++
+		if *m.ReadonlyRootFilesystem {
+			data[i] = 1
+		} else {
+			data[i] = 0
+		}
+		i++
+	}
+	if len(m.Ulimits) > 0 {
+		for _, msg := range m.Ulimits {
+			data[i] = 0xba
+			i++
+			data[i] = 0x1
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.User != nil {
+		data[i] = 0xc2
+		i++
+		data[i] = 0x1
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.User)))
+		i += copy(data[i:], *m.User)
+	}
+	if len(m.VolumesFrom) > 0 {
+		for _, msg := range m.VolumesFrom {
+			data[i] = 0xca
+			i++
+			data[i] = 0x1
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.WorkingDirectory != nil {
+		data[i] = 0xd2
+		i++
+		data[i] = 0x1
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.WorkingDirectory)))
+		i += copy(data[i:], *m.WorkingDirectory)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
 func (m *ContainerInstance) Marshal() (data []byte, err error) {
 	size := m.Size()
 	data = make([]byte, size)
@@ -6386,11 +9728,11 @@ func (m *ContainerInstance) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x62
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.VersionInfo.Size()))
-		n1, err := m.VersionInfo.MarshalTo(data[i:])
+		n2, err := m.VersionInfo.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n1
+		i += n2
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(data[i:], m.XXX_unrecognized)
@@ -6471,11 +9813,11 @@ func (m *Deployment) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x12
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.CreatedAt.Size()))
-		n2, err := m.CreatedAt.MarshalTo(data[i:])
+		n3, err := m.CreatedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n2
+		i += n3
 	}
 	if m.DesiredCount != nil {
 		data[i] = 0x18
@@ -6514,11 +9856,11 @@ func (m *Deployment) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x4a
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.UpdatedAt.Size()))
-		n3, err := m.UpdatedAt.MarshalTo(data[i:])
+		n4, err := m.UpdatedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n3
+		i += n4
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(data[i:], m.XXX_unrecognized)
@@ -6731,6 +10073,64 @@ func (m *DescribeServicesOutput) MarshalTo(data []byte) (int, error) {
 	return i, nil
 }
 
+func (m *DescribeTaskDefinitionInput) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *DescribeTaskDefinitionInput) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.TaskDefinition != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.TaskDefinition)))
+		i += copy(data[i:], *m.TaskDefinition)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *DescribeTaskDefinitionOutput) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *DescribeTaskDefinitionOutput) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.TaskDefinition != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(m.TaskDefinition.Size()))
+		n5, err := m.TaskDefinition.MarshalTo(data[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
 func (m *DescribeTasksInput) Marshal() (data []byte, err error) {
 	size := m.Size()
 	data = make([]byte, size)
@@ -6851,6 +10251,66 @@ func (m *Failure) MarshalTo(data []byte) (int, error) {
 	return i, nil
 }
 
+func (m *HostEntry) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *HostEntry) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Hostname != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Hostname)))
+		i += copy(data[i:], *m.Hostname)
+	}
+	if m.IpAddress != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.IpAddress)))
+		i += copy(data[i:], *m.IpAddress)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *HostVolumeProperties) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *HostVolumeProperties) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.SourcePath != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.SourcePath)))
+		i += copy(data[i:], *m.SourcePath)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
 func (m *KeyValuePair) Marshal() (data []byte, err error) {
 	size := m.Size()
 	data = make([]byte, size)
@@ -6933,6 +10393,86 @@ func (m *ListClustersOutput) MarshalTo(data []byte) (int, error) {
 	_ = l
 	if len(m.ClusterArns) > 0 {
 		for _, s := range m.ClusterArns {
+			data[i] = 0x12
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				data[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			data[i] = uint8(l)
+			i++
+			i += copy(data[i:], s)
+		}
+	}
+	if m.NextToken != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.NextToken)))
+		i += copy(data[i:], *m.NextToken)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *ListContainerInstancesInput) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *ListContainerInstancesInput) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Cluster != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Cluster)))
+		i += copy(data[i:], *m.Cluster)
+	}
+	if m.MaxResults != nil {
+		data[i] = 0x18
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.MaxResults)<<1)^uint64((*m.MaxResults>>63))))
+	}
+	if m.NextToken != nil {
+		data[i] = 0x22
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.NextToken)))
+		i += copy(data[i:], *m.NextToken)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *ListContainerInstancesOutput) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *ListContainerInstancesOutput) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.ContainerInstanceArns) > 0 {
+		for _, s := range m.ContainerInstanceArns {
 			data[i] = 0x12
 			i++
 			l = len(s)
@@ -7186,6 +10726,93 @@ func (m *LoadBalancer) MarshalTo(data []byte) (int, error) {
 	return i, nil
 }
 
+func (m *LogConfiguration) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *LogConfiguration) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.LogDriver != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.LogDriver)))
+		i += copy(data[i:], *m.LogDriver)
+	}
+	if len(m.Options) > 0 {
+		for k, _ := range m.Options {
+			data[i] = 0x1a
+			i++
+			v := m.Options[k]
+			mapSize := 1 + len(k) + sovTypes(uint64(len(k))) + 1 + len(v) + sovTypes(uint64(len(v)))
+			i = encodeVarintTypes(data, i, uint64(mapSize))
+			data[i] = 0xa
+			i++
+			i = encodeVarintTypes(data, i, uint64(len(k)))
+			i += copy(data[i:], k)
+			data[i] = 0x12
+			i++
+			i = encodeVarintTypes(data, i, uint64(len(v)))
+			i += copy(data[i:], v)
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *MountPoint) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *MountPoint) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ContainerPath != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.ContainerPath)))
+		i += copy(data[i:], *m.ContainerPath)
+	}
+	if m.ReadOnly != nil {
+		data[i] = 0x18
+		i++
+		if *m.ReadOnly {
+			data[i] = 1
+		} else {
+			data[i] = 0
+		}
+		i++
+	}
+	if m.SourceVolume != nil {
+		data[i] = 0x22
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.SourceVolume)))
+		i += copy(data[i:], *m.SourceVolume)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
 func (m *NetworkBinding) Marshal() (data []byte, err error) {
 	size := m.Size()
 	data = make([]byte, size)
@@ -7219,6 +10846,43 @@ func (m *NetworkBinding) MarshalTo(data []byte) (int, error) {
 	}
 	if m.Protocol != nil {
 		data[i] = 0x2a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Protocol)))
+		i += copy(data[i:], *m.Protocol)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *PortMapping) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *PortMapping) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ContainerPort != nil {
+		data[i] = 0x10
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.ContainerPort)<<1)^uint64((*m.ContainerPort>>63))))
+	}
+	if m.HostPort != nil {
+		data[i] = 0x18
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.HostPort)<<1)^uint64((*m.HostPort>>63))))
+	}
+	if m.Protocol != nil {
+		data[i] = 0x22
 		i++
 		i = encodeVarintTypes(data, i, uint64(len(*m.Protocol)))
 		i += copy(data[i:], *m.Protocol)
@@ -7317,21 +10981,21 @@ func (m *Service) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x1a
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.CreatedAt.Size()))
-		n4, err := m.CreatedAt.MarshalTo(data[i:])
+		n6, err := m.CreatedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n4
+		i += n6
 	}
 	if m.DeploymentConfiguration != nil {
 		data[i] = 0x22
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.DeploymentConfiguration.Size()))
-		n5, err := m.DeploymentConfiguration.MarshalTo(data[i:])
+		n7, err := m.DeploymentConfiguration.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n5
+		i += n7
 	}
 	if len(m.Deployments) > 0 {
 		for _, msg := range m.Deployments {
@@ -7439,11 +11103,11 @@ func (m *ServiceEvent) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x12
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.CreatedAt.Size()))
-		n6, err := m.CreatedAt.MarshalTo(data[i:])
+		n8, err := m.CreatedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n6
+		i += n8
 	}
 	if m.Id != nil {
 		data[i] = 0x1a
@@ -7506,11 +11170,11 @@ func (m *Task) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x2a
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.CreatedAt.Size()))
-		n7, err := m.CreatedAt.MarshalTo(data[i:])
+		n9, err := m.CreatedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n7
+		i += n9
 	}
 	if m.DesiredStatus != nil {
 		data[i] = 0x32
@@ -7528,21 +11192,21 @@ func (m *Task) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x42
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.Overrides.Size()))
-		n8, err := m.Overrides.MarshalTo(data[i:])
+		n10, err := m.Overrides.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n8
+		i += n10
 	}
 	if m.StartedAt != nil {
 		data[i] = 0x4a
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.StartedAt.Size()))
-		n9, err := m.StartedAt.MarshalTo(data[i:])
+		n11, err := m.StartedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n9
+		i += n11
 	}
 	if m.StartedBy != nil {
 		data[i] = 0x52
@@ -7554,11 +11218,11 @@ func (m *Task) MarshalTo(data []byte) (int, error) {
 		data[i] = 0x5a
 		i++
 		i = encodeVarintTypes(data, i, uint64(m.StoppedAt.Size()))
-		n10, err := m.StoppedAt.MarshalTo(data[i:])
+		n12, err := m.StoppedAt.MarshalTo(data[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n10
+		i += n12
 	}
 	if m.StoppedReason != nil {
 		data[i] = 0x62
@@ -7577,6 +11241,86 @@ func (m *Task) MarshalTo(data []byte) (int, error) {
 		i++
 		i = encodeVarintTypes(data, i, uint64(len(*m.TaskDefinitionArn)))
 		i += copy(data[i:], *m.TaskDefinitionArn)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *TaskDefinition) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *TaskDefinition) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.ContainerDefinitions) > 0 {
+		for _, msg := range m.ContainerDefinitions {
+			data[i] = 0x12
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Family != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Family)))
+		i += copy(data[i:], *m.Family)
+	}
+	if len(m.RequiresAttributes) > 0 {
+		for _, msg := range m.RequiresAttributes {
+			data[i] = 0x22
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Revision != nil {
+		data[i] = 0x28
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.Revision)<<1)^uint64((*m.Revision>>63))))
+	}
+	if m.Status != nil {
+		data[i] = 0x32
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Status)))
+		i += copy(data[i:], *m.Status)
+	}
+	if m.TaskDefinitionArn != nil {
+		data[i] = 0x3a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.TaskDefinitionArn)))
+		i += copy(data[i:], *m.TaskDefinitionArn)
+	}
+	if len(m.Volumes) > 0 {
+		for _, msg := range m.Volumes {
+			data[i] = 0x42
+			i++
+			i = encodeVarintTypes(data, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(data[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(data[i:], m.XXX_unrecognized)
@@ -7617,6 +11361,43 @@ func (m *TaskOverride) MarshalTo(data []byte) (int, error) {
 	return i, nil
 }
 
+func (m *Ulimit) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *Ulimit) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.HardLimit != nil {
+		data[i] = 0x10
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.HardLimit)<<1)^uint64((*m.HardLimit>>63))))
+	}
+	if m.Name != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Name)))
+		i += copy(data[i:], *m.Name)
+	}
+	if m.SoftLimit != nil {
+		data[i] = 0x20
+		i++
+		i = encodeVarintTypes(data, i, uint64((uint64(*m.SoftLimit)<<1)^uint64((*m.SoftLimit>>63))))
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
 func (m *VersionInfo) Marshal() (data []byte, err error) {
 	size := m.Size()
 	data = make([]byte, size)
@@ -7649,6 +11430,80 @@ func (m *VersionInfo) MarshalTo(data []byte) (int, error) {
 		i++
 		i = encodeVarintTypes(data, i, uint64(len(*m.DockerVersion)))
 		i += copy(data[i:], *m.DockerVersion)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *Volume) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *Volume) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Host != nil {
+		data[i] = 0x12
+		i++
+		i = encodeVarintTypes(data, i, uint64(m.Host.Size()))
+		n13, err := m.Host.MarshalTo(data[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n13
+	}
+	if m.Name != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.Name)))
+		i += copy(data[i:], *m.Name)
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(data[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *VolumeFrom) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *VolumeFrom) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ReadOnly != nil {
+		data[i] = 0x10
+		i++
+		if *m.ReadOnly {
+			data[i] = 1
+		} else {
+			data[i] = 0
+		}
+		i++
+	}
+	if m.SourceContainer != nil {
+		data[i] = 0x1a
+		i++
+		i = encodeVarintTypes(data, i, uint64(len(*m.SourceContainer)))
+		i += copy(data[i:], *m.SourceContainer)
 	}
 	if m.XXX_unrecognized != nil {
 		i += copy(data[i:], m.XXX_unrecognized)
@@ -7741,62 +11596,214 @@ func NewPopulatedContainer(r randyTypes, easy bool) *Container {
 	return this
 }
 
+func NewPopulatedContainerDefinition(r randyTypes, easy bool) *ContainerDefinition {
+	this := &ContainerDefinition{}
+	if r.Intn(10) != 0 {
+		v10 := r.Intn(10)
+		this.Command = make([]string, v10)
+		for i := 0; i < v10; i++ {
+			this.Command[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v11 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v11 *= -1
+		}
+		this.Cpu = &v11
+	}
+	if r.Intn(10) != 0 {
+		v12 := bool(bool(r.Intn(2) == 0))
+		this.DisableNetworking = &v12
+	}
+	if r.Intn(10) != 0 {
+		v13 := r.Intn(10)
+		this.DnsSearchDomains = make([]string, v13)
+		for i := 0; i < v13; i++ {
+			this.DnsSearchDomains[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v14 := r.Intn(10)
+		this.DnsServers = make([]string, v14)
+		for i := 0; i < v14; i++ {
+			this.DnsServers[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v15 := r.Intn(10)
+		this.DockerLabels = make(map[string]string)
+		for i := 0; i < v15; i++ {
+			this.DockerLabels[randStringTypes(r)] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v16 := r.Intn(10)
+		this.DockerSecurityOptions = make([]string, v16)
+		for i := 0; i < v16; i++ {
+			this.DockerSecurityOptions[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v17 := r.Intn(10)
+		this.EntryPoint = make([]string, v17)
+		for i := 0; i < v17; i++ {
+			this.EntryPoint[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v18 := r.Intn(5)
+		this.Environment = make([]*KeyValuePair, v18)
+		for i := 0; i < v18; i++ {
+			this.Environment[i] = NewPopulatedKeyValuePair(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v19 := bool(bool(r.Intn(2) == 0))
+		this.Essential = &v19
+	}
+	if r.Intn(10) != 0 {
+		v20 := r.Intn(5)
+		this.ExtraHosts = make([]*HostEntry, v20)
+		for i := 0; i < v20; i++ {
+			this.ExtraHosts[i] = NewPopulatedHostEntry(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v21 := randStringTypes(r)
+		this.Hostname = &v21
+	}
+	if r.Intn(10) != 0 {
+		v22 := randStringTypes(r)
+		this.Image = &v22
+	}
+	if r.Intn(10) != 0 {
+		v23 := r.Intn(10)
+		this.Links = make([]string, v23)
+		for i := 0; i < v23; i++ {
+			this.Links[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		this.LogConfiguration = NewPopulatedLogConfiguration(r, easy)
+	}
+	if r.Intn(10) != 0 {
+		v24 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v24 *= -1
+		}
+		this.Memory = &v24
+	}
+	if r.Intn(10) != 0 {
+		v25 := r.Intn(5)
+		this.MountPoints = make([]*MountPoint, v25)
+		for i := 0; i < v25; i++ {
+			this.MountPoints[i] = NewPopulatedMountPoint(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v26 := randStringTypes(r)
+		this.Name = &v26
+	}
+	if r.Intn(10) != 0 {
+		v27 := r.Intn(5)
+		this.PortMappings = make([]*PortMapping, v27)
+		for i := 0; i < v27; i++ {
+			this.PortMappings[i] = NewPopulatedPortMapping(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v28 := bool(bool(r.Intn(2) == 0))
+		this.Privileged = &v28
+	}
+	if r.Intn(10) != 0 {
+		v29 := bool(bool(r.Intn(2) == 0))
+		this.ReadonlyRootFilesystem = &v29
+	}
+	if r.Intn(10) != 0 {
+		v30 := r.Intn(5)
+		this.Ulimits = make([]*Ulimit, v30)
+		for i := 0; i < v30; i++ {
+			this.Ulimits[i] = NewPopulatedUlimit(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v31 := randStringTypes(r)
+		this.User = &v31
+	}
+	if r.Intn(10) != 0 {
+		v32 := r.Intn(5)
+		this.VolumesFrom = make([]*VolumeFrom, v32)
+		for i := 0; i < v32; i++ {
+			this.VolumesFrom[i] = NewPopulatedVolumeFrom(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v33 := randStringTypes(r)
+		this.WorkingDirectory = &v33
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 27)
+	}
+	return this
+}
+
 func NewPopulatedContainerInstance(r randyTypes, easy bool) *ContainerInstance {
 	this := &ContainerInstance{}
 	if r.Intn(10) != 0 {
-		v10 := bool(bool(r.Intn(2) == 0))
-		this.AgentConnected = &v10
+		v34 := bool(bool(r.Intn(2) == 0))
+		this.AgentConnected = &v34
 	}
 	if r.Intn(10) != 0 {
-		v11 := randStringTypes(r)
-		this.AgentUpdateStatus = &v11
+		v35 := randStringTypes(r)
+		this.AgentUpdateStatus = &v35
 	}
 	if r.Intn(10) != 0 {
-		v12 := r.Intn(5)
-		this.Attributes = make([]*Attribute, v12)
-		for i := 0; i < v12; i++ {
+		v36 := r.Intn(5)
+		this.Attributes = make([]*Attribute, v36)
+		for i := 0; i < v36; i++ {
 			this.Attributes[i] = NewPopulatedAttribute(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v13 := randStringTypes(r)
-		this.ContainerInstanceArn = &v13
+		v37 := randStringTypes(r)
+		this.ContainerInstanceArn = &v37
 	}
 	if r.Intn(10) != 0 {
-		v14 := randStringTypes(r)
-		this.Ec2InstanceId = &v14
+		v38 := randStringTypes(r)
+		this.Ec2InstanceId = &v38
 	}
 	if r.Intn(10) != 0 {
-		v15 := int64(r.Int63())
+		v39 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v15 *= -1
+			v39 *= -1
 		}
-		this.PendingTasksCount = &v15
+		this.PendingTasksCount = &v39
 	}
 	if r.Intn(10) != 0 {
-		v16 := r.Intn(5)
-		this.RegisteredResources = make([]*Resource, v16)
-		for i := 0; i < v16; i++ {
+		v40 := r.Intn(5)
+		this.RegisteredResources = make([]*Resource, v40)
+		for i := 0; i < v40; i++ {
 			this.RegisteredResources[i] = NewPopulatedResource(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v17 := r.Intn(5)
-		this.RemainingResources = make([]*Resource, v17)
-		for i := 0; i < v17; i++ {
+		v41 := r.Intn(5)
+		this.RemainingResources = make([]*Resource, v41)
+		for i := 0; i < v41; i++ {
 			this.RemainingResources[i] = NewPopulatedResource(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v18 := int64(r.Int63())
+		v42 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v18 *= -1
+			v42 *= -1
 		}
-		this.RunningTasksCount = &v18
+		this.RunningTasksCount = &v42
 	}
 	if r.Intn(10) != 0 {
-		v19 := randStringTypes(r)
-		this.Status = &v19
+		v43 := randStringTypes(r)
+		this.Status = &v43
 	}
 	if r.Intn(10) != 0 {
 		this.VersionInfo = NewPopulatedVersionInfo(r, easy)
@@ -7810,22 +11817,22 @@ func NewPopulatedContainerInstance(r randyTypes, easy bool) *ContainerInstance {
 func NewPopulatedContainerOverride(r randyTypes, easy bool) *ContainerOverride {
 	this := &ContainerOverride{}
 	if r.Intn(10) != 0 {
-		v20 := r.Intn(10)
-		this.Command = make([]string, v20)
-		for i := 0; i < v20; i++ {
+		v44 := r.Intn(10)
+		this.Command = make([]string, v44)
+		for i := 0; i < v44; i++ {
 			this.Command[i] = randStringTypes(r)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v21 := r.Intn(5)
-		this.Environment = make([]*KeyValuePair, v21)
-		for i := 0; i < v21; i++ {
+		v45 := r.Intn(5)
+		this.Environment = make([]*KeyValuePair, v45)
+		for i := 0; i < v45; i++ {
 			this.Environment[i] = NewPopulatedKeyValuePair(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v22 := randStringTypes(r)
-		this.Name = &v22
+		v46 := randStringTypes(r)
+		this.Name = &v46
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
@@ -7839,37 +11846,37 @@ func NewPopulatedDeployment(r randyTypes, easy bool) *Deployment {
 		this.CreatedAt = opsee_types.NewPopulatedTimestamp(r, easy)
 	}
 	if r.Intn(10) != 0 {
-		v23 := int64(r.Int63())
+		v47 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v23 *= -1
+			v47 *= -1
 		}
-		this.DesiredCount = &v23
+		this.DesiredCount = &v47
 	}
 	if r.Intn(10) != 0 {
-		v24 := randStringTypes(r)
-		this.Id = &v24
+		v48 := randStringTypes(r)
+		this.Id = &v48
 	}
 	if r.Intn(10) != 0 {
-		v25 := int64(r.Int63())
+		v49 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v25 *= -1
+			v49 *= -1
 		}
-		this.PendingCount = &v25
+		this.PendingCount = &v49
 	}
 	if r.Intn(10) != 0 {
-		v26 := int64(r.Int63())
+		v50 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v26 *= -1
+			v50 *= -1
 		}
-		this.RunningCount = &v26
+		this.RunningCount = &v50
 	}
 	if r.Intn(10) != 0 {
-		v27 := randStringTypes(r)
-		this.Status = &v27
+		v51 := randStringTypes(r)
+		this.Status = &v51
 	}
 	if r.Intn(10) != 0 {
-		v28 := randStringTypes(r)
-		this.TaskDefinition = &v28
+		v52 := randStringTypes(r)
+		this.TaskDefinition = &v52
 	}
 	if r.Intn(10) != 0 {
 		this.UpdatedAt = opsee_types.NewPopulatedTimestamp(r, easy)
@@ -7883,18 +11890,18 @@ func NewPopulatedDeployment(r randyTypes, easy bool) *Deployment {
 func NewPopulatedDeploymentConfiguration(r randyTypes, easy bool) *DeploymentConfiguration {
 	this := &DeploymentConfiguration{}
 	if r.Intn(10) != 0 {
-		v29 := int64(r.Int63())
+		v53 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v29 *= -1
+			v53 *= -1
 		}
-		this.MaximumPercent = &v29
+		this.MaximumPercent = &v53
 	}
 	if r.Intn(10) != 0 {
-		v30 := int64(r.Int63())
+		v54 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v30 *= -1
+			v54 *= -1
 		}
-		this.MinimumHealthyPercent = &v30
+		this.MinimumHealthyPercent = &v54
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
@@ -7905,13 +11912,13 @@ func NewPopulatedDeploymentConfiguration(r randyTypes, easy bool) *DeploymentCon
 func NewPopulatedDescribeContainerInstancesInput(r randyTypes, easy bool) *DescribeContainerInstancesInput {
 	this := &DescribeContainerInstancesInput{}
 	if r.Intn(10) != 0 {
-		v31 := randStringTypes(r)
-		this.Cluster = &v31
+		v55 := randStringTypes(r)
+		this.Cluster = &v55
 	}
 	if r.Intn(10) != 0 {
-		v32 := r.Intn(10)
-		this.ContainerInstances = make([]string, v32)
-		for i := 0; i < v32; i++ {
+		v56 := r.Intn(10)
+		this.ContainerInstances = make([]string, v56)
+		for i := 0; i < v56; i++ {
 			this.ContainerInstances[i] = randStringTypes(r)
 		}
 	}
@@ -7924,16 +11931,16 @@ func NewPopulatedDescribeContainerInstancesInput(r randyTypes, easy bool) *Descr
 func NewPopulatedDescribeContainerInstancesOutput(r randyTypes, easy bool) *DescribeContainerInstancesOutput {
 	this := &DescribeContainerInstancesOutput{}
 	if r.Intn(10) != 0 {
-		v33 := r.Intn(5)
-		this.ContainerInstances = make([]*ContainerInstance, v33)
-		for i := 0; i < v33; i++ {
+		v57 := r.Intn(5)
+		this.ContainerInstances = make([]*ContainerInstance, v57)
+		for i := 0; i < v57; i++ {
 			this.ContainerInstances[i] = NewPopulatedContainerInstance(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v34 := r.Intn(5)
-		this.Failures = make([]*Failure, v34)
-		for i := 0; i < v34; i++ {
+		v58 := r.Intn(5)
+		this.Failures = make([]*Failure, v58)
+		for i := 0; i < v58; i++ {
 			this.Failures[i] = NewPopulatedFailure(r, easy)
 		}
 	}
@@ -7946,13 +11953,13 @@ func NewPopulatedDescribeContainerInstancesOutput(r randyTypes, easy bool) *Desc
 func NewPopulatedDescribeServicesInput(r randyTypes, easy bool) *DescribeServicesInput {
 	this := &DescribeServicesInput{}
 	if r.Intn(10) != 0 {
-		v35 := randStringTypes(r)
-		this.Cluster = &v35
+		v59 := randStringTypes(r)
+		this.Cluster = &v59
 	}
 	if r.Intn(10) != 0 {
-		v36 := r.Intn(10)
-		this.Services = make([]string, v36)
-		for i := 0; i < v36; i++ {
+		v60 := r.Intn(10)
+		this.Services = make([]string, v60)
+		for i := 0; i < v60; i++ {
 			this.Services[i] = randStringTypes(r)
 		}
 	}
@@ -7965,16 +11972,16 @@ func NewPopulatedDescribeServicesInput(r randyTypes, easy bool) *DescribeService
 func NewPopulatedDescribeServicesOutput(r randyTypes, easy bool) *DescribeServicesOutput {
 	this := &DescribeServicesOutput{}
 	if r.Intn(10) != 0 {
-		v37 := r.Intn(5)
-		this.Failures = make([]*Failure, v37)
-		for i := 0; i < v37; i++ {
+		v61 := r.Intn(5)
+		this.Failures = make([]*Failure, v61)
+		for i := 0; i < v61; i++ {
 			this.Failures[i] = NewPopulatedFailure(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v38 := r.Intn(5)
-		this.Services = make([]*Service, v38)
-		for i := 0; i < v38; i++ {
+		v62 := r.Intn(5)
+		this.Services = make([]*Service, v62)
+		for i := 0; i < v62; i++ {
 			this.Services[i] = NewPopulatedService(r, easy)
 		}
 	}
@@ -7984,16 +11991,39 @@ func NewPopulatedDescribeServicesOutput(r randyTypes, easy bool) *DescribeServic
 	return this
 }
 
+func NewPopulatedDescribeTaskDefinitionInput(r randyTypes, easy bool) *DescribeTaskDefinitionInput {
+	this := &DescribeTaskDefinitionInput{}
+	if r.Intn(10) != 0 {
+		v63 := randStringTypes(r)
+		this.TaskDefinition = &v63
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedDescribeTaskDefinitionOutput(r randyTypes, easy bool) *DescribeTaskDefinitionOutput {
+	this := &DescribeTaskDefinitionOutput{}
+	if r.Intn(10) != 0 {
+		this.TaskDefinition = NewPopulatedTaskDefinition(r, easy)
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 3)
+	}
+	return this
+}
+
 func NewPopulatedDescribeTasksInput(r randyTypes, easy bool) *DescribeTasksInput {
 	this := &DescribeTasksInput{}
 	if r.Intn(10) != 0 {
-		v39 := randStringTypes(r)
-		this.Cluster = &v39
+		v64 := randStringTypes(r)
+		this.Cluster = &v64
 	}
 	if r.Intn(10) != 0 {
-		v40 := r.Intn(10)
-		this.Tasks = make([]string, v40)
-		for i := 0; i < v40; i++ {
+		v65 := r.Intn(10)
+		this.Tasks = make([]string, v65)
+		for i := 0; i < v65; i++ {
 			this.Tasks[i] = randStringTypes(r)
 		}
 	}
@@ -8006,16 +12036,16 @@ func NewPopulatedDescribeTasksInput(r randyTypes, easy bool) *DescribeTasksInput
 func NewPopulatedDescribeTasksOutput(r randyTypes, easy bool) *DescribeTasksOutput {
 	this := &DescribeTasksOutput{}
 	if r.Intn(10) != 0 {
-		v41 := r.Intn(5)
-		this.Failures = make([]*Failure, v41)
-		for i := 0; i < v41; i++ {
+		v66 := r.Intn(5)
+		this.Failures = make([]*Failure, v66)
+		for i := 0; i < v66; i++ {
 			this.Failures[i] = NewPopulatedFailure(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v42 := r.Intn(5)
-		this.Tasks = make([]*Task, v42)
-		for i := 0; i < v42; i++ {
+		v67 := r.Intn(5)
+		this.Tasks = make([]*Task, v67)
+		for i := 0; i < v67; i++ {
 			this.Tasks[i] = NewPopulatedTask(r, easy)
 		}
 	}
@@ -8028,12 +12058,12 @@ func NewPopulatedDescribeTasksOutput(r randyTypes, easy bool) *DescribeTasksOutp
 func NewPopulatedFailure(r randyTypes, easy bool) *Failure {
 	this := &Failure{}
 	if r.Intn(10) != 0 {
-		v43 := randStringTypes(r)
-		this.Arn = &v43
+		v68 := randStringTypes(r)
+		this.Arn = &v68
 	}
 	if r.Intn(10) != 0 {
-		v44 := randStringTypes(r)
-		this.Reason = &v44
+		v69 := randStringTypes(r)
+		this.Reason = &v69
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
@@ -8041,15 +12071,43 @@ func NewPopulatedFailure(r randyTypes, easy bool) *Failure {
 	return this
 }
 
+func NewPopulatedHostEntry(r randyTypes, easy bool) *HostEntry {
+	this := &HostEntry{}
+	if r.Intn(10) != 0 {
+		v70 := randStringTypes(r)
+		this.Hostname = &v70
+	}
+	if r.Intn(10) != 0 {
+		v71 := randStringTypes(r)
+		this.IpAddress = &v71
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
+	}
+	return this
+}
+
+func NewPopulatedHostVolumeProperties(r randyTypes, easy bool) *HostVolumeProperties {
+	this := &HostVolumeProperties{}
+	if r.Intn(10) != 0 {
+		v72 := randStringTypes(r)
+		this.SourcePath = &v72
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 3)
+	}
+	return this
+}
+
 func NewPopulatedKeyValuePair(r randyTypes, easy bool) *KeyValuePair {
 	this := &KeyValuePair{}
 	if r.Intn(10) != 0 {
-		v45 := randStringTypes(r)
-		this.Name = &v45
+		v73 := randStringTypes(r)
+		this.Name = &v73
 	}
 	if r.Intn(10) != 0 {
-		v46 := randStringTypes(r)
-		this.Value = &v46
+		v74 := randStringTypes(r)
+		this.Value = &v74
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
@@ -8060,15 +12118,15 @@ func NewPopulatedKeyValuePair(r randyTypes, easy bool) *KeyValuePair {
 func NewPopulatedListClustersInput(r randyTypes, easy bool) *ListClustersInput {
 	this := &ListClustersInput{}
 	if r.Intn(10) != 0 {
-		v47 := int64(r.Int63())
+		v75 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v47 *= -1
+			v75 *= -1
 		}
-		this.MaxResults = &v47
+		this.MaxResults = &v75
 	}
 	if r.Intn(10) != 0 {
-		v48 := randStringTypes(r)
-		this.NextToken = &v48
+		v76 := randStringTypes(r)
+		this.NextToken = &v76
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
@@ -8079,15 +12137,57 @@ func NewPopulatedListClustersInput(r randyTypes, easy bool) *ListClustersInput {
 func NewPopulatedListClustersOutput(r randyTypes, easy bool) *ListClustersOutput {
 	this := &ListClustersOutput{}
 	if r.Intn(10) != 0 {
-		v49 := r.Intn(10)
-		this.ClusterArns = make([]string, v49)
-		for i := 0; i < v49; i++ {
+		v77 := r.Intn(10)
+		this.ClusterArns = make([]string, v77)
+		for i := 0; i < v77; i++ {
 			this.ClusterArns[i] = randStringTypes(r)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v50 := randStringTypes(r)
-		this.NextToken = &v50
+		v78 := randStringTypes(r)
+		this.NextToken = &v78
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
+	}
+	return this
+}
+
+func NewPopulatedListContainerInstancesInput(r randyTypes, easy bool) *ListContainerInstancesInput {
+	this := &ListContainerInstancesInput{}
+	if r.Intn(10) != 0 {
+		v79 := randStringTypes(r)
+		this.Cluster = &v79
+	}
+	if r.Intn(10) != 0 {
+		v80 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v80 *= -1
+		}
+		this.MaxResults = &v80
+	}
+	if r.Intn(10) != 0 {
+		v81 := randStringTypes(r)
+		this.NextToken = &v81
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedListContainerInstancesOutput(r randyTypes, easy bool) *ListContainerInstancesOutput {
+	this := &ListContainerInstancesOutput{}
+	if r.Intn(10) != 0 {
+		v82 := r.Intn(10)
+		this.ContainerInstanceArns = make([]string, v82)
+		for i := 0; i < v82; i++ {
+			this.ContainerInstanceArns[i] = randStringTypes(r)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v83 := randStringTypes(r)
+		this.NextToken = &v83
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
@@ -8098,19 +12198,19 @@ func NewPopulatedListClustersOutput(r randyTypes, easy bool) *ListClustersOutput
 func NewPopulatedListServicesInput(r randyTypes, easy bool) *ListServicesInput {
 	this := &ListServicesInput{}
 	if r.Intn(10) != 0 {
-		v51 := randStringTypes(r)
-		this.Cluster = &v51
+		v84 := randStringTypes(r)
+		this.Cluster = &v84
 	}
 	if r.Intn(10) != 0 {
-		v52 := int64(r.Int63())
+		v85 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v52 *= -1
+			v85 *= -1
 		}
-		this.MaxResults = &v52
+		this.MaxResults = &v85
 	}
 	if r.Intn(10) != 0 {
-		v53 := randStringTypes(r)
-		this.NextToken = &v53
+		v86 := randStringTypes(r)
+		this.NextToken = &v86
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
@@ -8121,13 +12221,13 @@ func NewPopulatedListServicesInput(r randyTypes, easy bool) *ListServicesInput {
 func NewPopulatedListServicesOutput(r randyTypes, easy bool) *ListServicesOutput {
 	this := &ListServicesOutput{}
 	if r.Intn(10) != 0 {
-		v54 := randStringTypes(r)
-		this.NextToken = &v54
+		v87 := randStringTypes(r)
+		this.NextToken = &v87
 	}
 	if r.Intn(10) != 0 {
-		v55 := r.Intn(10)
-		this.ServiceArns = make([]string, v55)
-		for i := 0; i < v55; i++ {
+		v88 := r.Intn(10)
+		this.ServiceArns = make([]string, v88)
+		for i := 0; i < v88; i++ {
 			this.ServiceArns[i] = randStringTypes(r)
 		}
 	}
@@ -8140,39 +12240,39 @@ func NewPopulatedListServicesOutput(r randyTypes, easy bool) *ListServicesOutput
 func NewPopulatedListTasksInput(r randyTypes, easy bool) *ListTasksInput {
 	this := &ListTasksInput{}
 	if r.Intn(10) != 0 {
-		v56 := randStringTypes(r)
-		this.Cluster = &v56
+		v89 := randStringTypes(r)
+		this.Cluster = &v89
 	}
 	if r.Intn(10) != 0 {
-		v57 := randStringTypes(r)
-		this.ContainerInstance = &v57
+		v90 := randStringTypes(r)
+		this.ContainerInstance = &v90
 	}
 	if r.Intn(10) != 0 {
-		v58 := randStringTypes(r)
-		this.DesiredStatus = &v58
+		v91 := randStringTypes(r)
+		this.DesiredStatus = &v91
 	}
 	if r.Intn(10) != 0 {
-		v59 := randStringTypes(r)
-		this.Family = &v59
+		v92 := randStringTypes(r)
+		this.Family = &v92
 	}
 	if r.Intn(10) != 0 {
-		v60 := int64(r.Int63())
+		v93 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v60 *= -1
+			v93 *= -1
 		}
-		this.MaxResults = &v60
+		this.MaxResults = &v93
 	}
 	if r.Intn(10) != 0 {
-		v61 := randStringTypes(r)
-		this.NextToken = &v61
+		v94 := randStringTypes(r)
+		this.NextToken = &v94
 	}
 	if r.Intn(10) != 0 {
-		v62 := randStringTypes(r)
-		this.ServiceName = &v62
+		v95 := randStringTypes(r)
+		this.ServiceName = &v95
 	}
 	if r.Intn(10) != 0 {
-		v63 := randStringTypes(r)
-		this.StartedBy = &v63
+		v96 := randStringTypes(r)
+		this.StartedBy = &v96
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 10)
@@ -8183,13 +12283,13 @@ func NewPopulatedListTasksInput(r randyTypes, easy bool) *ListTasksInput {
 func NewPopulatedListTasksOutput(r randyTypes, easy bool) *ListTasksOutput {
 	this := &ListTasksOutput{}
 	if r.Intn(10) != 0 {
-		v64 := randStringTypes(r)
-		this.NextToken = &v64
+		v97 := randStringTypes(r)
+		this.NextToken = &v97
 	}
 	if r.Intn(10) != 0 {
-		v65 := r.Intn(10)
-		this.TaskArns = make([]string, v65)
-		for i := 0; i < v65; i++ {
+		v98 := r.Intn(10)
+		this.TaskArns = make([]string, v98)
+		for i := 0; i < v98; i++ {
 			this.TaskArns[i] = randStringTypes(r)
 		}
 	}
@@ -8202,19 +12302,58 @@ func NewPopulatedListTasksOutput(r randyTypes, easy bool) *ListTasksOutput {
 func NewPopulatedLoadBalancer(r randyTypes, easy bool) *LoadBalancer {
 	this := &LoadBalancer{}
 	if r.Intn(10) != 0 {
-		v66 := randStringTypes(r)
-		this.ContainerName = &v66
+		v99 := randStringTypes(r)
+		this.ContainerName = &v99
 	}
 	if r.Intn(10) != 0 {
-		v67 := int64(r.Int63())
+		v100 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v67 *= -1
+			v100 *= -1
 		}
-		this.ContainerPort = &v67
+		this.ContainerPort = &v100
 	}
 	if r.Intn(10) != 0 {
-		v68 := randStringTypes(r)
-		this.LoadBalancerName = &v68
+		v101 := randStringTypes(r)
+		this.LoadBalancerName = &v101
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedLogConfiguration(r randyTypes, easy bool) *LogConfiguration {
+	this := &LogConfiguration{}
+	if r.Intn(10) != 0 {
+		v102 := randStringTypes(r)
+		this.LogDriver = &v102
+	}
+	if r.Intn(10) != 0 {
+		v103 := r.Intn(10)
+		this.Options = make(map[string]string)
+		for i := 0; i < v103; i++ {
+			this.Options[randStringTypes(r)] = randStringTypes(r)
+		}
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
+	}
+	return this
+}
+
+func NewPopulatedMountPoint(r randyTypes, easy bool) *MountPoint {
+	this := &MountPoint{}
+	if r.Intn(10) != 0 {
+		v104 := randStringTypes(r)
+		this.ContainerPath = &v104
+	}
+	if r.Intn(10) != 0 {
+		v105 := bool(bool(r.Intn(2) == 0))
+		this.ReadOnly = &v105
+	}
+	if r.Intn(10) != 0 {
+		v106 := randStringTypes(r)
+		this.SourceVolume = &v106
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
@@ -8225,26 +12364,26 @@ func NewPopulatedLoadBalancer(r randyTypes, easy bool) *LoadBalancer {
 func NewPopulatedNetworkBinding(r randyTypes, easy bool) *NetworkBinding {
 	this := &NetworkBinding{}
 	if r.Intn(10) != 0 {
-		v69 := randStringTypes(r)
-		this.BindIP = &v69
+		v107 := randStringTypes(r)
+		this.BindIP = &v107
 	}
 	if r.Intn(10) != 0 {
-		v70 := int64(r.Int63())
+		v108 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v70 *= -1
+			v108 *= -1
 		}
-		this.ContainerPort = &v70
+		this.ContainerPort = &v108
 	}
 	if r.Intn(10) != 0 {
-		v71 := int64(r.Int63())
+		v109 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v71 *= -1
+			v109 *= -1
 		}
-		this.HostPort = &v71
+		this.HostPort = &v109
 	}
 	if r.Intn(10) != 0 {
-		v72 := randStringTypes(r)
-		this.Protocol = &v72
+		v110 := randStringTypes(r)
+		this.Protocol = &v110
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 6)
@@ -8252,43 +12391,69 @@ func NewPopulatedNetworkBinding(r randyTypes, easy bool) *NetworkBinding {
 	return this
 }
 
+func NewPopulatedPortMapping(r randyTypes, easy bool) *PortMapping {
+	this := &PortMapping{}
+	if r.Intn(10) != 0 {
+		v111 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v111 *= -1
+		}
+		this.ContainerPort = &v111
+	}
+	if r.Intn(10) != 0 {
+		v112 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v112 *= -1
+		}
+		this.HostPort = &v112
+	}
+	if r.Intn(10) != 0 {
+		v113 := randStringTypes(r)
+		this.Protocol = &v113
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
+	}
+	return this
+}
+
 func NewPopulatedResource(r randyTypes, easy bool) *Resource {
 	this := &Resource{}
 	if r.Intn(10) != 0 {
-		v73 := float64(r.Float64())
+		v114 := float64(r.Float64())
 		if r.Intn(2) == 0 {
-			v73 *= -1
+			v114 *= -1
 		}
-		this.DoubleValue = &v73
+		this.DoubleValue = &v114
 	}
 	if r.Intn(10) != 0 {
-		v74 := int64(r.Int63())
+		v115 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v74 *= -1
+			v115 *= -1
 		}
-		this.IntegerValue = &v74
+		this.IntegerValue = &v115
 	}
 	if r.Intn(10) != 0 {
-		v75 := int64(r.Int63())
+		v116 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v75 *= -1
+			v116 *= -1
 		}
-		this.LongValue = &v75
+		this.LongValue = &v116
 	}
 	if r.Intn(10) != 0 {
-		v76 := randStringTypes(r)
-		this.Name = &v76
+		v117 := randStringTypes(r)
+		this.Name = &v117
 	}
 	if r.Intn(10) != 0 {
-		v77 := r.Intn(10)
-		this.StringSetValue = make([]string, v77)
-		for i := 0; i < v77; i++ {
+		v118 := r.Intn(10)
+		this.StringSetValue = make([]string, v118)
+		for i := 0; i < v118; i++ {
 			this.StringSetValue[i] = randStringTypes(r)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v78 := randStringTypes(r)
-		this.Type = &v78
+		v119 := randStringTypes(r)
+		this.Type = &v119
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 8)
@@ -8299,8 +12464,8 @@ func NewPopulatedResource(r randyTypes, easy bool) *Resource {
 func NewPopulatedService(r randyTypes, easy bool) *Service {
 	this := &Service{}
 	if r.Intn(10) != 0 {
-		v79 := randStringTypes(r)
-		this.ClusterArn = &v79
+		v120 := randStringTypes(r)
+		this.ClusterArn = &v120
 	}
 	if r.Intn(10) != 0 {
 		this.CreatedAt = opsee_types.NewPopulatedTimestamp(r, easy)
@@ -8309,66 +12474,66 @@ func NewPopulatedService(r randyTypes, easy bool) *Service {
 		this.DeploymentConfiguration = NewPopulatedDeploymentConfiguration(r, easy)
 	}
 	if r.Intn(10) != 0 {
-		v80 := r.Intn(5)
-		this.Deployments = make([]*Deployment, v80)
-		for i := 0; i < v80; i++ {
+		v121 := r.Intn(5)
+		this.Deployments = make([]*Deployment, v121)
+		for i := 0; i < v121; i++ {
 			this.Deployments[i] = NewPopulatedDeployment(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v81 := int64(r.Int63())
+		v122 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v81 *= -1
+			v122 *= -1
 		}
-		this.DesiredCount = &v81
+		this.DesiredCount = &v122
 	}
 	if r.Intn(10) != 0 {
-		v82 := r.Intn(5)
-		this.Events = make([]*ServiceEvent, v82)
-		for i := 0; i < v82; i++ {
+		v123 := r.Intn(5)
+		this.Events = make([]*ServiceEvent, v123)
+		for i := 0; i < v123; i++ {
 			this.Events[i] = NewPopulatedServiceEvent(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v83 := r.Intn(5)
-		this.LoadBalancers = make([]*LoadBalancer, v83)
-		for i := 0; i < v83; i++ {
+		v124 := r.Intn(5)
+		this.LoadBalancers = make([]*LoadBalancer, v124)
+		for i := 0; i < v124; i++ {
 			this.LoadBalancers[i] = NewPopulatedLoadBalancer(r, easy)
 		}
 	}
 	if r.Intn(10) != 0 {
-		v84 := int64(r.Int63())
+		v125 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v84 *= -1
+			v125 *= -1
 		}
-		this.PendingCount = &v84
+		this.PendingCount = &v125
 	}
 	if r.Intn(10) != 0 {
-		v85 := randStringTypes(r)
-		this.RoleArn = &v85
+		v126 := randStringTypes(r)
+		this.RoleArn = &v126
 	}
 	if r.Intn(10) != 0 {
-		v86 := int64(r.Int63())
+		v127 := int64(r.Int63())
 		if r.Intn(2) == 0 {
-			v86 *= -1
+			v127 *= -1
 		}
-		this.RunningCount = &v86
+		this.RunningCount = &v127
 	}
 	if r.Intn(10) != 0 {
-		v87 := randStringTypes(r)
-		this.ServiceArn = &v87
+		v128 := randStringTypes(r)
+		this.ServiceArn = &v128
 	}
 	if r.Intn(10) != 0 {
-		v88 := randStringTypes(r)
-		this.ServiceName = &v88
+		v129 := randStringTypes(r)
+		this.ServiceName = &v129
 	}
 	if r.Intn(10) != 0 {
-		v89 := randStringTypes(r)
-		this.Status = &v89
+		v130 := randStringTypes(r)
+		this.Status = &v130
 	}
 	if r.Intn(10) != 0 {
-		v90 := randStringTypes(r)
-		this.TaskDefinition = &v90
+		v131 := randStringTypes(r)
+		this.TaskDefinition = &v131
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 16)
@@ -8382,12 +12547,12 @@ func NewPopulatedServiceEvent(r randyTypes, easy bool) *ServiceEvent {
 		this.CreatedAt = opsee_types.NewPopulatedTimestamp(r, easy)
 	}
 	if r.Intn(10) != 0 {
-		v91 := randStringTypes(r)
-		this.Id = &v91
+		v132 := randStringTypes(r)
+		this.Id = &v132
 	}
 	if r.Intn(10) != 0 {
-		v92 := randStringTypes(r)
-		this.Message = &v92
+		v133 := randStringTypes(r)
+		this.Message = &v133
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
@@ -8398,17 +12563,17 @@ func NewPopulatedServiceEvent(r randyTypes, easy bool) *ServiceEvent {
 func NewPopulatedTask(r randyTypes, easy bool) *Task {
 	this := &Task{}
 	if r.Intn(10) != 0 {
-		v93 := randStringTypes(r)
-		this.ClusterArn = &v93
+		v134 := randStringTypes(r)
+		this.ClusterArn = &v134
 	}
 	if r.Intn(10) != 0 {
-		v94 := randStringTypes(r)
-		this.ContainerInstanceArn = &v94
+		v135 := randStringTypes(r)
+		this.ContainerInstanceArn = &v135
 	}
 	if r.Intn(10) != 0 {
-		v95 := r.Intn(5)
-		this.Containers = make([]*Container, v95)
-		for i := 0; i < v95; i++ {
+		v136 := r.Intn(5)
+		this.Containers = make([]*Container, v136)
+		for i := 0; i < v136; i++ {
 			this.Containers[i] = NewPopulatedContainer(r, easy)
 		}
 	}
@@ -8416,12 +12581,12 @@ func NewPopulatedTask(r randyTypes, easy bool) *Task {
 		this.CreatedAt = opsee_types.NewPopulatedTimestamp(r, easy)
 	}
 	if r.Intn(10) != 0 {
-		v96 := randStringTypes(r)
-		this.DesiredStatus = &v96
+		v137 := randStringTypes(r)
+		this.DesiredStatus = &v137
 	}
 	if r.Intn(10) != 0 {
-		v97 := randStringTypes(r)
-		this.LastStatus = &v97
+		v138 := randStringTypes(r)
+		this.LastStatus = &v138
 	}
 	if r.Intn(10) != 0 {
 		this.Overrides = NewPopulatedTaskOverride(r, easy)
@@ -8430,23 +12595,23 @@ func NewPopulatedTask(r randyTypes, easy bool) *Task {
 		this.StartedAt = opsee_types.NewPopulatedTimestamp(r, easy)
 	}
 	if r.Intn(10) != 0 {
-		v98 := randStringTypes(r)
-		this.StartedBy = &v98
+		v139 := randStringTypes(r)
+		this.StartedBy = &v139
 	}
 	if r.Intn(10) != 0 {
 		this.StoppedAt = opsee_types.NewPopulatedTimestamp(r, easy)
 	}
 	if r.Intn(10) != 0 {
-		v99 := randStringTypes(r)
-		this.StoppedReason = &v99
+		v140 := randStringTypes(r)
+		this.StoppedReason = &v140
 	}
 	if r.Intn(10) != 0 {
-		v100 := randStringTypes(r)
-		this.TaskArn = &v100
+		v141 := randStringTypes(r)
+		this.TaskArn = &v141
 	}
 	if r.Intn(10) != 0 {
-		v101 := randStringTypes(r)
-		this.TaskDefinitionArn = &v101
+		v142 := randStringTypes(r)
+		this.TaskDefinitionArn = &v142
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 15)
@@ -8454,12 +12619,60 @@ func NewPopulatedTask(r randyTypes, easy bool) *Task {
 	return this
 }
 
+func NewPopulatedTaskDefinition(r randyTypes, easy bool) *TaskDefinition {
+	this := &TaskDefinition{}
+	if r.Intn(10) != 0 {
+		v143 := r.Intn(5)
+		this.ContainerDefinitions = make([]*ContainerDefinition, v143)
+		for i := 0; i < v143; i++ {
+			this.ContainerDefinitions[i] = NewPopulatedContainerDefinition(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v144 := randStringTypes(r)
+		this.Family = &v144
+	}
+	if r.Intn(10) != 0 {
+		v145 := r.Intn(5)
+		this.RequiresAttributes = make([]*Attribute, v145)
+		for i := 0; i < v145; i++ {
+			this.RequiresAttributes[i] = NewPopulatedAttribute(r, easy)
+		}
+	}
+	if r.Intn(10) != 0 {
+		v146 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v146 *= -1
+		}
+		this.Revision = &v146
+	}
+	if r.Intn(10) != 0 {
+		v147 := randStringTypes(r)
+		this.Status = &v147
+	}
+	if r.Intn(10) != 0 {
+		v148 := randStringTypes(r)
+		this.TaskDefinitionArn = &v148
+	}
+	if r.Intn(10) != 0 {
+		v149 := r.Intn(5)
+		this.Volumes = make([]*Volume, v149)
+		for i := 0; i < v149; i++ {
+			this.Volumes[i] = NewPopulatedVolume(r, easy)
+		}
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 9)
+	}
+	return this
+}
+
 func NewPopulatedTaskOverride(r randyTypes, easy bool) *TaskOverride {
 	this := &TaskOverride{}
 	if r.Intn(10) != 0 {
-		v102 := r.Intn(5)
-		this.ContainerOverrides = make([]*ContainerOverride, v102)
-		for i := 0; i < v102; i++ {
+		v150 := r.Intn(5)
+		this.ContainerOverrides = make([]*ContainerOverride, v150)
+		for i := 0; i < v150; i++ {
 			this.ContainerOverrides[i] = NewPopulatedContainerOverride(r, easy)
 		}
 	}
@@ -8469,22 +12682,79 @@ func NewPopulatedTaskOverride(r randyTypes, easy bool) *TaskOverride {
 	return this
 }
 
-func NewPopulatedVersionInfo(r randyTypes, easy bool) *VersionInfo {
-	this := &VersionInfo{}
+func NewPopulatedUlimit(r randyTypes, easy bool) *Ulimit {
+	this := &Ulimit{}
 	if r.Intn(10) != 0 {
-		v103 := randStringTypes(r)
-		this.AgentHash = &v103
+		v151 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v151 *= -1
+		}
+		this.HardLimit = &v151
 	}
 	if r.Intn(10) != 0 {
-		v104 := randStringTypes(r)
-		this.AgentVersion = &v104
+		v152 := randStringTypes(r)
+		this.Name = &v152
 	}
 	if r.Intn(10) != 0 {
-		v105 := randStringTypes(r)
-		this.DockerVersion = &v105
+		v153 := int64(r.Int63())
+		if r.Intn(2) == 0 {
+			v153 *= -1
+		}
+		this.SoftLimit = &v153
 	}
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedVersionInfo(r randyTypes, easy bool) *VersionInfo {
+	this := &VersionInfo{}
+	if r.Intn(10) != 0 {
+		v154 := randStringTypes(r)
+		this.AgentHash = &v154
+	}
+	if r.Intn(10) != 0 {
+		v155 := randStringTypes(r)
+		this.AgentVersion = &v155
+	}
+	if r.Intn(10) != 0 {
+		v156 := randStringTypes(r)
+		this.DockerVersion = &v156
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedVolume(r randyTypes, easy bool) *Volume {
+	this := &Volume{}
+	if r.Intn(10) != 0 {
+		this.Host = NewPopulatedHostVolumeProperties(r, easy)
+	}
+	if r.Intn(10) != 0 {
+		v157 := randStringTypes(r)
+		this.Name = &v157
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
+	}
+	return this
+}
+
+func NewPopulatedVolumeFrom(r randyTypes, easy bool) *VolumeFrom {
+	this := &VolumeFrom{}
+	if r.Intn(10) != 0 {
+		v158 := bool(bool(r.Intn(2) == 0))
+		this.ReadOnly = &v158
+	}
+	if r.Intn(10) != 0 {
+		v159 := randStringTypes(r)
+		this.SourceContainer = &v159
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTypes(r, 4)
 	}
 	return this
 }
@@ -8508,9 +12778,9 @@ func randUTF8RuneTypes(r randyTypes) rune {
 	return rune(ru + 61)
 }
 func randStringTypes(r randyTypes) string {
-	v106 := r.Intn(100)
-	tmps := make([]rune, v106)
-	for i := 0; i < v106; i++ {
+	v160 := r.Intn(100)
+	tmps := make([]rune, v160)
+	for i := 0; i < v160; i++ {
 		tmps[i] = randUTF8RuneTypes(r)
 	}
 	return string(tmps)
@@ -8532,11 +12802,11 @@ func randFieldTypes(data []byte, r randyTypes, fieldNumber int, wire int) []byte
 	switch wire {
 	case 0:
 		data = encodeVarintPopulateTypes(data, uint64(key))
-		v107 := r.Int63()
+		v161 := r.Int63()
 		if r.Intn(2) == 0 {
-			v107 *= -1
+			v161 *= -1
 		}
-		data = encodeVarintPopulateTypes(data, uint64(v107))
+		data = encodeVarintPopulateTypes(data, uint64(v161))
 	case 1:
 		data = encodeVarintPopulateTypes(data, uint64(key))
 		data = append(data, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
@@ -8609,6 +12879,137 @@ func (m *Container) Size() (n int) {
 	if m.TaskArn != nil {
 		l = len(*m.TaskArn)
 		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ContainerDefinition) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.Command) > 0 {
+		for _, s := range m.Command {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Cpu != nil {
+		n += 1 + sozTypes(uint64(*m.Cpu))
+	}
+	if m.DisableNetworking != nil {
+		n += 2
+	}
+	if len(m.DnsSearchDomains) > 0 {
+		for _, s := range m.DnsSearchDomains {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if len(m.DnsServers) > 0 {
+		for _, s := range m.DnsServers {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if len(m.DockerLabels) > 0 {
+		for k, v := range m.DockerLabels {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovTypes(uint64(len(k))) + 1 + len(v) + sovTypes(uint64(len(v)))
+			n += mapEntrySize + 1 + sovTypes(uint64(mapEntrySize))
+		}
+	}
+	if len(m.DockerSecurityOptions) > 0 {
+		for _, s := range m.DockerSecurityOptions {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if len(m.EntryPoint) > 0 {
+		for _, s := range m.EntryPoint {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if len(m.Environment) > 0 {
+		for _, e := range m.Environment {
+			l = e.Size()
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Essential != nil {
+		n += 2
+	}
+	if len(m.ExtraHosts) > 0 {
+		for _, e := range m.ExtraHosts {
+			l = e.Size()
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Hostname != nil {
+		l = len(*m.Hostname)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.Image != nil {
+		l = len(*m.Image)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if len(m.Links) > 0 {
+		for _, s := range m.Links {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.LogConfiguration != nil {
+		l = m.LogConfiguration.Size()
+		n += 2 + l + sovTypes(uint64(l))
+	}
+	if m.Memory != nil {
+		n += 2 + sozTypes(uint64(*m.Memory))
+	}
+	if len(m.MountPoints) > 0 {
+		for _, e := range m.MountPoints {
+			l = e.Size()
+			n += 2 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Name != nil {
+		l = len(*m.Name)
+		n += 2 + l + sovTypes(uint64(l))
+	}
+	if len(m.PortMappings) > 0 {
+		for _, e := range m.PortMappings {
+			l = e.Size()
+			n += 2 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Privileged != nil {
+		n += 3
+	}
+	if m.ReadonlyRootFilesystem != nil {
+		n += 3
+	}
+	if len(m.Ulimits) > 0 {
+		for _, e := range m.Ulimits {
+			l = e.Size()
+			n += 2 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.User != nil {
+		l = len(*m.User)
+		n += 2 + l + sovTypes(uint64(l))
+	}
+	if len(m.VolumesFrom) > 0 {
+		for _, e := range m.VolumesFrom {
+			l = e.Size()
+			n += 2 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.WorkingDirectory != nil {
+		l = len(*m.WorkingDirectory)
+		n += 2 + l + sovTypes(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -8830,6 +13231,32 @@ func (m *DescribeServicesOutput) Size() (n int) {
 	return n
 }
 
+func (m *DescribeTaskDefinitionInput) Size() (n int) {
+	var l int
+	_ = l
+	if m.TaskDefinition != nil {
+		l = len(*m.TaskDefinition)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *DescribeTaskDefinitionOutput) Size() (n int) {
+	var l int
+	_ = l
+	if m.TaskDefinition != nil {
+		l = m.TaskDefinition.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *DescribeTasksInput) Size() (n int) {
 	var l int
 	_ = l
@@ -8887,6 +13314,36 @@ func (m *Failure) Size() (n int) {
 	return n
 }
 
+func (m *HostEntry) Size() (n int) {
+	var l int
+	_ = l
+	if m.Hostname != nil {
+		l = len(*m.Hostname)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.IpAddress != nil {
+		l = len(*m.IpAddress)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *HostVolumeProperties) Size() (n int) {
+	var l int
+	_ = l
+	if m.SourcePath != nil {
+		l = len(*m.SourcePath)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *KeyValuePair) Size() (n int) {
 	var l int
 	_ = l
@@ -8925,6 +13382,45 @@ func (m *ListClustersOutput) Size() (n int) {
 	_ = l
 	if len(m.ClusterArns) > 0 {
 		for _, s := range m.ClusterArns {
+			l = len(s)
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.NextToken != nil {
+		l = len(*m.NextToken)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListContainerInstancesInput) Size() (n int) {
+	var l int
+	_ = l
+	if m.Cluster != nil {
+		l = len(*m.Cluster)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.MaxResults != nil {
+		n += 1 + sozTypes(uint64(*m.MaxResults))
+	}
+	if m.NextToken != nil {
+		l = len(*m.NextToken)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListContainerInstancesOutput) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.ContainerInstanceArns) > 0 {
+		for _, s := range m.ContainerInstanceArns {
 			l = len(s)
 			n += 1 + l + sovTypes(uint64(l))
 		}
@@ -9057,6 +13553,47 @@ func (m *LoadBalancer) Size() (n int) {
 	return n
 }
 
+func (m *LogConfiguration) Size() (n int) {
+	var l int
+	_ = l
+	if m.LogDriver != nil {
+		l = len(*m.LogDriver)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if len(m.Options) > 0 {
+		for k, v := range m.Options {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovTypes(uint64(len(k))) + 1 + len(v) + sovTypes(uint64(len(v)))
+			n += mapEntrySize + 1 + sovTypes(uint64(mapEntrySize))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *MountPoint) Size() (n int) {
+	var l int
+	_ = l
+	if m.ContainerPath != nil {
+		l = len(*m.ContainerPath)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.ReadOnly != nil {
+		n += 2
+	}
+	if m.SourceVolume != nil {
+		l = len(*m.SourceVolume)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *NetworkBinding) Size() (n int) {
 	var l int
 	_ = l
@@ -9064,6 +13601,25 @@ func (m *NetworkBinding) Size() (n int) {
 		l = len(*m.BindIP)
 		n += 1 + l + sovTypes(uint64(l))
 	}
+	if m.ContainerPort != nil {
+		n += 1 + sozTypes(uint64(*m.ContainerPort))
+	}
+	if m.HostPort != nil {
+		n += 1 + sozTypes(uint64(*m.HostPort))
+	}
+	if m.Protocol != nil {
+		l = len(*m.Protocol)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *PortMapping) Size() (n int) {
+	var l int
+	_ = l
 	if m.ContainerPort != nil {
 		n += 1 + sozTypes(uint64(*m.ContainerPort))
 	}
@@ -9264,6 +13820,48 @@ func (m *Task) Size() (n int) {
 	return n
 }
 
+func (m *TaskDefinition) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.ContainerDefinitions) > 0 {
+		for _, e := range m.ContainerDefinitions {
+			l = e.Size()
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Family != nil {
+		l = len(*m.Family)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if len(m.RequiresAttributes) > 0 {
+		for _, e := range m.RequiresAttributes {
+			l = e.Size()
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.Revision != nil {
+		n += 1 + sozTypes(uint64(*m.Revision))
+	}
+	if m.Status != nil {
+		l = len(*m.Status)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.TaskDefinitionArn != nil {
+		l = len(*m.TaskDefinitionArn)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if len(m.Volumes) > 0 {
+		for _, e := range m.Volumes {
+			l = e.Size()
+			n += 1 + l + sovTypes(uint64(l))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *TaskOverride) Size() (n int) {
 	var l int
 	_ = l
@@ -9272,6 +13870,25 @@ func (m *TaskOverride) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovTypes(uint64(l))
 		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *Ulimit) Size() (n int) {
+	var l int
+	_ = l
+	if m.HardLimit != nil {
+		n += 1 + sozTypes(uint64(*m.HardLimit))
+	}
+	if m.Name != nil {
+		l = len(*m.Name)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.SoftLimit != nil {
+		n += 1 + sozTypes(uint64(*m.SoftLimit))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -9292,6 +13909,39 @@ func (m *VersionInfo) Size() (n int) {
 	}
 	if m.DockerVersion != nil {
 		l = len(*m.DockerVersion)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *Volume) Size() (n int) {
+	var l int
+	_ = l
+	if m.Host != nil {
+		l = m.Host.Size()
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.Name != nil {
+		l = len(*m.Name)
+		n += 1 + l + sovTypes(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *VolumeFrom) Size() (n int) {
+	var l int
+	_ = l
+	if m.ReadOnly != nil {
+		n += 2
+	}
+	if m.SourceContainer != nil {
+		l = len(*m.SourceContainer)
 		n += 1 + l + sovTypes(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -9655,6 +14305,839 @@ func (m *Container) Unmarshal(data []byte) error {
 			}
 			s := string(data[iNdEx:postIndex])
 			m.TaskArn = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ContainerDefinition) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ContainerDefinition: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ContainerDefinition: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Command", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Command = append(m.Command, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cpu", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.Cpu = &v2
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DisableNetworking", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.DisableNetworking = &b
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DnsSearchDomains", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DnsSearchDomains = append(m.DnsSearchDomains, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DnsServers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DnsServers = append(m.DnsServers, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DockerLabels", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(data[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			var valuekey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				valuekey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapvalue uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLenmapvalue |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapvalue := int(stringLenmapvalue)
+			if intStringLenmapvalue < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postStringIndexmapvalue := iNdEx + intStringLenmapvalue
+			if postStringIndexmapvalue > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapvalue := string(data[iNdEx:postStringIndexmapvalue])
+			iNdEx = postStringIndexmapvalue
+			if m.DockerLabels == nil {
+				m.DockerLabels = make(map[string]string)
+			}
+			m.DockerLabels[mapkey] = mapvalue
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DockerSecurityOptions", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DockerSecurityOptions = append(m.DockerSecurityOptions, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EntryPoint", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.EntryPoint = append(m.EntryPoint, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Environment", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Environment = append(m.Environment, &KeyValuePair{})
+			if err := m.Environment[len(m.Environment)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 11:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Essential", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.Essential = &b
+		case 12:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExtraHosts", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ExtraHosts = append(m.ExtraHosts, &HostEntry{})
+			if err := m.ExtraHosts[len(m.ExtraHosts)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 13:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hostname", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Hostname = &s
+			iNdEx = postIndex
+		case 14:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Image", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Image = &s
+			iNdEx = postIndex
+		case 15:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Links", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Links = append(m.Links, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 16:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LogConfiguration", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.LogConfiguration == nil {
+				m.LogConfiguration = &LogConfiguration{}
+			}
+			if err := m.LogConfiguration.Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 17:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Memory", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.Memory = &v2
+		case 18:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MountPoints", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MountPoints = append(m.MountPoints, &MountPoint{})
+			if err := m.MountPoints[len(m.MountPoints)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 19:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Name = &s
+			iNdEx = postIndex
+		case 20:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PortMappings", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PortMappings = append(m.PortMappings, &PortMapping{})
+			if err := m.PortMappings[len(m.PortMappings)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 21:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Privileged", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.Privileged = &b
+		case 22:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReadonlyRootFilesystem", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.ReadonlyRootFilesystem = &b
+		case 23:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Ulimits", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Ulimits = append(m.Ulimits, &Ulimit{})
+			if err := m.Ulimits[len(m.Ulimits)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 24:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field User", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.User = &s
+			iNdEx = postIndex
+		case 25:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VolumesFrom", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VolumesFrom = append(m.VolumesFrom, &VolumeFrom{})
+			if err := m.VolumesFrom[len(m.VolumesFrom)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 26:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field WorkingDirectory", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.WorkingDirectory = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -10995,6 +16478,171 @@ func (m *DescribeServicesOutput) Unmarshal(data []byte) error {
 	}
 	return nil
 }
+func (m *DescribeTaskDefinitionInput) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DescribeTaskDefinitionInput: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DescribeTaskDefinitionInput: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TaskDefinition", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.TaskDefinition = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DescribeTaskDefinitionOutput) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DescribeTaskDefinitionOutput: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DescribeTaskDefinitionOutput: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TaskDefinition", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.TaskDefinition == nil {
+				m.TaskDefinition = &TaskDefinition{}
+			}
+			if err := m.TaskDefinition.Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *DescribeTasksInput) Unmarshal(data []byte) error {
 	l := len(data)
 	iNdEx := 0
@@ -11329,6 +16977,198 @@ func (m *Failure) Unmarshal(data []byte) error {
 	}
 	return nil
 }
+func (m *HostEntry) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HostEntry: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HostEntry: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hostname", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Hostname = &s
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field IpAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.IpAddress = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *HostVolumeProperties) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HostVolumeProperties: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HostVolumeProperties: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourcePath", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.SourcePath = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *KeyValuePair) Unmarshal(data []byte) error {
 	l := len(data)
 	iNdEx := 0
@@ -11600,6 +17440,249 @@ func (m *ListClustersOutput) Unmarshal(data []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.ClusterArns = append(m.ClusterArns, string(data[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NextToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.NextToken = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListContainerInstancesInput) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListContainerInstancesInput: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListContainerInstancesInput: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cluster", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Cluster = &s
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxResults", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.MaxResults = &v2
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NextToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.NextToken = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListContainerInstancesOutput) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListContainerInstancesOutput: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListContainerInstancesOutput: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContainerInstanceArns", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ContainerInstanceArns = append(m.ContainerInstanceArns, string(data[iNdEx:postIndex]))
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -12422,6 +18505,330 @@ func (m *LoadBalancer) Unmarshal(data []byte) error {
 	}
 	return nil
 }
+func (m *LogConfiguration) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LogConfiguration: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LogConfiguration: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LogDriver", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.LogDriver = &s
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Options", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(data[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			var valuekey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				valuekey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapvalue uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLenmapvalue |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapvalue := int(stringLenmapvalue)
+			if intStringLenmapvalue < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postStringIndexmapvalue := iNdEx + intStringLenmapvalue
+			if postStringIndexmapvalue > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapvalue := string(data[iNdEx:postStringIndexmapvalue])
+			iNdEx = postStringIndexmapvalue
+			if m.Options == nil {
+				m.Options = make(map[string]string)
+			}
+			m.Options[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MountPoint) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MountPoint: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MountPoint: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContainerPath", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.ContainerPath = &s
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReadOnly", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.ReadOnly = &b
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceVolume", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.SourceVolume = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *NetworkBinding) Unmarshal(data []byte) error {
 	l := len(data)
 	iNdEx := 0
@@ -12526,6 +18933,131 @@ func (m *NetworkBinding) Unmarshal(data []byte) error {
 			v2 := int64(v)
 			m.HostPort = &v2
 		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Protocol", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Protocol = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PortMapping) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PortMapping: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PortMapping: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContainerPort", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.ContainerPort = &v2
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HostPort", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.HostPort = &v2
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Protocol", wireType)
 			}
@@ -13834,6 +20366,262 @@ func (m *Task) Unmarshal(data []byte) error {
 	}
 	return nil
 }
+func (m *TaskDefinition) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: TaskDefinition: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: TaskDefinition: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContainerDefinitions", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ContainerDefinitions = append(m.ContainerDefinitions, &ContainerDefinition{})
+			if err := m.ContainerDefinitions[len(m.ContainerDefinitions)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Family", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Family = &s
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequiresAttributes", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RequiresAttributes = append(m.RequiresAttributes, &Attribute{})
+			if err := m.RequiresAttributes[len(m.RequiresAttributes)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Revision", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.Revision = &v2
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Status = &s
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TaskDefinitionArn", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.TaskDefinitionArn = &s
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Volumes", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Volumes = append(m.Volumes, &Volume{})
+			if err := m.Volumes[len(m.Volumes)-1].Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *TaskOverride) Unmarshal(data []byte) error {
 	l := len(data)
 	iNdEx := 0
@@ -13894,6 +20682,131 @@ func (m *TaskOverride) Unmarshal(data []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Ulimit) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Ulimit: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Ulimit: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HardLimit", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.HardLimit = &v2
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Name = &s
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SoftLimit", wireType)
+			}
+			var v uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			v = (v >> 1) ^ uint64((int64(v&1)<<63)>>63)
+			v2 := int64(v)
+			m.SoftLimit = &v2
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTypes(data[iNdEx:])
@@ -14057,6 +20970,222 @@ func (m *VersionInfo) Unmarshal(data []byte) error {
 	}
 	return nil
 }
+func (m *Volume) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Volume: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Volume: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Host == nil {
+				m.Host = &HostVolumeProperties{}
+			}
+			if err := m.Host.Unmarshal(data[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.Name = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VolumeFrom) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTypes
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VolumeFrom: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VolumeFrom: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReadOnly", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			b := bool(v != 0)
+			m.ReadOnly = &b
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceContainer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTypes
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTypes
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(data[iNdEx:postIndex])
+			m.SourceContainer = &s
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTypes(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthTypes
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func skipTypes(data []byte) (n int, err error) {
 	l := len(data)
 	iNdEx := 0
@@ -14163,113 +21292,166 @@ var (
 )
 
 var fileDescriptorTypes = []byte{
-	// 1721 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xa4, 0x58, 0x4b, 0x6f, 0x1c, 0x45,
-	0x10, 0xd6, 0x3e, 0xbc, 0x8f, 0x9e, 0xdd, 0x75, 0xdc, 0xce, 0x63, 0x31, 0x90, 0x98, 0x11, 0x8a,
-	0x02, 0x0a, 0x0e, 0x72, 0x40, 0x0a, 0xaf, 0x83, 0x5f, 0x21, 0x56, 0xec, 0xc4, 0x8c, 0x4d, 0x0e,
-	0x9c, 0x32, 0x9e, 0x6d, 0xaf, 0x47, 0xde, 0x99, 0x5e, 0x4d, 0xf7, 0x38, 0xf1, 0x8d, 0x13, 0xbf,
-	0x80, 0x5f, 0xc0, 0x29, 0x3f, 0x80, 0x03, 0x27, 0x84, 0xc4, 0x85, 0x23, 0x3f, 0x01, 0xf8, 0x15,
-	0x88, 0x03, 0xa2, 0xfa, 0x31, 0x33, 0x3d, 0x33, 0xbb, 0xde, 0x05, 0x0e, 0x2b, 0x6d, 0x57, 0x57,
-	0x55, 0x57, 0x7d, 0x55, 0x5d, 0x55, 0x3d, 0xc8, 0xe2, 0x17, 0x63, 0xc2, 0xd6, 0xc6, 0x11, 0xe5,
-	0x14, 0x77, 0xe9, 0x98, 0x11, 0xb2, 0xe6, 0xbe, 0x60, 0x6b, 0xc4, 0x63, 0x2b, 0xef, 0x0d, 0x7d,
-	0x7e, 0x1a, 0x1f, 0xaf, 0x79, 0x34, 0xb8, 0x37, 0xa4, 0x43, 0x7a, 0x4f, 0x72, 0x1d, 0xc7, 0x27,
-	0x72, 0x25, 0x17, 0xf2, 0x9f, 0x92, 0x5e, 0x79, 0xdf, 0x60, 0x97, 0x8a, 0x32, 0x7e, 0xb9, 0x54,
-	0x02, 0xea, 0x08, 0x25, 0xf1, 0xf1, 0x5c, 0x12, 0xd2, 0xc2, 0x7b, 0xdc, 0x0f, 0x08, 0xe3, 0x6e,
-	0x30, 0x56, 0xb2, 0xf6, 0x87, 0xa8, 0xbd, 0xc1, 0x79, 0xe4, 0x1f, 0xc7, 0x9c, 0x60, 0x8c, 0xea,
-	0x4f, 0xdc, 0x80, 0xf4, 0xab, 0xab, 0x95, 0x3b, 0x6d, 0xa7, 0x1e, 0xc2, 0x7f, 0x7c, 0x15, 0x2d,
-	0x3c, 0x73, 0x47, 0x31, 0xe9, 0xd7, 0x24, 0x71, 0xe1, 0x5c, 0x2c, 0xec, 0xbf, 0x2a, 0xa8, 0xbd,
-	0x45, 0x43, 0xee, 0xfa, 0x21, 0x89, 0xb0, 0x8d, 0x3a, 0xe9, 0x62, 0x23, 0x0a, 0xb5, 0x7c, 0xc7,
-	0x33, 0x68, 0x78, 0x05, 0xb5, 0x76, 0x5e, 0xfa, 0x7c, 0x8b, 0x0e, 0x94, 0x2a, 0xec, 0xb4, 0x88,
-	0x5e, 0xe3, 0x9b, 0x08, 0xed, 0xb9, 0x8c, 0x1f, 0x72, 0x97, 0xc7, 0xac, 0x5f, 0x97, 0xd2, 0x68,
-	0x94, 0x52, 0x52, 0xbb, 0x16, 0x0c, 0xbb, 0x3e, 0x47, 0x8b, 0x4f, 0x08, 0x7f, 0x41, 0xa3, 0xb3,
-	0x4d, 0x3f, 0x1c, 0xf8, 0xe1, 0x90, 0xf5, 0x1b, 0xab, 0xb5, 0x3b, 0xd6, 0xfa, 0x9b, 0x6b, 0x39,
-	0xf8, 0xd7, 0xf2, 0x5c, 0xce, 0x62, 0x98, 0x97, 0xc2, 0xd7, 0x51, 0xc3, 0x21, 0x2e, 0xa3, 0x61,
-	0xbf, 0x29, 0xd5, 0x37, 0x22, 0xb9, 0xc2, 0x7d, 0xd4, 0x3c, 0x72, 0xd9, 0x99, 0xf0, 0xa7, 0x25,
-	0x37, 0x9a, 0x5c, 0x2d, 0xed, 0x9f, 0xeb, 0x68, 0x29, 0xf5, 0x77, 0x37, 0x04, 0x38, 0x43, 0x8f,
-	0xe0, 0xdb, 0xa8, 0xb7, 0x31, 0x24, 0x21, 0x78, 0x14, 0x86, 0xc4, 0xe3, 0x64, 0x20, 0x61, 0x68,
-	0x39, 0x3d, 0x37, 0x47, 0xc5, 0x77, 0xd1, 0x92, 0xe4, 0xfb, 0x72, 0x3c, 0x70, 0x39, 0xd1, 0x3e,
-	0x2b, 0x70, 0x97, 0xdc, 0xe2, 0x06, 0x7e, 0x80, 0x50, 0x1a, 0x1f, 0x01, 0x8d, 0xf0, 0xb0, 0x5f,
-	0xf0, 0x30, 0x65, 0x70, 0x90, 0x9b, 0xf2, 0xe2, 0x75, 0x74, 0xb5, 0x64, 0xa4, 0x70, 0x46, 0x81,
-	0x78, 0xd5, 0x9b, 0xb0, 0x87, 0xdf, 0x46, 0xdd, 0x1d, 0x6f, 0x3d, 0xa1, 0xec, 0x0e, 0x00, 0x52,
-	0xc1, 0xdc, 0x25, 0x26, 0x51, 0x78, 0x70, 0x40, 0x24, 0x7a, 0x02, 0x20, 0xb6, 0x45, 0xe3, 0x90,
-	0x4b, 0xf0, 0xb0, 0xb3, 0x34, 0x2e, 0x6e, 0xe0, 0x5d, 0xb4, 0xec, 0x90, 0xa1, 0xcf, 0x38, 0x89,
-	0xc8, 0xc0, 0x21, 0x8c, 0xc6, 0x91, 0x07, 0xae, 0xb4, 0xa4, 0x2b, 0x37, 0x0a, 0xae, 0x24, 0xfb,
-	0xce, 0x72, 0x54, 0x96, 0x81, 0x98, 0x63, 0x87, 0x04, 0x60, 0xb5, 0x08, 0x64, 0xaa, 0xa9, 0x7d,
-	0xb9, 0x26, 0x1c, 0x95, 0x44, 0x84, 0x07, 0x4e, 0x1c, 0x86, 0x79, 0x0f, 0x90, 0xf2, 0x20, 0x2a,
-	0x6e, 0x88, 0x0c, 0xd1, 0x61, 0xb2, 0x54, 0x86, 0x30, 0x15, 0x9b, 0x4f, 0x91, 0xf5, 0x8c, 0x44,
-	0xcc, 0xa7, 0xe1, 0x6e, 0x78, 0x42, 0xfb, 0x1d, 0xd8, 0xb4, 0xd6, 0x57, 0x0a, 0x76, 0x18, 0x1c,
-	0x8e, 0x75, 0x9e, 0x2d, 0xec, 0xaf, 0x2b, 0x46, 0x16, 0x3d, 0x85, 0x9d, 0xc8, 0x87, 0xab, 0x00,
-	0x59, 0xb7, 0x45, 0x83, 0xc0, 0x0d, 0x45, 0xfa, 0xd4, 0x44, 0xd6, 0x79, 0x6a, 0x89, 0x3f, 0x43,
-	0xd6, 0x4e, 0x78, 0xee, 0x47, 0x34, 0x0c, 0x20, 0x49, 0x20, 0x63, 0x84, 0xd7, 0xaf, 0x17, 0x4e,
-	0x7b, 0x4c, 0x2e, 0xe4, 0x6d, 0x3d, 0x70, 0xfd, 0xc8, 0xb1, 0x48, 0xc6, 0x9f, 0xde, 0xa1, 0x7a,
-	0x76, 0x87, 0xec, 0xef, 0xab, 0x08, 0x6d, 0x93, 0xf1, 0x88, 0x5e, 0x48, 0x96, 0x0f, 0xe0, 0x4e,
-	0x43, 0xf2, 0x43, 0x92, 0x6e, 0x70, 0x99, 0xbc, 0xd6, 0xfa, 0x75, 0xad, 0x5f, 0x95, 0xb7, 0xa3,
-	0xa4, 0x78, 0x38, 0x6d, 0x2f, 0x61, 0x14, 0x97, 0x7f, 0x9b, 0x30, 0x1f, 0x02, 0xa5, 0x60, 0x54,
-	0x97, 0xbb, 0x33, 0x30, 0x68, 0xb8, 0x87, 0xaa, 0x90, 0x4c, 0xea, 0xe8, 0xaa, 0x3f, 0x10, 0x32,
-	0x3a, 0x83, 0x94, 0xcc, 0x82, 0x92, 0x19, 0x1b, 0x34, 0xc1, 0xa3, 0x63, 0xa4, 0x78, 0x1a, 0x8a,
-	0x27, 0x32, 0x68, 0x46, 0x64, 0x9a, 0xb9, 0xc8, 0xc0, 0x5d, 0x14, 0xf1, 0xdb, 0x26, 0x27, 0x10,
-	0x78, 0x0e, 0x88, 0xeb, 0x2b, 0xdc, 0xe3, 0x39, 0xaa, 0xf0, 0x58, 0xdd, 0x36, 0xe1, 0x71, 0xfb,
-	0x72, 0x8f, 0xe3, 0x84, 0xd1, 0x7e, 0x81, 0x6e, 0x64, 0xa8, 0x41, 0x08, 0x4f, 0xfc, 0x61, 0x1c,
-	0xb9, 0x52, 0x21, 0x1c, 0xbc, 0xef, 0xbe, 0xf4, 0x83, 0x38, 0x38, 0x20, 0x90, 0x69, 0xa1, 0xc2,
-	0x11, 0x3b, 0xbd, 0x20, 0x47, 0x85, 0x83, 0xaf, 0xed, 0x83, 0x11, 0x40, 0x79, 0x44, 0xdc, 0x11,
-	0x3f, 0xbd, 0x48, 0xd8, 0x15, 0x7a, 0xd7, 0x82, 0x49, 0x9b, 0xf6, 0x19, 0xba, 0x05, 0x50, 0x7b,
-	0x70, 0xc3, 0x49, 0xe9, 0x6a, 0xb3, 0xdd, 0x70, 0x1c, 0x73, 0x99, 0x3f, 0xa3, 0x58, 0x5c, 0x1c,
-	0x5d, 0x85, 0x9b, 0x9e, 0x5a, 0xe2, 0x35, 0x84, 0xcb, 0x42, 0x32, 0x8d, 0xda, 0x0e, 0x2e, 0x55,
-	0x03, 0x66, 0xbf, 0xaa, 0xa0, 0xd5, 0xe9, 0xa7, 0x3d, 0x8d, 0xb9, 0x38, 0xee, 0x60, 0xa2, 0xd2,
-	0xaa, 0xcc, 0xcd, 0xd5, 0x42, 0x6e, 0x96, 0x18, 0x27, 0x1d, 0x0b, 0x65, 0xab, 0xf5, 0xd0, 0xf5,
-	0x47, 0x71, 0xa4, 0x8d, 0xcb, 0x22, 0x92, 0xe8, 0xd1, 0xdb, 0x4e, 0xeb, 0x44, 0xf3, 0xd9, 0xfb,
-	0xe8, 0x5a, 0x62, 0xe9, 0x21, 0x89, 0xce, 0xfd, 0x39, 0xd0, 0x80, 0x76, 0x94, 0xb0, 0x6a, 0x0c,
-	0x5a, 0x4c, 0xaf, 0xc5, 0xcd, 0xbc, 0x5e, 0xd4, 0xa7, 0xfd, 0x35, 0xad, 0xab, 0xce, 0x67, 0x9d,
-	0x90, 0xc9, 0x1d, 0x55, 0x96, 0xd1, 0xdb, 0x86, 0x09, 0xdb, 0x08, 0x27, 0x16, 0xc8, 0x42, 0x34,
-	0xcb, 0x1d, 0xe8, 0xd2, 0x92, 0x4f, 0xfb, 0xb2, 0x20, 0xf2, 0x9c, 0xd9, 0x1c, 0x2d, 0xe7, 0xb4,
-	0xfc, 0x0f, 0x27, 0xde, 0x31, 0x0f, 0xb0, 0xd6, 0x97, 0x0b, 0x02, 0x62, 0x2f, 0x39, 0xf5, 0x3e,
-	0x6a, 0x6a, 0x79, 0x7c, 0x05, 0xd5, 0xb2, 0x79, 0xa0, 0xe6, 0x42, 0x87, 0xc9, 0xba, 0x6d, 0xcd,
-	0xec, 0xb6, 0xf6, 0x03, 0xd4, 0x31, 0x6b, 0xd7, 0xbf, 0x18, 0x45, 0xbe, 0x40, 0x4b, 0x7b, 0xd0,
-	0x29, 0x34, 0x30, 0x1a, 0x29, 0x98, 0x28, 0xe0, 0x1e, 0x42, 0xc1, 0x8f, 0x47, 0x9c, 0xe9, 0x3b,
-	0x88, 0x82, 0x94, 0x82, 0xdf, 0x40, 0xed, 0x27, 0xe4, 0x25, 0x3f, 0xa2, 0x67, 0x24, 0xb1, 0xa4,
-	0x1d, 0x26, 0x04, 0xfb, 0x08, 0x61, 0x53, 0xa5, 0x86, 0x6d, 0x15, 0x59, 0x9a, 0x02, 0x3e, 0x31,
-	0x5d, 0x9e, 0x2d, 0x2f, 0x23, 0xcd, 0xd0, 0x7a, 0xa6, 0x0c, 0x9d, 0x37, 0x43, 0xf3, 0x2e, 0xd4,
-	0x2e, 0x77, 0xa1, 0x3e, 0xc5, 0x85, 0x42, 0xfa, 0xe6, 0x64, 0xaa, 0x05, 0x19, 0xe1, 0xa0, 0xe6,
-	0x97, 0x0e, 0xaa, 0x54, 0xb2, 0x58, 0x46, 0xb2, 0xbf, 0xad, 0xa2, 0x9e, 0x50, 0x3b, 0x57, 0x4e,
-	0xde, 0x9d, 0x30, 0x25, 0x25, 0x83, 0x4e, 0xe9, 0xe2, 0x8b, 0xd1, 0x43, 0xb7, 0x91, 0xdc, 0x18,
-	0xd8, 0x1d, 0x98, 0x44, 0x91, 0x3e, 0x0f, 0xdd, 0xc0, 0x1f, 0x5d, 0xe8, 0x31, 0xa6, 0x71, 0x22,
-	0x57, 0x05, 0xb0, 0x1a, 0x97, 0x83, 0xd5, 0x9c, 0xee, 0xb8, 0xcc, 0x39, 0xd5, 0x2b, 0x12, 0xc7,
-	0x05, 0x49, 0xc8, 0x83, 0x05, 0x11, 0xd4, 0xff, 0xcd, 0x0b, 0xd9, 0x28, 0x40, 0x9e, 0x25, 0x04,
-	0xfb, 0x31, 0x5a, 0x4c, 0x51, 0x99, 0x0b, 0x69, 0xa8, 0x3e, 0x7a, 0xb6, 0x4c, 0xab, 0x8f, 0x1e,
-	0x2e, 0x99, 0xfd, 0x4d, 0x05, 0x75, 0xf6, 0xa8, 0x3b, 0xd8, 0x74, 0x47, 0x02, 0x98, 0x48, 0x20,
-	0x93, 0xe2, 0x68, 0xdc, 0x89, 0xae, 0x67, 0x12, 0x73, 0x5c, 0x07, 0x34, 0x4a, 0x3a, 0x49, 0xc6,
-	0x25, 0x88, 0xf8, 0x5d, 0x74, 0xc5, 0xd4, 0x6d, 0x4c, 0x04, 0x57, 0x46, 0x05, 0xba, 0x30, 0xa4,
-	0x97, 0x1f, 0x9e, 0x05, 0xfc, 0xe2, 0xef, 0xee, 0x81, 0xb6, 0xa1, 0x71, 0x2c, 0x57, 0x73, 0x1e,
-	0x0e, 0x5e, 0x3f, 0xa2, 0x8c, 0x4b, 0x86, 0xba, 0x7a, 0x02, 0x9c, 0xea, 0xb5, 0xd8, 0x3b, 0x10,
-	0x0f, 0x12, 0x8f, 0x8e, 0x74, 0x68, 0x5b, 0x63, 0xbd, 0xb6, 0x7f, 0xac, 0xa0, 0x56, 0x32, 0xbb,
-	0x89, 0x58, 0x6d, 0xd3, 0xf8, 0x78, 0x44, 0x54, 0x29, 0x10, 0x76, 0x54, 0x1c, 0x6b, 0x90, 0x91,
-	0xc4, 0xe0, 0xb0, 0x1b, 0x72, 0x32, 0x24, 0x51, 0x56, 0x2d, 0x60, 0x70, 0xf0, 0x0d, 0x9a, 0x08,
-	0xcf, 0x1e, 0x0d, 0x87, 0x8a, 0x41, 0xd9, 0xd2, 0x1e, 0x25, 0x84, 0x89, 0xef, 0x0d, 0xe8, 0xec,
-	0x87, 0x30, 0x5b, 0x87, 0xc3, 0x43, 0xc2, 0x95, 0x58, 0x43, 0x06, 0xae, 0xc7, 0x72, 0x54, 0x21,
-	0x7b, 0x04, 0xa3, 0x83, 0x4e, 0xb2, 0xba, 0x18, 0x23, 0xec, 0xbf, 0xeb, 0xa8, 0xa9, 0x13, 0x4c,
-	0x64, 0x6a, 0x56, 0x45, 0x34, 0x8c, 0x28, 0x2b, 0x22, 0xf9, 0x21, 0xac, 0x36, 0xef, 0x10, 0xf6,
-	0x7c, 0xea, 0x48, 0x22, 0xbd, 0xb3, 0xd6, 0x6f, 0x17, 0x0a, 0xf6, 0x14, 0x6e, 0xe7, 0xc6, 0x60,
-	0xca, 0x64, 0xf3, 0x09, 0xe0, 0x9e, 0x6e, 0x31, 0x80, 0x46, 0xb4, 0x81, 0xd7, 0xa6, 0x6a, 0x85,
-	0x90, 0x64, 0xdc, 0xa5, 0x19, 0xb1, 0x31, 0x61, 0x46, 0xbc, 0x8f, 0x1a, 0x3b, 0xe7, 0x52, 0x77,
-	0x73, 0xe2, 0x68, 0xab, 0x01, 0x94, 0x3c, 0x4e, 0x83, 0x48, 0x56, 0xbc, 0x81, 0xba, 0x66, 0x3e,
-	0x27, 0xcf, 0x8a, 0xa2, 0xac, 0xc9, 0xe3, 0x74, 0xcd, 0x4c, 0x67, 0xa5, 0x59, 0xb4, 0x3d, 0x61,
-	0x16, 0x85, 0x22, 0xe7, 0xd0, 0x91, 0x7c, 0x3e, 0x21, 0x55, 0xe4, 0x22, 0xb5, 0x2c, 0x4d, 0xa9,
-	0xd6, 0x84, 0x29, 0x15, 0x42, 0x9e, 0xd5, 0x55, 0xf9, 0x4c, 0x80, 0x90, 0x67, 0x65, 0xb5, 0x58,
-	0x7e, 0xba, 0xe5, 0xf2, 0x93, 0xcd, 0xb9, 0xbd, 0x19, 0x73, 0xee, 0xe2, 0xa4, 0x39, 0xd7, 0x0e,
-	0x51, 0xc7, 0x84, 0xef, 0x3f, 0x4e, 0xfa, 0x6a, 0x8a, 0xaf, 0xa5, 0x53, 0x3c, 0xa0, 0xb2, 0x4f,
-	0x18, 0x83, 0x47, 0xab, 0xae, 0x21, 0xcd, 0x40, 0x2d, 0xc5, 0x0b, 0xb9, 0x2e, 0x0c, 0x9b, 0x99,
-	0xed, 0xd3, 0x1e, 0xa9, 0xb5, 0x4b, 0x1e, 0xa9, 0xf0, 0x24, 0x4e, 0x65, 0xa6, 0x3d, 0x89, 0x53,
-	0x06, 0x38, 0x2d, 0xe5, 0xcd, 0xbb, 0xbd, 0x30, 0xaf, 0xdb, 0xa5, 0xce, 0xd4, 0x98, 0xd4, 0x99,
-	0xf2, 0xdf, 0x30, 0x9a, 0xa5, 0x6f, 0x18, 0x1f, 0xa1, 0x76, 0xf2, 0xc8, 0x63, 0xb2, 0xc3, 0x94,
-	0xb3, 0x54, 0x20, 0x96, 0xf0, 0x38, 0x6d, 0x9a, 0x70, 0x0b, 0xb3, 0x75, 0xf3, 0x99, 0xfd, 0x4a,
-	0x61, 0x09, 0x63, 0xbe, 0x65, 0xa1, 0x42, 0xcb, 0x52, 0x3a, 0xe9, 0x78, 0x2c, 0x75, 0x5a, 0xb3,
-	0x74, 0x6a, 0x46, 0x01, 0x85, 0x96, 0xd2, 0x43, 0x9c, 0x4a, 0xe6, 0x2e, 0x33, 0x89, 0xe6, 0x97,
-	0x93, 0x6e, 0xee, 0xcb, 0x89, 0x18, 0x09, 0xf2, 0xf9, 0x2a, 0x78, 0x54, 0x4a, 0x2f, 0xf1, 0xe2,
-	0x86, 0xfd, 0x1c, 0x75, 0x4c, 0x48, 0x72, 0x8f, 0x8d, 0x0c, 0xcb, 0x19, 0x8f, 0x8d, 0x14, 0xd0,
-	0xec, 0xb1, 0x91, 0xca, 0xda, 0x71, 0xee, 0x05, 0x2f, 0x20, 0x93, 0x9f, 0x66, 0x1e, 0xb9, 0xec,
-	0x34, 0x69, 0xda, 0x6e, 0x42, 0x10, 0x57, 0x5d, 0xee, 0x6a, 0x09, 0x9d, 0xa3, 0x1d, 0xd7, 0xa0,
-	0xc9, 0x5c, 0xa1, 0xde, 0x19, 0xb4, 0x19, 0xcd, 0x94, 0x4c, 0x31, 0x26, 0x71, 0xf3, 0xad, 0x3f,
-	0x7f, 0xbf, 0x59, 0x79, 0xf5, 0xc7, 0xcd, 0xca, 0x0f, 0xf0, 0xfb, 0x05, 0x7e, 0xbf, 0xc2, 0xef,
-	0x37, 0xf8, 0xfd, 0xf4, 0xdd, 0xad, 0xca, 0x57, 0x35, 0xb0, 0xff, 0x9f, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0x10, 0xc9, 0x47, 0xf8, 0x51, 0x14, 0x00, 0x00,
+	// 2569 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xa4, 0x19, 0xcb, 0x72, 0x1c, 0x49,
+	0x31, 0xe6, 0xa1, 0x79, 0xd4, 0xcc, 0xe8, 0xd1, 0xb2, 0xe4, 0x5e, 0x79, 0x59, 0x9b, 0x86, 0xd8,
+	0x30, 0x84, 0x91, 0x09, 0xad, 0x59, 0x8c, 0x97, 0x47, 0xc8, 0x96, 0x8c, 0x15, 0x96, 0xec, 0xa1,
+	0x65, 0x9b, 0x0d, 0x4e, 0xdb, 0x9a, 0x2e, 0x8d, 0x3a, 0xd4, 0x8f, 0xa1, 0xaa, 0x5b, 0xf6, 0xdc,
+	0x38, 0xc1, 0x0f, 0xf0, 0x05, 0x9c, 0xf6, 0x03, 0xf6, 0xc0, 0x89, 0x20, 0x82, 0x0b, 0x47, 0x7e,
+	0x80, 0x08, 0xe0, 0x2b, 0x08, 0x0e, 0x04, 0x99, 0x55, 0xd5, 0xdd, 0xd5, 0x0f, 0x69, 0x64, 0xf6,
+	0x30, 0x11, 0x53, 0x59, 0x99, 0x59, 0x95, 0x59, 0xf9, 0x6e, 0x32, 0x88, 0xe7, 0x33, 0xca, 0xb7,
+	0x67, 0x2c, 0x8a, 0x23, 0x63, 0x14, 0xcd, 0x38, 0xa5, 0xdb, 0xce, 0x5b, 0xbe, 0x4d, 0x27, 0x7c,
+	0xeb, 0x7b, 0x53, 0x2f, 0x3e, 0x4b, 0x4e, 0xb6, 0x27, 0x51, 0x70, 0x7f, 0x1a, 0x4d, 0xa3, 0xfb,
+	0x02, 0xeb, 0x24, 0x39, 0x15, 0x2b, 0xb1, 0x10, 0xff, 0x24, 0xf5, 0xd6, 0xf7, 0x35, 0x74, 0xc1,
+	0x28, 0xc7, 0x17, 0x4b, 0x49, 0x20, 0x8f, 0x90, 0x14, 0x8f, 0xae, 0x45, 0x21, 0x6e, 0x78, 0x3f,
+	0xf6, 0x02, 0xca, 0x63, 0x27, 0x98, 0x49, 0x5a, 0xeb, 0x07, 0xa4, 0xbf, 0x1b, 0xc7, 0xcc, 0x3b,
+	0x49, 0x62, 0x6a, 0x18, 0xa4, 0xfd, 0xc2, 0x09, 0xa8, 0xd9, 0xbc, 0xd3, 0xb8, 0xdb, 0xb7, 0xdb,
+	0x21, 0xfc, 0x37, 0x6e, 0x90, 0xa5, 0x37, 0x8e, 0x9f, 0x50, 0xb3, 0x25, 0x80, 0x4b, 0x17, 0xb8,
+	0xb0, 0xfe, 0xd3, 0x20, 0xfd, 0x27, 0x51, 0x18, 0x3b, 0x5e, 0x48, 0x99, 0x61, 0x91, 0x61, 0xb6,
+	0xd8, 0x65, 0xa1, 0xa2, 0x1f, 0x4e, 0x34, 0x98, 0xb1, 0x45, 0x7a, 0xfb, 0xef, 0xbc, 0xf8, 0x49,
+	0xe4, 0x4a, 0x56, 0x86, 0xdd, 0xa3, 0x6a, 0x6d, 0x7c, 0x44, 0xc8, 0xa1, 0xc3, 0xe3, 0xe3, 0xd8,
+	0x89, 0x13, 0x6e, 0xb6, 0x05, 0x35, 0xf1, 0x33, 0x48, 0x76, 0xaf, 0x25, 0xed, 0x5e, 0x3f, 0x27,
+	0x2b, 0x2f, 0x68, 0xfc, 0x36, 0x62, 0xe7, 0x8f, 0xbd, 0xd0, 0xf5, 0xc2, 0x29, 0x37, 0x3b, 0x77,
+	0x5a, 0x77, 0x07, 0x3b, 0xdf, 0xd8, 0x2e, 0xa8, 0x7f, 0xbb, 0x88, 0x65, 0xaf, 0x84, 0x45, 0x2a,
+	0x63, 0x93, 0x74, 0x6c, 0xea, 0xf0, 0x28, 0x34, 0xbb, 0x82, 0x7d, 0x87, 0x89, 0x95, 0x61, 0x92,
+	0xee, 0x2b, 0x87, 0x9f, 0xa3, 0x3c, 0x3d, 0xb1, 0xd1, 0x8d, 0xe5, 0xd2, 0xfa, 0x5d, 0x9f, 0xac,
+	0x67, 0xf2, 0xee, 0xd1, 0x53, 0x2f, 0xf4, 0x62, 0x4f, 0x52, 0x3c, 0x89, 0x82, 0xc0, 0x09, 0x5d,
+	0xd0, 0x40, 0x0b, 0x29, 0x26, 0x72, 0x69, 0xac, 0x92, 0xd6, 0x93, 0x59, 0xa2, 0xe4, 0x6e, 0x4d,
+	0x66, 0x89, 0x71, 0x8f, 0xac, 0xed, 0x79, 0xdc, 0x39, 0xf1, 0xa9, 0xba, 0x1f, 0xdc, 0x45, 0x48,
+	0xde, 0xb3, 0xd7, 0xdc, 0xf2, 0x86, 0xf1, 0x5d, 0xb2, 0xba, 0x17, 0xf2, 0x63, 0xea, 0xb0, 0xc9,
+	0xd9, 0x5e, 0x14, 0xc0, 0xc1, 0x1c, 0x94, 0x81, 0x47, 0xac, 0xba, 0x25, 0x38, 0x2a, 0x53, 0xe0,
+	0xb2, 0x0b, 0xca, 0xa4, 0x4e, 0x40, 0x99, 0x6e, 0x06, 0x31, 0x3e, 0x27, 0xc3, 0xbd, 0x68, 0x72,
+	0x4e, 0xd9, 0xa1, 0x73, 0x42, 0x7d, 0x0e, 0x52, 0xa3, 0xd6, 0x1e, 0x94, 0xb4, 0x56, 0x23, 0xdf,
+	0xb6, 0x4e, 0xb6, 0x1f, 0xc6, 0x6c, 0x6e, 0x0f, 0x5d, 0x0d, 0x64, 0x3c, 0x20, 0x1b, 0x12, 0xe5,
+	0x98, 0x4e, 0x12, 0xe6, 0xc5, 0xf3, 0x97, 0x33, 0xa4, 0xe3, 0xa0, 0x3f, 0xbc, 0xc4, 0x86, 0x5b,
+	0xb7, 0x89, 0xf7, 0x15, 0xcc, 0xc6, 0x91, 0x17, 0xc6, 0x66, 0x5f, 0xde, 0x97, 0x66, 0x10, 0xe3,
+	0x27, 0x64, 0xb0, 0x1f, 0x5e, 0x78, 0x2c, 0x0a, 0x03, 0x80, 0x9a, 0x44, 0x5c, 0xf7, 0x56, 0xe9,
+	0xba, 0xcf, 0xe9, 0x5c, 0x58, 0xe9, 0xd8, 0xf1, 0x98, 0x3d, 0xa0, 0x39, 0xbe, 0xf1, 0x21, 0xe9,
+	0xef, 0x73, 0x0e, 0xff, 0x3c, 0xc7, 0x37, 0x07, 0x42, 0xc1, 0x7d, 0x9a, 0x02, 0x8c, 0x87, 0x70,
+	0xf8, 0xbb, 0x98, 0x39, 0xcf, 0x22, 0x1e, 0x73, 0x73, 0x28, 0x78, 0x9b, 0x25, 0xde, 0xb8, 0x27,
+	0xc5, 0x25, 0x34, 0xc3, 0x45, 0x7b, 0xc6, 0x3f, 0x68, 0x8b, 0xe6, 0x48, 0xd8, 0x47, 0xef, 0x4c,
+	0xad, 0xd1, 0x67, 0x0e, 0x02, 0x67, 0x4a, 0xcd, 0x65, 0xe9, 0x33, 0x1e, 0x2e, 0x10, 0x7a, 0xe8,
+	0x85, 0xe7, 0xdc, 0x5c, 0x11, 0x32, 0x2e, 0xf9, 0xb8, 0x30, 0x9e, 0x93, 0xd5, 0xc3, 0x68, 0x0a,
+	0xea, 0x3e, 0xf5, 0xa6, 0x09, 0x73, 0x50, 0x27, 0xe6, 0x2a, 0x90, 0x0d, 0x76, 0x6e, 0x97, 0xee,
+	0x51, 0x46, 0xb3, 0x57, 0xfd, 0x12, 0x04, 0x6d, 0xf9, 0x88, 0x06, 0x11, 0x9b, 0x9b, 0x6b, 0xc2,
+	0xd4, 0x3a, 0x81, 0x58, 0x19, 0x9f, 0x91, 0xc1, 0x51, 0x94, 0x84, 0xb1, 0xd0, 0x28, 0x37, 0x0d,
+	0x21, 0xe7, 0x07, 0x25, 0xfe, 0x39, 0x86, 0x3d, 0x08, 0x72, 0xec, 0xcc, 0xfb, 0xd6, 0x35, 0xef,
+	0xfb, 0x29, 0x19, 0x8e, 0x23, 0x16, 0x1f, 0x39, 0xb3, 0x99, 0x70, 0xbd, 0x1b, 0x82, 0xe3, 0x56,
+	0x89, 0xa3, 0x86, 0x62, 0x0f, 0x67, 0x1a, 0x3e, 0x3e, 0xfa, 0x98, 0x79, 0x17, 0x9e, 0x4f, 0xa7,
+	0xd4, 0x35, 0x37, 0xc4, 0xb3, 0x90, 0x59, 0x06, 0x31, 0x3e, 0x25, 0x9b, 0xe0, 0x94, 0x6e, 0x14,
+	0xfa, 0x73, 0x3b, 0x8a, 0xe2, 0xa7, 0x00, 0xe6, 0x73, 0x1e, 0xd3, 0xc0, 0xdc, 0x14, 0xb8, 0x9b,
+	0xac, 0x76, 0xd7, 0xb8, 0x4f, 0xba, 0xaf, 0x7d, 0x2f, 0xf0, 0x40, 0xc8, 0x9b, 0xe2, 0x4a, 0x1b,
+	0xa5, 0x2b, 0xc9, 0x5d, 0xbb, 0x9b, 0x48, 0x2c, 0x14, 0xee, 0x35, 0xa7, 0xcc, 0x34, 0xa5, 0x70,
+	0x09, 0xfc, 0x47, 0x6d, 0xbd, 0x89, 0xfc, 0x04, 0x02, 0xe5, 0x53, 0x16, 0x05, 0xe6, 0x07, 0xb5,
+	0xda, 0x92, 0x18, 0x88, 0x60, 0x0f, 0x2e, 0x72, 0x6c, 0x74, 0xd5, 0x5f, 0x4a, 0xaf, 0xdd, 0xf3,
+	0x18, 0x9d, 0xc4, 0xf8, 0x18, 0x5b, 0x82, 0xf9, 0xea, 0xdb, 0x12, 0x7c, 0xeb, 0x67, 0x10, 0x04,
+	0xca, 0x3e, 0x85, 0xb1, 0xe2, 0x9c, 0xce, 0xcd, 0x86, 0xa0, 0xc1, 0xbf, 0x68, 0x38, 0x22, 0xea,
+	0xaa, 0xb8, 0x2a, 0x17, 0x8f, 0x9a, 0x0f, 0x1b, 0xd6, 0x5f, 0xda, 0x64, 0x2d, 0xf3, 0xd4, 0x83,
+	0x10, 0x02, 0x7b, 0x38, 0xa1, 0xc6, 0xc7, 0x64, 0x79, 0x77, 0x0a, 0x06, 0x0e, 0x3b, 0x21, 0x9c,
+	0x44, 0x5d, 0x41, 0xd8, 0xb3, 0x97, 0x9d, 0x02, 0x14, 0x63, 0x90, 0xc0, 0x7b, 0x3d, 0x73, 0x9d,
+	0x98, 0xaa, 0xe8, 0x2b, 0xc3, 0xfc, 0x9a, 0x53, 0xde, 0x40, 0x57, 0xc9, 0x32, 0x05, 0x06, 0xe9,
+	0x3a, 0x57, 0xc9, 0x10, 0x6c, 0xe2, 0x64, 0xb8, 0xc6, 0x0e, 0xb9, 0x51, 0xb9, 0x24, 0x86, 0x55,
+	0x19, 0xce, 0x6f, 0x4c, 0x6a, 0xf6, 0x8c, 0x6f, 0x93, 0xd1, 0xfe, 0x64, 0x27, 0x85, 0x1c, 0xb8,
+	0x10, 0xc8, 0x10, 0x79, 0x44, 0x75, 0x20, 0x4a, 0x30, 0xa6, 0x22, 0x8e, 0x63, 0xa8, 0xe6, 0x4f,
+	0xd0, 0x6a, 0x45, 0x18, 0x37, 0xec, 0xb5, 0x59, 0x79, 0xc3, 0x38, 0x20, 0xeb, 0x36, 0x9d, 0x7a,
+	0x60, 0x28, 0x8c, 0xba, 0x36, 0xe5, 0x51, 0xc2, 0x26, 0x54, 0x46, 0xa7, 0xc1, 0xce, 0xcd, 0x92,
+	0x28, 0xe9, 0xbe, 0xbd, 0xce, 0xaa, 0x34, 0x90, 0x7d, 0x0c, 0x9b, 0x62, 0xbc, 0x45, 0xd3, 0xce,
+	0x38, 0xf5, 0xaf, 0xe6, 0x64, 0xb0, 0x0a, 0x09, 0x4a, 0x60, 0x27, 0x61, 0x58, 0x94, 0x80, 0x48,
+	0x09, 0x58, 0x79, 0x03, 0xfd, 0x5b, 0x3d, 0xd3, 0x40, 0xe6, 0x2a, 0x2e, 0xdf, 0xe6, 0xc7, 0x60,
+	0xb1, 0x10, 0xdb, 0x21, 0x04, 0x1c, 0x84, 0xa7, 0x11, 0xc4, 0xb1, 0x46, 0x8d, 0x37, 0x6a, 0x18,
+	0x60, 0xb2, 0xf9, 0xc2, 0xfa, 0x4d, 0x43, 0xb3, 0xa2, 0x97, 0xb0, 0xc3, 0x3c, 0x48, 0xca, 0x97,
+	0x67, 0xb3, 0x52, 0x44, 0x6e, 0xbd, 0x67, 0x44, 0x4e, 0xe3, 0x49, 0x3b, 0x8f, 0x27, 0xd6, 0x57,
+	0x4d, 0xc8, 0x5a, 0x74, 0xe6, 0x47, 0x73, 0x81, 0xf2, 0x00, 0xaa, 0x0b, 0xf0, 0x70, 0x30, 0xd2,
+	0xdd, 0x58, 0x18, 0xef, 0x60, 0x67, 0x53, 0xf1, 0x97, 0x85, 0xd6, 0xab, 0xb4, 0x8c, 0xb1, 0xfb,
+	0x93, 0x14, 0x11, 0xcb, 0x90, 0x3d, 0xca, 0xc1, 0xbb, 0x5c, 0xa9, 0x46, 0x99, 0x6e, 0x87, 0xae,
+	0x06, 0x33, 0x96, 0x49, 0x13, 0x8c, 0x49, 0x1e, 0xdd, 0xf4, 0x5c, 0xa4, 0x51, 0x16, 0x24, 0x69,
+	0x96, 0x24, 0xcd, 0x4c, 0x83, 0x21, 0x8e, 0x7a, 0x23, 0x89, 0xd3, 0x91, 0x38, 0x4c, 0x83, 0x69,
+	0x2f, 0xd3, 0x2d, 0xbc, 0x0c, 0xf8, 0x22, 0xbe, 0x5f, 0x9e, 0x45, 0x55, 0x31, 0xb1, 0x1c, 0x17,
+	0xa0, 0x28, 0xb1, 0xf4, 0x36, 0x94, 0xb8, 0x7f, 0xb5, 0xc4, 0x49, 0x8a, 0x68, 0xbd, 0x25, 0x37,
+	0x73, 0xad, 0x15, 0x53, 0x01, 0x1c, 0x7c, 0xe4, 0xbc, 0xf3, 0x82, 0x24, 0x18, 0x53, 0xb0, 0xb4,
+	0x50, 0xea, 0xd1, 0xb0, 0x97, 0x83, 0x02, 0x14, 0x93, 0xf6, 0x11, 0x5c, 0x02, 0x20, 0xcf, 0xa8,
+	0xe3, 0xc7, 0x67, 0xf3, 0x14, 0x5d, 0x6a, 0x6f, 0x23, 0xa8, 0xdb, 0xb4, 0xce, 0xc9, 0x6d, 0x50,
+	0xf5, 0x04, 0x3c, 0x9c, 0x56, 0x5c, 0x9b, 0x1f, 0x84, 0xb3, 0x24, 0x16, 0xf6, 0xe3, 0x27, 0xe8,
+	0x38, 0x2a, 0x6e, 0x75, 0x27, 0x72, 0x69, 0x6c, 0x13, 0xa3, 0x4a, 0x24, 0xcc, 0xa8, 0x6f, 0x1b,
+	0x95, 0x68, 0xc0, 0xad, 0x2f, 0x1b, 0xe4, 0xce, 0xe5, 0xa7, 0xbd, 0x4c, 0x62, 0x3c, 0x6e, 0x5c,
+	0xcb, 0xb4, 0x29, 0x6c, 0xf3, 0xce, 0x65, 0xc5, 0x4d, 0x8a, 0x58, 0x77, 0x2c, 0x84, 0xad, 0xde,
+	0x53, 0xc7, 0xf3, 0x13, 0xa6, 0x2e, 0x97, 0xbf, 0x48, 0xca, 0x47, 0x6d, 0xdb, 0xbd, 0x53, 0x85,
+	0x67, 0x1d, 0x41, 0x09, 0xa4, 0x6e, 0x8a, 0xf5, 0x96, 0x77, 0x0d, 0x6d, 0x40, 0x21, 0x91, 0xa2,
+	0x2a, 0x1d, 0xf4, 0xb8, 0x5a, 0xa3, 0x67, 0x6e, 0x96, 0xf9, 0x29, 0x79, 0xf5, 0xdb, 0x35, 0xaf,
+	0x77, 0x3b, 0xa4, 0x29, 0x1c, 0x55, 0xa5, 0x51, 0xdb, 0xda, 0x15, 0xf6, 0xc9, 0xad, 0xf4, 0x06,
+	0x45, 0x43, 0x96, 0x72, 0x55, 0xed, 0xbb, 0x59, 0x67, 0xdf, 0x16, 0x25, 0x1f, 0xd6, 0xb3, 0x51,
+	0xe2, 0xec, 0xd7, 0xf2, 0xa9, 0x56, 0xf3, 0x45, 0xa4, 0xca, 0x31, 0x7b, 0xc4, 0xd0, 0x8f, 0x59,
+	0xa8, 0x7c, 0x48, 0xad, 0x02, 0x4f, 0x69, 0x7e, 0x09, 0xd9, 0x71, 0x2b, 0x26, 0xeb, 0x05, 0x2e,
+	0x5f, 0x43, 0xe5, 0xdf, 0xd1, 0x0f, 0x18, 0xec, 0xac, 0xd7, 0x88, 0x93, 0x9e, 0xfa, 0x09, 0xe9,
+	0x2a, 0x7a, 0xac, 0x01, 0xf2, 0x3e, 0xaa, 0xe5, 0xb0, 0x50, 0xeb, 0x52, 0x5a, 0x7a, 0x97, 0x02,
+	0xcf, 0xd3, 0xcf, 0xea, 0xd3, 0x42, 0x4d, 0xda, 0x2c, 0xd5, 0xa4, 0x50, 0x07, 0x1f, 0xcc, 0x76,
+	0x5d, 0x17, 0x2e, 0x95, 0x26, 0xf9, 0xbe, 0x97, 0x02, 0xac, 0x4f, 0xc9, 0x0d, 0xa4, 0x94, 0x45,
+	0xcd, 0x98, 0x45, 0x33, 0xca, 0x62, 0x8f, 0x8a, 0x3a, 0xed, 0x58, 0x64, 0xaa, 0xb1, 0x13, 0x9f,
+	0x29, 0x9e, 0x84, 0x67, 0x10, 0xeb, 0x21, 0x19, 0xea, 0x81, 0xfe, 0x3d, 0x3a, 0xc8, 0x5f, 0x90,
+	0xb5, 0x43, 0x48, 0xab, 0xea, 0x5d, 0xd4, 0x43, 0xc1, 0x71, 0x10, 0xb4, 0x20, 0x3b, 0x26, 0x7e,
+	0xcc, 0x55, 0xc0, 0x22, 0x41, 0x06, 0x41, 0x21, 0x5e, 0x40, 0x0d, 0xfe, 0x2a, 0x3a, 0xa7, 0xa9,
+	0x22, 0xfa, 0x61, 0x0a, 0xb0, 0x5e, 0x11, 0x43, 0x67, 0xa9, 0x5e, 0xed, 0x0e, 0x19, 0x28, 0x08,
+	0xa8, 0x94, 0xab, 0x5c, 0x36, 0x98, 0xe4, 0xa0, 0x05, 0x5c, 0x13, 0x72, 0x4b, 0x70, 0x7d, 0xef,
+	0x30, 0x57, 0x14, 0xa6, 0x75, 0xb5, 0x30, 0xed, 0xf2, 0xb1, 0x8c, 0x7c, 0x58, 0x7f, 0xac, 0x12,
+	0x0b, 0xe2, 0x76, 0x5d, 0x51, 0x95, 0x0a, 0xb8, 0x51, 0x57, 0x55, 0x2d, 0x12, 0xf5, 0x5c, 0xbe,
+	0xc9, 0x75, 0x23, 0xd7, 0xd7, 0x13, 0x50, 0xbd, 0x56, 0x29, 0xac, 0x15, 0x68, 0x9a, 0x25, 0x1a,
+	0x7c, 0x4b, 0x85, 0x2f, 0x44, 0x95, 0x4e, 0x3b, 0xe0, 0x39, 0xc8, 0xfa, 0x7d, 0x93, 0x2c, 0x23,
+	0xdb, 0x6b, 0x79, 0xff, 0xbd, 0x9a, 0xea, 0x39, 0x2d, 0x80, 0x2b, 0xfa, 0xc3, 0x92, 0x54, 0x95,
+	0x17, 0x85, 0x41, 0xc5, 0xc8, 0xd5, 0x81, 0xe8, 0xa8, 0x4f, 0x9d, 0xc0, 0xf3, 0xe7, 0xaa, 0xbc,
+	0xed, 0x9c, 0x8a, 0x55, 0x49, 0x59, 0x9d, 0xab, 0x95, 0xd5, 0xbd, 0x5c, 0x70, 0xe1, 0x5e, 0xb2,
+	0x86, 0x48, 0x05, 0x7f, 0xa1, 0xfc, 0x1b, 0x6e, 0xc0, 0xa0, 0x2e, 0x78, 0x3c, 0x17, 0x05, 0x04,
+	0xd0, 0xf3, 0x14, 0x60, 0x3d, 0x27, 0x2b, 0x99, 0x56, 0xae, 0xa5, 0x69, 0x08, 0x25, 0x6a, 0xfa,
+	0x91, 0x65, 0x25, 0x35, 0xfe, 0xe0, 0xd6, 0x6f, 0x1b, 0x64, 0x78, 0x18, 0x39, 0xee, 0x63, 0xc7,
+	0x47, 0xc5, 0x30, 0xd4, 0x4c, 0xa6, 0x47, 0xcd, 0xfd, 0x47, 0x13, 0x1d, 0x58, 0xc0, 0xc2, 0xce,
+	0x50, 0x59, 0x4c, 0x8e, 0x85, 0x40, 0xec, 0x9f, 0x74, 0xde, 0x5a, 0xa5, 0x08, 0xed, 0x6e, 0x11,
+	0x6e, 0x7d, 0xd5, 0xa8, 0x36, 0xcf, 0x28, 0x17, 0xc0, 0xf6, 0xa0, 0x97, 0xcc, 0x1e, 0xbc, 0xef,
+	0xa7, 0x00, 0xe3, 0x29, 0xe9, 0xa6, 0x53, 0x09, 0x19, 0x91, 0xef, 0x2d, 0xe8, 0xb2, 0xb7, 0x15,
+	0xba, 0x9c, 0x00, 0x74, 0x23, 0xb9, 0xda, 0x7a, 0x44, 0x86, 0xfa, 0xc6, 0x7b, 0x75, 0x6d, 0x0c,
+	0x4c, 0x21, 0xeb, 0xaf, 0x8b, 0x6a, 0xc9, 0xa3, 0xac, 0xa6, 0x16, 0x00, 0xe2, 0x7b, 0x60, 0x43,
+	0xfc, 0x12, 0x5a, 0x5e, 0xa1, 0xb7, 0x9e, 0xdd, 0x63, 0x6a, 0x8d, 0xf5, 0xa9, 0x0c, 0xd2, 0x32,
+	0x7c, 0x2b, 0x75, 0x0d, 0xb9, 0x06, 0xc3, 0x37, 0x5b, 0x2e, 0x4e, 0xc2, 0xd0, 0x52, 0xf1, 0xef,
+	0xc1, 0x58, 0x9d, 0xd8, 0x39, 0x11, 0xab, 0x6b, 0xbe, 0x93, 0xca, 0x35, 0x02, 0xa1, 0x2d, 0xe7,
+	0x79, 0x67, 0x6a, 0x8d, 0x7b, 0x63, 0x9c, 0x2e, 0x4e, 0x22, 0x5f, 0x79, 0x41, 0x6f, 0xa6, 0xd6,
+	0x10, 0x63, 0x06, 0xda, 0x58, 0xa0, 0x7a, 0x58, 0x73, 0xd1, 0x61, 0xad, 0x2b, 0x0e, 0x6b, 0x97,
+	0x0e, 0xfb, 0x53, 0x03, 0xd5, 0x26, 0x15, 0x81, 0x3e, 0xb4, 0x17, 0x25, 0x27, 0x3e, 0x7d, 0x93,
+	0x3d, 0x4b, 0xc3, 0x1e, 0xb8, 0x39, 0x08, 0x15, 0x79, 0x10, 0xc6, 0x74, 0x4a, 0x59, 0x9e, 0xb0,
+	0xa0, 0xd0, 0xf7, 0x34, 0x98, 0x34, 0xaf, 0x70, 0x2a, 0x11, 0xa4, 0xe0, 0x60, 0x5e, 0x0a, 0x50,
+	0x3b, 0xa9, 0x84, 0x12, 0xe9, 0x18, 0x7a, 0xe1, 0x70, 0x7a, 0x4c, 0x63, 0x49, 0x26, 0x87, 0x72,
+	0xcb, 0xbc, 0x00, 0x45, 0xda, 0x57, 0x50, 0xea, 0x2b, 0xe7, 0x6f, 0x63, 0xd9, 0x6f, 0xfd, 0xb7,
+	0x4d, 0xba, 0xca, 0xf1, 0x31, 0x82, 0xe4, 0x89, 0x2c, 0xcd, 0xc5, 0x79, 0x1e, 0x2b, 0x36, 0x4d,
+	0xad, 0xeb, 0x36, 0x4d, 0x5f, 0x5c, 0xda, 0x42, 0x08, 0xe9, 0x06, 0x3b, 0x1f, 0x97, 0x1c, 0xe4,
+	0x12, 0x6c, 0xfb, 0xa6, 0x7b, 0x49, 0x27, 0xf2, 0x19, 0xe8, 0x3d, 0xdb, 0x92, 0x73, 0xcb, 0xea,
+	0x38, 0x25, 0xc7, 0x80, 0x27, 0xc9, 0xb1, 0x2b, 0x3d, 0x5d, 0xa7, 0xa6, 0xa7, 0xfb, 0x84, 0x74,
+	0xf6, 0x2f, 0x04, 0xef, 0x6e, 0x6d, 0x2b, 0xaa, 0x14, 0x28, 0x70, 0xec, 0x0e, 0x15, 0xa8, 0xc6,
+	0x2e, 0x19, 0xe9, 0x71, 0x26, 0x1d, 0x03, 0xdc, 0xaa, 0x84, 0x83, 0x1c, 0xc7, 0x1e, 0xe9, 0x11,
+	0x88, 0x57, 0x7a, 0xc7, 0x7e, 0x4d, 0xef, 0x08, 0xc9, 0xc7, 0x8e, 0x7c, 0x31, 0xee, 0x20, 0x32,
+	0xf9, 0x30, 0xb9, 0xac, 0x74, 0x95, 0x83, 0x9a, 0xae, 0x12, 0xcb, 0xaf, 0x2c, 0xb9, 0x89, 0xb6,
+	0x1e, 0xcb, 0xaf, 0x0c, 0x52, 0x4e, 0x0b, 0xa3, 0x6a, 0x5a, 0xc8, 0xfb, 0xd2, 0xe5, 0x05, 0x7d,
+	0xe9, 0x4a, 0x6d, 0xdd, 0x1e, 0x42, 0x6c, 0xd1, 0xd4, 0xf7, 0x7f, 0x76, 0xe6, 0xb2, 0xeb, 0x6e,
+	0x65, 0x5d, 0x37, 0x68, 0xe5, 0x08, 0xca, 0x4e, 0x1c, 0x91, 0x4a, 0x97, 0xed, 0x06, 0x72, 0x89,
+	0x13, 0xad, 0x36, 0x5e, 0x6c, 0xa1, 0xb5, 0x5f, 0x36, 0x54, 0x6a, 0x5d, 0x31, 0x54, 0x7a, 0x08,
+	0x3c, 0x53, 0xf8, 0x65, 0x23, 0xac, 0x0c, 0x01, 0x4e, 0xcb, 0x70, 0x8b, 0x62, 0x2f, 0x5d, 0x57,
+	0xec, 0x4a, 0xc5, 0xd0, 0xa9, 0xab, 0x18, 0x8a, 0x5f, 0x3f, 0xba, 0x95, 0xaf, 0x1f, 0x3f, 0x22,
+	0xfd, 0x74, 0x28, 0xc3, 0x45, 0xe6, 0xaf, 0x5a, 0x29, 0x6a, 0x2c, 0xc5, 0xb1, 0xfb, 0x51, 0x8a,
+	0x8d, 0xd7, 0x56, 0x45, 0xc1, 0xe2, 0xa9, 0x02, 0x4f, 0x11, 0x8b, 0xa5, 0x04, 0x29, 0x95, 0x12,
+	0x92, 0x67, 0x34, 0x9b, 0x09, 0x9e, 0x83, 0x45, 0x3c, 0x15, 0x22, 0xaa, 0x42, 0x51, 0xa9, 0x36,
+	0x46, 0x1a, 0xf3, 0x88, 0xeb, 0x40, 0xfd, 0x9b, 0xcb, 0xa8, 0xf0, 0xcd, 0x05, 0x4b, 0xb5, 0xa2,
+	0xbd, 0x22, 0x8e, 0x34, 0xe9, 0xb5, 0xb8, 0xbc, 0x61, 0xfd, 0xbd, 0x59, 0x36, 0x6f, 0xe3, 0x8d,
+	0x66, 0x2f, 0x39, 0x38, 0x6d, 0xe4, 0xac, 0xc5, 0x9f, 0x3f, 0x34, 0x9b, 0xd2, 0xe8, 0xb5, 0x7a,
+	0xaf, 0x55, 0xa8, 0xf7, 0x9e, 0xe1, 0x84, 0xf0, 0xd7, 0x09, 0xbc, 0x33, 0x7f, 0x8f, 0xb1, 0xa9,
+	0xc1, 0x2a, 0x34, 0x32, 0xf5, 0x5f, 0x78, 0x38, 0xae, 0x53, 0xe3, 0x29, 0x48, 0xfd, 0x72, 0xad,
+	0xb9, 0x77, 0xa7, 0xe0, 0xde, 0xb5, 0xea, 0xea, 0x5e, 0xa2, 0x2e, 0x9c, 0x9a, 0xab, 0x81, 0xb7,
+	0x8a, 0x82, 0x1b, 0xb5, 0xc3, 0x6e, 0xbb, 0xab, 0x06, 0xdd, 0xd6, 0x17, 0x64, 0xa8, 0x9b, 0x5c,
+	0x61, 0xf8, 0x92, 0xdb, 0xea, 0x82, 0xe1, 0x4b, 0x66, 0xb0, 0xf9, 0xf0, 0x25, 0xa3, 0xb5, 0x3e,
+	0x27, 0x1d, 0x39, 0xaa, 0x47, 0x6b, 0x7c, 0xe6, 0x30, 0xf7, 0x10, 0x17, 0xaa, 0x3a, 0xe8, 0x9f,
+	0xa5, 0x80, 0x2c, 0xe1, 0xb6, 0xb4, 0x84, 0x8b, 0xf6, 0x1b, 0x9d, 0xc6, 0x92, 0x42, 0xa5, 0x68,
+	0x9e, 0x02, 0xa0, 0x9f, 0xd3, 0x67, 0xa5, 0x88, 0x2c, 0x86, 0xe0, 0xcf, 0x1c, 0x9e, 0x96, 0x5e,
+	0x7d, 0x27, 0x05, 0x60, 0x90, 0x16, 0xbb, 0x8a, 0x42, 0x1d, 0x33, 0x74, 0x34, 0x98, 0xf0, 0x72,
+	0x31, 0xc5, 0x4f, 0x91, 0xd2, 0xbe, 0x40, 0x07, 0x5a, 0xaf, 0x49, 0x47, 0x6a, 0xd1, 0xf8, 0x21,
+	0x69, 0x63, 0x31, 0xa3, 0xa2, 0xe7, 0xb7, 0x6a, 0xbe, 0x36, 0x95, 0xdb, 0x70, 0xbb, 0x8d, 0xd5,
+	0x4e, 0x9d, 0xac, 0x96, 0x4d, 0x48, 0xfe, 0x25, 0xa2, 0x50, 0x25, 0x36, 0x4b, 0x55, 0xe2, 0x5d,
+	0xb2, 0x22, 0xab, 0xc4, 0xec, 0x01, 0x14, 0xa3, 0x15, 0x5e, 0x04, 0x3f, 0xfe, 0xe6, 0xbf, 0xff,
+	0xf9, 0x51, 0xe3, 0xcb, 0x7f, 0x7d, 0xd4, 0xf8, 0x23, 0xfc, 0xfe, 0x0a, 0xbf, 0xbf, 0xc1, 0xef,
+	0x1f, 0xf0, 0xfb, 0xf3, 0x1f, 0x6e, 0x37, 0x7e, 0xd5, 0x82, 0x5b, 0xfe, 0x2f, 0x00, 0x00, 0xff,
+	0xff, 0x0d, 0x51, 0xf6, 0x00, 0xf0, 0x1e, 0x00, 0x00,
 }

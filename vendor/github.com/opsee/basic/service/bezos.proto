@@ -24,6 +24,8 @@ message BezosRequest {
   oneof input {
     aws.cloudwatch.ListMetricsInput cloudwatch_ListMetricsInput = 101;
     aws.cloudwatch.GetMetricStatisticsInput cloudwatch_GetMetricStatisticsInput = 102;
+    aws.cloudwatch.DescribeAlarmsInput cloudwatch_DescribeAlarmsInput = 103;
+    aws.cloudwatch.DescribeAlarmsForMetricInput cloudwatch_DescribeAlarmsForMetricInput = 104;
 
     aws.ec2.DescribeInstancesInput ec2_DescribeInstancesInput = 201;
     aws.ec2.DescribeSecurityGroupsInput ec2_DescribeSecurityGroupsInput = 202;
@@ -43,6 +45,8 @@ message BezosRequest {
 	aws.ecs.ListClustersInput ecs_ListClustersInput = 604;
 	aws.ecs.ListServicesInput ecs_ListServicesInput = 605;
 	aws.ecs.DescribeServicesInput ecs_DescribeServicesInput = 606;
+	aws.ecs.ListContainerInstancesInput ecs_ListContainerInstancesInput = 607;
+	aws.ecs.DescribeTaskDefinitionInput ecs_DescribeTaskDefinitionInput = 608;
   }
 }
 
@@ -52,6 +56,8 @@ message BezosResponse {
   oneof output {
     aws.cloudwatch.ListMetricsOutput cloudwatch_ListMetricsOutput = 101;
     aws.cloudwatch.GetMetricStatisticsOutput cloudwatch_GetMetricStatisticsOutput = 102;
+    aws.cloudwatch.DescribeAlarmsOutput cloudwatch_DescribeAlarmsOutput = 103;
+    aws.cloudwatch.DescribeAlarmsForMetricOutput cloudwatch_DescribeAlarmsForMetricOutput = 104;
 
     aws.ec2.DescribeInstancesOutput ec2_DescribeInstancesOutput = 201;
     aws.ec2.DescribeSecurityGroupsOutput ec2_DescribeSecurityGroupsOutput = 202;
@@ -71,6 +77,8 @@ message BezosResponse {
 	aws.ecs.ListClustersOutput ecs_ListClustersOutput = 604;
 	aws.ecs.ListServicesOutput ecs_ListServicesOutput = 605;
 	aws.ecs.DescribeServicesOutput ecs_DescribeServicesOutput = 606;
+	aws.ecs.ListContainerInstancesOutput ecs_ListContainerInstancesOutput = 607;
+	aws.ecs.DescribeTaskDefinitionOutput ecs_DescribeTaskDefinitionOutput = 608;
   }
 }
 

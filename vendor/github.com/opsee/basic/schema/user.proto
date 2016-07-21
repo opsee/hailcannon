@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "github.com/opsee/protobuf/opseeproto/opsee.proto";
+import "github.com/opsee/protobuf/opseeproto/types/permissions.proto";
 import "github.com/opsee/protobuf/opseeproto/types/timestamp.proto";
 import "stack.proto";
 
@@ -10,18 +11,28 @@ package opsee;
 option go_package = "schema";
 option (opseeproto.graphql) = true;
 
+message UserFlags {
+	option (opseeproto.bitflags) = true;
+	bool admin = 1;
+	bool edit = 2;
+	bool billing = 3;
+}
+
 message User {
 	int32 id = 1 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"id\""];
 	string customer_id = 2 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"customer_id\" db:\"customer_id\""];
 	string email = 3 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"email\""];
 	string name = 4 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"name\""];
-	bool verified = 5 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"verified\""];
-	bool admin = 6 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"admin\""];
-	bool active = 7 [(opseeproto.required) = true, (gogoproto.moretags) = "token:\"active\""];
+	bool verified = 5 [(gogoproto.jsontag) = "verified", (opseeproto.required) = true, (gogoproto.moretags) = "token:\"verified\""];
+	bool admin = 6 [(gogoproto.jsontag) = "admin", (opseeproto.required) = true, (gogoproto.moretags) = "token:\"admin\""];
+	bool active = 7 [(gogoproto.jsontag) = "active", (opseeproto.required) = true, (gogoproto.moretags) = "token:\"active\""];
 	int32 admin_id = 8 [(gogoproto.moretags) = "token:\"admin_id\""];
 	string password_hash = 9 [(gogoproto.jsontag) = "-", (gogoproto.moretags) = "db:\"password_hash\""];
 	opsee.types.Timestamp created_at = 10 [(gogoproto.moretags) = "db:\"created_at\""];
 	opsee.types.Timestamp updated_at = 11 [(gogoproto.moretags) = "db:\"updated_at\""];
+	string status = 12 [(gogoproto.moretags) = "token:\"status\" db:\"status\""];
+	bool has_password = 14 [(gogoproto.jsontag) = "has_password", (gogoproto.moretags) = "db:\"has_password\""];
+	UserFlags perms = 15 [(gogoproto.moretags) = "db:\"perms\" token:\"perms\""];
 }
 
 message Customer {
@@ -34,12 +45,17 @@ message Customer {
 }
 
 message Team {
-  string id = 1;
-	string name = 2;
-	string subscription = 3;
+	string id = 1;
+	string name = 2 [(gogoproto.moretags) = "db:\"name\""];
+	string subscription = 3 [(gogoproto.moretags) = "db:\"subscription\""];
 	CreditCardInfo creditCardInfo = 4;
 	repeated Invoice invoices = 5;
 	repeated User users = 6;
+	string stripe_customer_id = 7 [(gogoproto.moretags) = "db:\"stripe_customer_id\""];
+	string stripe_subscription_id = 8 [(gogoproto.moretags) = "db:\"stripe_subscription_id\""];
+	int32 subscription_quantity = 9 [(gogoproto.moretags) = "db:\"subscription_quantity\""];
+	string subscription_status = 10 [(gogoproto.moretags) = "db:\"subscription_status\""];
+	string subscription_plan = 11 [(gogoproto.moretags) = "db:\"subscription_plan\""];
 }
 
 message Invoice {
@@ -54,4 +70,17 @@ message CreditCardInfo {
 	int32 exp_month = 3;
 	int32 exp_year = 4;
 	string brand = 5;
+}
+
+message Invite {
+	int32 id = 1;
+	string email = 2;
+	string name = 3;
+	string customer_id = 4 [(gogoproto.moretags) = "db:\"customer_id\""];
+	UserFlags perms = 6;
+	opsee.types.Timestamp created_at = 7 [(gogoproto.moretags) = "db:\"created_at\""];
+	opsee.types.Timestamp updated_at = 8 [(gogoproto.moretags) = "db:\"updated_at\""];
+	string referrer = 9;
+	bool claimed = 10;
+	bool activated = 11;
 }

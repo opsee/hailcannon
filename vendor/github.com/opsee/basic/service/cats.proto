@@ -1,0 +1,176 @@
+syntax = "proto3";
+
+import "github.com/opsee/protobuf/opseeproto/opsee.proto";
+import "github.com/opsee/protobuf/opseeproto/types/timestamp.proto";
+import "github.com/opsee/basic/schema/aws/credentials/types.proto";
+import "github.com/opsee/basic/schema/user.proto";
+import "github.com/opsee/basic/schema/checks.proto";
+
+package opsee;
+
+option go_package = "service";
+option (opseeproto.graphql) = true;
+
+message GetCheckCountRequest {
+  User user = 1;
+	bool prorated = 2;
+}
+
+message GetCheckCountResponse {
+	float count = 1;
+	bool prorated = 2;
+}
+
+message GetCheckResultsRequest {
+	string check_id = 1;
+	string customer_id = 2;
+}
+
+message GetCheckResultsResponse {
+	repeated CheckResult results = 1;
+}
+
+message GetCheckStateTransitionsRequest{
+    string check_id = 1;
+    string customer_id = 2;
+    opsee.types.Timestamp AbsoluteStartTime = 3;
+    opsee.types.Timestamp AbsoluteEndTime = 4;
+}
+
+message GetCheckStateTransitionsResponse{
+    repeated CheckStateTransition transitions = 1;
+}
+
+// Customers
+message ListCustomersResponse {
+	repeated Customer customers = 1;
+	int32 page = 2;
+	int32 per_page = 3;
+	int32 total = 4;
+}
+
+// Users
+message GetUserRequest {
+	User requestor = 1;
+	string customer_id = 2;
+	int32 id = 3;
+	string email = 4;
+}
+
+message GetUserResponse {
+	User user = 1;
+	string basic_token = 2;
+}
+
+message ListUsersRequest {
+	User requestor = 1;
+	int32 page = 2;
+	int32 per_page = 3;
+}
+
+message ListUsersResponse {
+	repeated User users = 1;
+	int32 page = 2;
+	int32 per_page = 3;
+	int32 total = 4;
+}
+
+message InviteUserRequest {
+	User requestor = 1;
+	string email = 2;
+	opsee.UserFlags perms = 3;
+	string name = 4;
+}
+
+message InviteUserResponse {
+	Invite invite = 1;
+}
+
+message DeleteUserRequest {
+	User requestor = 1;
+	User user = 2;
+}
+
+message DeleteUserResponse {
+	User user = 2;
+}
+
+message UpdateUserRequest {
+	User requestor = 1;
+	User user = 2;
+	string email = 3;
+	string name = 4;
+	string password = 5;
+	string status = 6;
+	opsee.UserFlags perms = 7;
+}
+
+message UserTokenResponse {
+	User user = 1;
+	string token = 2;
+}
+
+// Teams
+message GetTeamRequest {
+	User requestor = 1;
+	Team team = 2;
+}
+
+message GetTeamResponse {
+	Team team = 1;
+}
+
+message CreateTeamRequest {
+	User requestor = 1;
+	Team team = 2;
+	string stripe_token = 3;
+	int64 trial_end = 4;
+}
+
+message CreateTeamResponse {
+	Team team = 1;
+}
+
+message UpdateTeamRequest {
+	User requestor = 1;
+	Team team = 2;
+	string stripe_token = 3;
+}
+
+message UpdateTeamResponse {
+	Team team = 2;
+}
+
+message DeleteTeamRequest {
+	User requestor = 1;
+	Team team = 2;
+}
+
+message DeleteTeamResponse {
+	Team team = 2;
+}
+
+message GetChecksRequest {
+	User requestor = 1;
+	string check_id = 2;
+}
+
+message GetChecksResponse {
+	repeated Check checks = 1;
+}
+
+service Cats {
+	rpc GetCheckCount(GetCheckCountRequest) returns (GetCheckCountResponse) {}
+	rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+	rpc UpdateUser(UpdateUserRequest) returns (UserTokenResponse) {}
+	rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+	rpc InviteUser(InviteUserRequest) returns (InviteUserResponse) {}
+	rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+	rpc GetTeam(GetTeamRequest) returns (GetTeamResponse) {}
+	rpc CreateTeam(CreateTeamRequest) returns (CreateTeamResponse) {}
+	rpc UpdateTeam(UpdateTeamRequest) returns (UpdateTeamResponse) {}
+	rpc DeleteTeam(DeleteTeamRequest) returns (DeleteTeamResponse) {}
+	rpc GetCheckResults(GetCheckResultsRequest) returns (GetCheckResultsResponse) {}
+	rpc GetCheckStateTransitions(GetCheckStateTransitionsRequest) returns (GetCheckStateTransitionsResponse) {}
+	rpc GetChecks(GetChecksRequest) returns (GetChecksResponse) {}
+}
