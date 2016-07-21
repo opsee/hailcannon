@@ -2,6 +2,7 @@ package hacker
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -36,7 +37,8 @@ const (
 )
 
 var (
-	signalsChannel = make(chan os.Signal, 1)
+	signalsChannel            = make(chan os.Signal, 1)
+	errNoUpdatesToBePerformed = errors.New("no updates to be performed")
 )
 
 func init() {
@@ -214,7 +216,7 @@ func (h *Hacker) UpdateIngressStack(templateBody string) error {
 		awsErr, ok := err.(awserr.RequestFailure)
 		if ok && awsErr.Code() == "ValidationError" {
 			if strings.Contains(awsErr.Message(), "No updates are to be performed.") {
-				return nil
+				return errNoUpdatesToBePerformed
 			}
 			if strings.Contains(awsErr.Message(), "DELETE_COMPLETE") || strings.Contains(awsErr.Message(), "DELETE_IN_PROGESS") {
 				go h.Stop()
@@ -403,8 +405,10 @@ func (h *Hacker) Start() {
 
 				err = h.UpdateIngressStack(string(tl))
 				if err != nil {
-					h.errCount += 1
-					log.WithFields(h.Fields()).Errorf("couldn't update ingress stack: %s", err.Error())
+					if err != errNoUpdatesToBePerformed {
+						h.errCount += 1
+						log.WithFields(h.Fields()).Errorf("couldn't update ingress stack: %s", err.Error())
+					}
 					break
 				} else {
 					// NOTE this message will also occur if no updates are to be performed.
