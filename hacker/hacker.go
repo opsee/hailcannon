@@ -228,7 +228,7 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 			},
 			Region: h.Region,
 			VpcId:  h.VpcId,
-			MaxAge: nil, // don't cache
+			MaxAge: timestamp, // don't cache
 			Input:  &service.BezosRequest_Ec2_DescribeSecurityGroupsInput{input},
 		})
 	if err != nil {
@@ -246,25 +246,38 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 		return true, nil
 	}
 
-	// TODO(dan) Think about ChangeSets instead of this hack.
 	newGroups := make(map[string]int)
 	forceUpdate := false
+	var finalSecurityGroups []*opsee_aws_ec2.SecurityGroup
 	for i, securityGroup := range securityGroups {
+		skip := false
 		for _, tag := range securityGroup.Tags {
-			if aws.StringValue(tag.Key) == "opsee_disable_ingress" {
-				if aws.StringValue(tag.Value) == "true" {
-					forceUpdate = true
-					continue
-				}
+			k := aws.StringValue(tag.Key)
+			v := aws.StringValue(tag.Value)
+			log.Info("sg tag: %s, %s", k, v)
+
+			if k == "opsee_disable_ingress" && v == "true" {
+				log.Info("disabling ingress for security group")
+				forceUpdate = true
+				skip = true
+				break
 			}
 		}
-		newGroups[aws.StringValue(securityGroup.GroupId)] = i
+		if !skip {
+			newGroups[aws.StringValue(securityGroup.GroupId)] = i
+			finalSecurityGroups = append(finalSecurityGroups, securityGroup)
+		}
+	}
+
+	if forceUpdate == true {
+		h.securityGroups = finalSecurityGroups
+		return true, nil
 	}
 
 	for _, securityGroup := range h.securityGroups {
-		if _, ok := newGroups[aws.StringValue(securityGroup.GroupId)]; !ok || forceUpdate {
+		if _, ok := newGroups[aws.StringValue(securityGroup.GroupId)]; !ok {
 			log.WithFields(log.Fields{"CustomerId": h.CustomerId, "GroupId": securityGroup.GroupId}).Error("Found new security group. Updating stack.")
-			h.securityGroups = securityGroups
+			h.securityGroups = finalSecurityGroups
 			return true, nil
 		}
 	}
