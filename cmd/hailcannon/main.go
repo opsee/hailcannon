@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -12,6 +13,10 @@ import (
 
 	"google.golang.org/grpc"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/cloudformation"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
@@ -147,19 +152,41 @@ func main() {
 		case <-time.After(30 * time.Second):
 			activeBastions, err := services.GetBastionStates([]string{}, &service.Filter{Key: "status", Value: "active"})
 			if err != nil {
-				log.WithError(err).Error("Couldn't get bastion states")
+				log.WithError(err).Error("couldn't get bastion states.")
+				continue
 			}
 			for _, bastion := range activeBastions {
 				if ah.Get(bastion.CustomerId) == nil {
+					config := &hacker.Config{
+						VpcId:      bastion.VpcId,
+						CustomerId: bastion.CustomerId,
+						Region:     bastion.Region,
+					}
+					resources := &hacker.Resources{
+						BastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", bastion.CustomerId),
+					}
+
 					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId}, spanxClient)
-					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys(), bezosClient)
+					sess := session.New(&aws.Config{
+						Credentials: creds,
+						Region:      aws.String(region),
+					})
+
+					clients := &hacker.Clients{
+						Ec2:            ec2.New(sess),
+						Cloudformation: cloudformation.New(sess),
+						Bezos:          beosClient,
+					}
+
+					nh, err := hacker.New(config, creds, clients, ah.StaleKeys())
 					if err != nil {
-						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
+						log.WithError(err).Errorf("couldn't create new hacker for customer %s", bastion.CustomerId)
 						continue
 					}
-					log.Infof("Created hacker for customer %s", bastion.CustomerId)
+
+					log.Infof("created hacker for customer %s", bastion.CustomerId)
 					ah.Put(bastion.CustomerId, nh)
-					go nh.HackForever()
+					go nh.Start()
 				}
 			}
 		}

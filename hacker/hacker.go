@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"sort"
 	"strings"
 	"sync"
 	"syscall"
@@ -14,8 +15,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	cf "github.com/crewjam/go-cloudformation"
@@ -27,9 +26,13 @@ import (
 )
 
 const (
-	MaxStackUpdateErrorCount = 3
-	DefaultResponseCacheTTL  = 2 * time.Minute
-	BezosRequestTimeout      = 30 * time.Second
+	ErrorKillThreshold      = 3
+	DefaultResponseCacheTTL = 2 * time.Minute
+	BezosRequestTimeout     = 30 * time.Second
+	StackTimeout            = 2 * time.Minute
+	IgnoreIngressKey        = "opsee_disable_ingress"
+	IngnoreIngressValue     = "true"
+	HoldTime                = 2 * time.Minute
 )
 
 var (
@@ -40,112 +43,23 @@ func init() {
 	signal.Notify(signalsChannel, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 }
 
-func Session(region string, creds *credentials.Credentials) *session.Session {
-	sess := session.New(&aws.Config{
-		Credentials: creds,
-		Region:      aws.String(region),
-	})
-
-	return sess
+type Config struct {
+	CustomerId string
+	Region     string
+	VpcId      string
 }
 
-type Hacker struct {
-	CustomerId                  string
-	Region                      string
-	VpcId                       string
-	HostSecurityGroupPhysicalId string
-	ingressStackPhysicalId      string
-	bastionStackPhysicalId      string
-	waitTime                    time.Duration
-	stackTimeoutMinutes         int64
-	ec2Client                   *ec2.EC2
-	bezosClient                 service.BezosClient
-	cloudformationClient        *cloudformation.CloudFormation
-	quit                        chan string
-	kill                        chan bool
-	bastionState                *schema.BastionState
-	waitGroup                   *sync.WaitGroup
-	stackUpdateErrCount         int
-	securityGroups              []*opsee_aws_ec2.SecurityGroup
-	updated                     bool
-}
-
-func NewHacker(bastion *schema.BastionState, creds *credentials.Credentials, quitChan chan string, bc service.BezosClient) (*Hacker, error) {
-	if bastion == nil {
-		return nil, fmt.Errorf("Nil bastion argument")
-	}
-	hacker := &Hacker{
-		CustomerId:             bastion.CustomerId,
-		Region:                 bastion.Region,
-		bastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", bastion.CustomerId),
-		waitTime:               time.Duration(time.Minute * 2),
-		stackTimeoutMinutes:    int64(2),
-		quit:                   quitChan,
-		kill:                   make(chan bool),
-		waitGroup:              &sync.WaitGroup{},
-		bezosClient:            bc,
-		updated:                true,
-	}
-
-	sess := Session(bastion.Region, creds)
-	hacker.VpcId = bastion.VpcId
-	hacker.ec2Client = ec2.New(sess)
-	hacker.cloudformationClient = cloudformation.New(sess)
-
-	err := hacker.FindIngressStack()
-	if err != nil {
-		return nil, err
-	}
-
-	return hacker, hacker.Validate()
-}
-
-func (h *Hacker) FindIngressStack() error {
-	// get security group id, group name, from bastion cloudformation stack
-	params := &cloudformation.DescribeStackResourcesInput{
-		StackName: aws.String(h.bastionStackPhysicalId),
-	}
-
-	resp, err := h.cloudformationClient.DescribeStackResources(params)
-	if err != nil {
-		return err
-	}
-
-	for _, resource := range resp.StackResources {
-		switch *resource.LogicalResourceId {
-		case "OpseeSecurityGroup":
-			h.HostSecurityGroupPhysicalId = *resource.PhysicalResourceId
-		case "OpseeBastionIngressStack":
-			h.ingressStackPhysicalId = *resource.PhysicalResourceId
-
-			// try to avoid creating a hacker for customers who's stacks have been updated by the legacy hacker
-			if aws.StringValue(resource.ResourceStatus) == "CREATE_COMPLETE" || aws.StringValue(resource.ResourceStatus) == "UPDATE_COMPLETE" {
-				if time.Now().UTC().Sub(aws.TimeValue(resource.Timestamp)) <= time.Duration(2*time.Minute) {
-					return fmt.Errorf("Stack was recently updated.  Last updated: %s", aws.TimeValue(resource.Timestamp).String())
-				}
-			} else {
-				return fmt.Errorf("Stack in incorrect state: %s.  Last updated: %s", aws.StringValue(resource.ResourceStatus), aws.TimeValue(resource.Timestamp).String())
-			}
-		}
-	}
-
-	return nil
-}
-
-// Ensures hacker has required fields retrieved from cfn and env.
-func (h *Hacker) Validate() error {
+// returns err if config is missing fields
+func (c *Config) Validate() error {
 	missing := []string{}
-	if h.CustomerId == "" {
+	if c.CustomerId == "" {
 		missing = append(missing, "CustomerId")
 	}
-	if h.HostSecurityGroupPhysicalId == "" {
-		missing = append(missing, "HostSecurityGroupPhysicalId")
+	if c.Region == "" {
+		missing = append(missing, "Region")
 	}
-	if h.ingressStackPhysicalId == "" {
-		missing = append(missing, "ingressStackPhysicalId")
-	}
-	if h.bastionStackPhysicalId == "" {
-		missing = append(missing, "bastionStackPhysicalId")
+	if c.VpcId == "" {
+		missing = append(missing, "VpcId")
 	}
 
 	if len(missing) > 0 {
@@ -155,54 +69,195 @@ func (h *Hacker) Validate() error {
 	return nil
 }
 
-// Used to update users ingress stack
-func (h *Hacker) UpdateStack(stackName string, parameters []*cloudformation.Parameter, templateBody string) error {
-	log.WithFields(log.Fields{"CustomerId": h.CustomerId, "Parameters": parameters, "StackName": stackName, "TemplateBody": templateBody}).Debugf("Attempting to update stack.")
-	updateStackInput := &cloudformation.UpdateStackInput{
-		Capabilities: []*string{aws.String("CAPABILITY_IAM")},
-		Parameters:   parameters,
-		StackName:    aws.String(stackName),
-		TemplateBody: aws.String(templateBody),
+type Clients struct {
+	Ec2            *ec2.EC2
+	Bezos          *service.Bezos
+	Cloudformation *cloudformation.CloudFormation
+}
+
+// returns err if clients is missing fields
+func (c *Clients) Validate() error {
+	missing := []string{}
+	if c.Bezos == nil {
+		missing = append(missing, "")
+	}
+	if c.Ec2 == nil {
+		missing = append(missing, "ec2 client")
+	}
+	if c.Cloudformation == nil {
+		missing = append(missing, "cloudformation client")
 	}
 
-	resp, err := h.cloudformationClient.UpdateStack(updateStackInput)
-	log.WithFields(log.Fields{"CustomerId": h.CustomerId, "Response": resp, "Error": err}).Debugf("Received response from cloudformation.")
+	if len(missing) > 0 {
+		return fmt.Errorf("Struct missing, %s", strings.Join(missing, ", "))
+	}
+
+	return nil
+}
+
+type Resources struct {
+	BastionStackPhysicalId      string
+	HostSecurityGroupPhysicalId string
+	IngressStackPhysicalId      string
+}
+
+// returns err if resources is missing fields
+func (r *Resources) Validate() error {
+	missing := []string{}
+	if r.BastionStackPhysicalId == "" {
+		missing = append(missing, "BastionStackPhysicalId")
+	}
+	if r.HostSecurityGroupPhysicalId == "" {
+		missing = append(missing, "HostSecurityGroupPhysicalId")
+	}
+	if r.IngressStackPhysicalId == "" {
+		missing = append(missing, "IngressStackPhysicalId")
+	}
+
+	if len(missing) > 0 {
+		return fmt.Errorf("Struct missing, %s", strings.Join(missing, ", "))
+	}
+
+	return nil
+}
+
+type Hacker struct {
+	config    *Config
+	clients   *Clients
+	resources *Resources
+	quit      chan string
+	kill      chan bool
+	waitGroup *sync.WaitGroup
+	errCount  int
+}
+
+// returns pertinent log fields
+func (h *Hacker) Fields() log.Fields {
+	return log.Fields{"customer_id": c.CustomerId, "errCount": h.errCount}
+}
+
+// returns err if hacker is missing fields
+func (h *Hacker) Validate() error {
+	if h.conig == nil {
+		return fmt.Errorf("missing config")
+	} else {
+		if err := h.config.Validate(); err != nil {
+			return err
+		}
+	}
+	if h.Resources != nil {
+		return fmt.Errorf("missing resources")
+	} else {
+		if err := h.resources.Validate(); err != nil {
+			return err
+		}
+	}
+	if h.clients != nil {
+		return fmt.Errorf("missing clients")
+	} else {
+		if err := h.clients.Validate(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func New(config *Config, resources *Resources, clients *Clients, quitChan chan string) (*Hacker, error) {
+	hacker := &Hacker{
+		config:    config,
+		resources: resources,
+		clients:   clients,
+		quit:      quitChan,
+		kill:      make(chan bool),
+		waitGroup: &sync.WaitGroup{},
+		updated:   true,
+	}
+
+	params := &cloudformation.DescribeStackResourcesInput{
+		StackName: aws.String(h.Resources.BastionStackPhysicalId),
+	}
+	resp, err := h.Clients.Cloudformation.DescribeStackResources(params)
 	if err != nil {
-		h.handleStackUpdateError(err)
 		return err
 	}
 
-	err = h.cloudformationClient.WaitUntilStackUpdateComplete(&cloudformation.DescribeStacksInput{
+	for _, resource := range resp.StackResources {
+		switch *resource.LogicalResourceId {
+		case "OpseeSecurityGroup":
+			h.Resources.HostSecurityGroupPhysicalId = aws.StringValue(resource.PhysicalResourceId)
+		case "OpseeBastionIngressStack":
+			h.Resources.IngressStackPhysicalId = aws.StringValue(resource.PhysicalResourceId)
+		}
+	}
+
+	return hacker, hacker.Validate()
+}
+
+func (h *Hacker) UpdateIngressStack(templateBody string) error {
+	log.WithFields(h.Fields()).Debugf("Attempting to update stack.")
+	parameters := []*cloudformation.Parameter{
+		&cloudformation.Parameter{
+			ParameterKey:   aws.String("BastionSecurityGroupId"),
+			ParameterValue: aws.String(h.Resources.HostSecurityGroupPhysicalId),
+		},
+	}
+
+	updateStackInput := &cloudformation.UpdateStackInput{
+		Capabilities: []*string{aws.String("CAPABILITY_IAM")},
+		Parameters:   parameters,
+		StackName:    aws.String(h.Resources.IngressStackPhysicalId),
+		TemplateBody: aws.String(templateBody),
+	}
+
+	resp, err := h.Clients.Cloudformation.UpdateStack(updateStackInput)
+	if err != nil {
+		awsErr, ok := err.(awserr.RequestFailure)
+		if ok && awsErr.Code() == "ValidationError" {
+			if strings.Contains(awsErr.Message(), "No updates are to be performed.") {
+				return nil
+			}
+			if strings.Contains(awsErr.Message(), "DELETE_COMPLETE") || strings.Contains(awsErr.Message(), "DELETE_IN_PROGESS") {
+				go h.Stop()
+				return nil
+			}
+		}
+		return err
+	}
+
+	err = h.Clients.Cloudformation.WaitUntilStackUpdateComplete(&cloudformation.DescribeStacksInput{
 		StackName: aws.String(stackName),
 	})
-	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": h.CustomerId}).WithError(err).Error("Waiting on stack update failed.")
-	}
 
 	return err
 }
 
-// call stop if the stack is in state DELETE_COMPLETE or DELETE_IN_PROGRESS.  save an API call
-func (h *Hacker) handleStackUpdateError(err error) {
-	awsErr, ok := err.(awserr.RequestFailure)
-	if ok && awsErr.Code() == "ValidationError" {
-		if strings.Contains(awsErr.Message(), "No updates are to be performed.") {
-			return
-		}
-		// if the stack has been deleted, stop trying to
-		if strings.Contains(awsErr.Message(), "DELETE_COMPLETE") || strings.Contains(awsErr.Message(), "DELETE_IN_PROGESS") {
-			go h.Stop()
-			return
-		}
-		h.stackUpdateErrCount += 1
+// Generate json for current ingress template
+func (h *Hacker) GenerateIngressTemplateJSON(sgs []*opsee_aws_ec2.SecurityGroup) ([]byte, error) {
+	template := cf.NewTemplate()
+	template.Description = "Listing of bastion security-group ingress rules."
+	template.Parameters["BastionSecurityGroupId"] = &cf.Parameter{
+		Description: "Bastion's security group id.",
+		Type:        "String",
 	}
-	if h.stackUpdateErrCount >= MaxStackUpdateErrorCount {
-		log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Warn("Max stack update error count reached")
-		go h.Stop()
+
+	for _, sg := range sgs {
+		// use the alphanumeric security group id  as physical id so we can get our current ingress rules with one api call
+		sgid := strings.Replace(aws.StringValue(sg.GroupId), "sg-", "sg", 1)
+		template.AddResource(fmt.Sprintf("%s", sgid), cf.EC2SecurityGroupIngress{
+			IpProtocol:            cf.String("tcp"),
+			FromPort:              cf.Integer(0),
+			ToPort:                cf.Integer(65535),
+			SourceSecurityGroupId: cf.Ref("BastionSecurityGroupId").String(),
+			GroupId:               cf.String(*sg.GroupId),
+		})
 	}
+
+	return json.Marshal(template)
 }
 
-func (h *Hacker) updateSecurityGroups() (bool, error) {
+// Fetch security groups from bezosphere
+func (h *Hacker) DescribeSecurityGroups() ([]*opsee_aws_ec2.SecurityGroup, error) {
 	input := &opsee_aws_ec2.DescribeSecurityGroupsInput{
 		Filters: []*opsee_aws_ec2.Filter{
 			&opsee_aws_ec2.Filter{
@@ -215,7 +270,7 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 	timestamp := &opsee_types.Timestamp{}
 	timestamp.Scan(time.Now().UTC().Add(DefaultResponseCacheTTL * -1))
 	ctx, _ := context.WithTimeout(context.Background(), BezosRequestTimeout)
-	resp, err := h.bezosClient.Get(
+	resp, err := h.Clients.Bezos.Get(
 		ctx,
 		&service.BezosRequest{
 			User: &schema.User{
@@ -228,11 +283,11 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 			},
 			Region: h.Region,
 			VpcId:  h.VpcId,
-			MaxAge: timestamp, // don't cache
+			MaxAge: timestamp,
 			Input:  &service.BezosRequest_Ec2_DescribeSecurityGroupsInput{input},
 		})
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	output := resp.GetEc2_DescribeSecurityGroupsOutput()
@@ -240,132 +295,122 @@ func (h *Hacker) updateSecurityGroups() (bool, error) {
 		return false, fmt.Errorf("error decoding aws response")
 	}
 
-	securityGroups := output.SecurityGroups
-	if len(securityGroups) != len(h.securityGroups) {
-		h.securityGroups = securityGroups
-		return true, nil
-	}
+	return output.SecurityGroups
+}
 
-	newGroups := make(map[string]int)
-	forceUpdate := false
-	var finalSecurityGroups []*opsee_aws_ec2.SecurityGroup
-	for i, securityGroup := range securityGroups {
+type SecurityGroups []*opsee_aws_ec2.SecurityGroup
+
+func (s SecurityGroups) Len() int      { return len(b) }
+func (s SecurityGroups) Swap(i, j int) { b[i], b[j] = b[j], b[i] }
+
+type ById struct{ SecurityGroups }
+
+func (b ById) Less(i, j int) bool {
+	return aws.StringValue(b[i].GroupID) < aws.StringValue(b[j].GroupID)
+}
+
+// Compare the current group ids to the new security groups.  Update if we have new or different group ids
+func (h *Hacker) GroupsToUpdate(ogs []*opsee_aws_ec2.SecurityGroup, ngs []*opsee_aws_ec2.SecurityGroup) []*opsee_aws_ec2.SecurityGroup {
+	var fgs []*opsee_aws_ec2.SecurityGroup
+
+	// filter newGroups by key,value
+	for i, sg := range ngs {
 		skip := false
-		for _, tag := range securityGroup.Tags {
+		for _, tag := range sg.Tags {
 			k := aws.StringValue(tag.Key)
 			v := aws.StringValue(tag.Value)
-			log.Info("sg tag: %s, %s", k, v)
 
-			if k == "opsee_disable_ingress" && v == "true" {
-				log.Info("disabling ingress for security group")
-				forceUpdate = true
+			if k == IgnoreIngressKey && v == IgnoreIngressValue {
 				skip = true
-				break
 			}
 		}
 		if !skip {
-			newGroups[aws.StringValue(securityGroup.GroupId)] = i
-			finalSecurityGroups = append(finalSecurityGroups, securityGroup)
+			fgs = append(fgs, sg)
 		}
 	}
 
-	if forceUpdate == true {
-		h.securityGroups = finalSecurityGroups
-		return true, nil
+	if len(fgs) != len(ogs) {
+		return fgs
 	}
 
-	for _, securityGroup := range h.securityGroups {
-		if _, ok := newGroups[aws.StringValue(securityGroup.GroupId)]; !ok {
-			log.WithFields(log.Fields{"CustomerId": h.CustomerId, "GroupId": securityGroup.GroupId}).Error("Found new security group. Updating stack.")
-			h.securityGroups = finalSecurityGroups
-			return true, nil
+	sort.Sort(ById{fgs})
+	sort.Sort(ById{ogs}) // NOTE: these are just group ids! don't use them to update
+
+	for i, _ := range fgs {
+		if aws.StringValue(fgs[i].GroupId) != aws.StringValue(gs[i].GroupId) {
+			return fgs
 		}
 	}
-	log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Info("No updates are to be performed.")
 
-	return false, nil
+	return fgs
 }
 
-// Generate json for current ingress template
-func (h *Hacker) GenerateIngressTemplateJSON() ([]byte, error) {
-	template := cf.NewTemplate()
-	template.Description = "Listing of bastion security-group ingress rules."
-	template.Parameters["BastionSecurityGroupId"] = &cf.Parameter{
-		Description: "Bastion's security group id.",
-		Type:        "String",
-	}
-
-	for i, securityGroup := range h.securityGroups {
-		resourceName := fmt.Sprintf("OpseeIngressRule%d", i)
-		template.AddResource(resourceName, cf.EC2SecurityGroupIngress{
-			IpProtocol:            cf.String("tcp"),
-			FromPort:              cf.Integer(0),
-			ToPort:                cf.Integer(65535),
-			SourceSecurityGroupId: cf.Ref("BastionSecurityGroupId").String(),
-			GroupId:               cf.String(*securityGroup.GroupId),
-		})
-	}
-
-	return json.Marshal(template)
-}
-
-// Get security groups from bezos, store them, and add ingress rules if necessary
-func (h *Hacker) Hack() error {
-	// if the last update didn't fail, fetch security groups
-	if h.updated {
-		cng, err := h.updateSecurityGroups()
-		if err != nil {
-			log.WithFields(log.Fields{"CustomerId": h.CustomerId, "err": err}).Warn("Couldn't retrieve security groups")
-			return nil
-		}
-
-		// No updates to be performed
-		if cng == false {
-			return nil
-		}
-	}
-	h.updated = false
-
-	parameters := []*cloudformation.Parameter{
-		&cloudformation.Parameter{
-			ParameterKey:   aws.String("BastionSecurityGroupId"),
-			ParameterValue: aws.String(h.HostSecurityGroupPhysicalId),
-		},
-	}
-
-	tl, err := h.GenerateIngressTemplateJSON()
-	if err != nil {
-		log.WithFields(log.Fields{"CustomerId": h.CustomerId, "err": err}).Error("Couldn't generate ingress template.")
-		return err
-	}
-
-	err = h.UpdateStack(h.ingressStackPhysicalId, parameters, string(tl))
+// Returns a semi-populated list of security groups retrieved from cloudformation resources
+// NOTE we only use these to ensure that we don't update if there are no new groups!
+func (h *Hacker) GetCurrentSecurityGroups() {
+	resp, err := h.Clients.Cloudformation.DescribeStackResources(params)
 	if err != nil {
 		return err
 	}
-	h.updated = true
 
-	return nil
+	var cgs []opsee_aws_ec2.SecurityGroup
+	for _, resource := range resp.StackResources {
+		lid := aws.StringValue(resource.LogicalResourceId)
+		sgid := strings.Replace(aws.StringValue(sg.GroupId), "sg", "sg-", 1)
+		if strings.HasPrefix(sgid, "sg-") {
+			cgs := append(cgs, &opsee_aws_ec2.SecurityGroup{GroupId: sgid})
+		}
+	}
 }
 
-func (h *Hacker) Stop() {
-	close(h.kill)
-	h.waitGroup.Wait()
-	h.quit <- h.CustomerId
-}
-
-func (h *Hacker) HackForever() {
+// Starts the hacker
+func (h *Hacker) Start() {
 	h.waitGroup.Add(1)
 	defer h.waitGroup.Done()
-	log.WithFields(log.Fields{"CustomerId": h.CustomerId}).Info("Started hacker.")
+	log.WithFields(h.Fields()).Info("Started hacker.")
 	for {
 		t := time.Now()
-		log.WithFields(log.Fields{"customer_id": h.CustomerId}).Info("Hacking")
-		err := h.Hack()
-		if err != nil {
-			log.WithFields(log.Fields{"CustomerId": h.CustomerId}).WithError(err).Error("Couldn't update the stack.")
+		for i := 0; i < 1; i++ {
+			// get current security group ids
+			csgs, err := h.GetCurrentSecurityGroups()
+			if err != nil {
+				log.WithFields(h.Fields()).Errorf("couldn't get current sgids from ingress stack: %s", err.Error())
+				h.errCount += 1
+				break
+			}
+
+			// get new security groups
+			nsgs, err := h.DescribeSecurityGroups()
+			if err != nil {
+				log.WithFields(h.Fields()).Errorf("couldn't get new sgids: %s", err.Error())
+				h.errCount += 1
+				break
+			}
+
+			// diff the two
+			usgs := h.GroupsToUpdate(csgs, nsgs)
+			if len(usgs) > 0 {
+				tl, err := h.GenerateIngressTemplateJSON(usgs)
+				if err != nil {
+					log.WithFields(h.Fields()).Errorf("couldn't generate ingress template json: %s", err.Error())
+					h.errCount += 1
+					break
+				}
+
+				err = h.UpdateIngressStack(string(tl))
+				if err != nil {
+					h.errCount += 1
+					log.WithFields(h.Fields()).Errorf("couldn't update ingress stack: %s", err.Error())
+					break
+				} else {
+					log.WithFields(h.Fields()).Info("updated ingress stack")
+				}
+			}
 		}
-		if wait := h.waitTime - time.Since(t); wait > time.Millisecond {
+		if errCount > ErrThreshold {
+			return fmt.Errorf("reached error threshold... quitting")
+		}
+		if wait := HoldTime - time.Since(t); wait > time.Millisecond {
 			log.Info("Waiting ", wait)
 			select {
 			case <-h.kill:
@@ -376,4 +421,11 @@ func (h *Hacker) HackForever() {
 			}
 		}
 	}
+}
+
+// Stop the hacker
+func (h *Hacker) Stop() {
+	close(h.kill)
+	h.waitGroup.Wait()
+	h.quit <- h.CustomerId
 }
