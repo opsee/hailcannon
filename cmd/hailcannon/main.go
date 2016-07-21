@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -10,12 +11,17 @@ import (
 	"syscall"
 	"time"
 
+	"golang.org/x/net/context"
+
 	"google.golang.org/grpc"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/cloudformation"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
-	"github.com/opsee/hailcannon/svc"
 	log "github.com/opsee/logrus"
 	"github.com/opsee/spanx/spanxcreds"
 	"google.golang.org/grpc/credentials"
@@ -85,8 +91,6 @@ func (ah *ActiveHackers) removeStaleKeys() {
 	}
 }
 
-// TODO(dan) grpc endpoint when we need it
-// dummy endpoint to prevent ECS kills
 func hello(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "hello")
 }
@@ -109,8 +113,6 @@ func logLevel(defaultLevel log.Level) {
 
 func main() {
 	ah := NewActiveHackers()
-	services := svc.NewOpseeServices()
-
 	go health()
 
 	spanxConn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
@@ -122,15 +124,21 @@ func main() {
 	spanxClient := service.NewSpanxClient(spanxConn)
 	defer spanxConn.Close()
 
+	keelhaulConn, err := grpc.Dial(os.Getenv("HAILCANNON_KEELHAUL_ADDRESS"),
+		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
+		grpc.WithTimeout(GrpcTimeout))
+	if err != nil {
+		log.WithError(err).Fatal("Couldn't create grpc connection to keelhaul.")
+	}
+
+	keelhaulClient := service.NewKeelhaulClient(keelhaulConn)
+	defer keelhaulConn.Close()
+
 	bezosConn, err := grpc.Dial(os.Getenv("HAILCANNON_BEZOSPHERE_ADDRESS"),
 		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
 		grpc.WithTimeout(GrpcTimeout))
 	if err != nil {
 		log.WithError(err).Fatal("Couldn't create grpc connection to bezosphere.")
-	}
-
-	if err != nil {
-		log.Fatalf("Couldn't initialize connection to bezosphere")
 	}
 
 	bezosClient := service.NewBezosClient(bezosConn)
@@ -145,21 +153,48 @@ func main() {
 				os.Exit(0)
 			}
 		case <-time.After(30 * time.Second):
-			activeBastions, err := services.GetBastionStates([]string{}, &service.Filter{Key: "status", Value: "active"})
+			keelResp, err := keelhaulClient.ListBastionStates(context.Background(), &service.ListBastionStatesRequest{
+				CustomerIds: []string{},
+				Filters:     []*service.Filter{&service.Filter{Key: "status", Value: "active"}},
+			})
 			if err != nil {
-				log.WithError(err).Error("Couldn't get bastion states")
+				log.WithError(err).Error("couldn't get bastion states.")
+				continue
 			}
+			activeBastions := keelResp.GetBastionStates()
+
 			for _, bastion := range activeBastions {
 				if ah.Get(bastion.CustomerId) == nil {
+					config := &hacker.Config{
+						VpcId:      bastion.VpcId,
+						CustomerId: bastion.CustomerId,
+						Region:     bastion.Region,
+					}
+					resources := &hacker.Resources{
+						BastionStackPhysicalId: fmt.Sprintf("opsee-stack-%s", bastion.CustomerId),
+					}
+
 					creds := spanxcreds.NewSpanxCredentials(&schema.User{CustomerId: bastion.CustomerId}, spanxClient)
-					nh, err := hacker.NewHacker(bastion, creds, ah.StaleKeys(), bezosClient)
+					sess := session.New(&aws.Config{
+						Credentials: creds,
+						Region:      aws.String(config.Region),
+					})
+
+					clients := &hacker.Clients{
+						Ec2:            ec2.New(sess),
+						Cloudformation: cloudformation.New(sess),
+						Bezos:          bezosClient,
+					}
+
+					nh, err := hacker.New(config, resources, clients, ah.StaleKeys())
 					if err != nil {
-						log.WithError(err).Errorf("Couldn't create new hacker for customer %s", bastion.CustomerId)
+						log.WithError(err).Errorf("couldn't create new hacker for customer %s", bastion.CustomerId)
 						continue
 					}
-					log.Infof("Created hacker for customer %s", bastion.CustomerId)
+
+					log.Infof("created hacker for customer %s", bastion.CustomerId)
 					ah.Put(bastion.CustomerId, nh)
-					go nh.HackForever()
+					go nh.Start()
 				}
 			}
 		}
