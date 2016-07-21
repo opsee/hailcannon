@@ -29,7 +29,7 @@ run: $(APPENV)
 	-e AWS_SECRET_ACCESS_KEY \
 	-p 9109:9109 \
 	--rm \
-	quay.io/opsee/hailcannon:$(PROJECT):$(GITCOMMIT)
+	quay.io/opsee/$(PROJECT):$(GITCOMMIT)
 
 push:
 	docker push quay.io/opsee/$(PROJECT):$(GITCOMMIT)

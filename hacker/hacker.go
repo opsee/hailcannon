@@ -145,14 +145,14 @@ func (h *Hacker) Validate() error {
 			return err
 		}
 	}
-	if h.resources != nil {
+	if h.resources == nil {
 		return fmt.Errorf("missing resources")
 	} else {
 		if err := h.resources.Validate(); err != nil {
 			return err
 		}
 	}
-	if h.clients != nil {
+	if h.clients == nil {
 		return fmt.Errorf("missing clients")
 	} else {
 		if err := h.clients.Validate(); err != nil {
@@ -407,6 +407,7 @@ func (h *Hacker) Start() {
 					log.WithFields(h.Fields()).Errorf("couldn't update ingress stack: %s", err.Error())
 					break
 				} else {
+					// NOTE this message will also occur if no updates are to be performed.
 					log.WithFields(h.Fields()).Info("updated ingress stack")
 				}
 			}

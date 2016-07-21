@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"time"
 
+	"golang.org/x/net/context"
+
 	"google.golang.org/grpc"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -20,7 +22,6 @@ import (
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/basic/service"
 	"github.com/opsee/hailcannon/hacker"
-	"github.com/opsee/hailcannon/svc"
 	log "github.com/opsee/logrus"
 	"github.com/opsee/spanx/spanxcreds"
 	"google.golang.org/grpc/credentials"
@@ -90,8 +91,6 @@ func (ah *ActiveHackers) removeStaleKeys() {
 	}
 }
 
-// TODO(dan) grpc endpoint when we need it
-// dummy endpoint to prevent ECS kills
 func hello(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "hello")
 }
@@ -114,8 +113,6 @@ func logLevel(defaultLevel log.Level) {
 
 func main() {
 	ah := NewActiveHackers()
-	services := svc.NewOpseeServices()
-
 	go health()
 
 	spanxConn, err := grpc.Dial(os.Getenv("HAILCANNON_SPANX_ADDRESS"),
@@ -127,15 +124,21 @@ func main() {
 	spanxClient := service.NewSpanxClient(spanxConn)
 	defer spanxConn.Close()
 
+	keelhaulConn, err := grpc.Dial(os.Getenv("HAILCANNON_KEELHAUL_ADDRESS"),
+		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
+		grpc.WithTimeout(GrpcTimeout))
+	if err != nil {
+		log.WithError(err).Fatal("Couldn't create grpc connection to keelhaul.")
+	}
+
+	keelhaulClient := service.NewKeelhaulClient(keelhaulConn)
+	defer keelhaulConn.Close()
+
 	bezosConn, err := grpc.Dial(os.Getenv("HAILCANNON_BEZOSPHERE_ADDRESS"),
 		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
 		grpc.WithTimeout(GrpcTimeout))
 	if err != nil {
 		log.WithError(err).Fatal("Couldn't create grpc connection to bezosphere.")
-	}
-
-	if err != nil {
-		log.Fatalf("Couldn't initialize connection to bezosphere")
 	}
 
 	bezosClient := service.NewBezosClient(bezosConn)
@@ -150,15 +153,17 @@ func main() {
 				os.Exit(0)
 			}
 		case <-time.After(30 * time.Second):
-			activeBastions, err := services.GetBastionStates([]string{}, &service.Filter{Key: "status", Value: "active"})
+			keelResp, err := keelhaulClient.ListBastionStates(context.Background(), &service.ListBastionStatesRequest{
+				CustomerIds: []string{},
+				Filters:     []*service.Filter{&service.Filter{Key: "status", Value: "active"}},
+			})
 			if err != nil {
 				log.WithError(err).Error("couldn't get bastion states.")
 				continue
 			}
+			activeBastions := keelResp.GetBastionStates()
+
 			for _, bastion := range activeBastions {
-				if bastion.CustomerId != "5963d7bc-6ba2-11e5-8603-6ba085b2f5b5" {
-					continue
-				}
 				if ah.Get(bastion.CustomerId) == nil {
 					config := &hacker.Config{
 						VpcId:      bastion.VpcId,
